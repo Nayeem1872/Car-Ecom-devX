@@ -11,9 +11,12 @@ import {
   LogOut,
   ChevronLeft,
   ChevronRight,
+  ShoppingBag,
+  TagsIcon,
 } from "lucide-react";
 import Link from "next/link";
-import { usePathname } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
+import Cookies from "js-cookie";
 
 interface NavItem {
   icon: React.ElementType;
@@ -22,8 +25,10 @@ interface NavItem {
 }
 
 const navItems: NavItem[] = [
-  { icon: LayoutDashboard, label: "Dashboard", href: "/dashboard" },
+  { icon: LayoutDashboard, label: "Dashboard", href: "/admin/dashboard" },
   { icon: BarChartBig, label: "Analytics", href: "/analytics" },
+  { icon: ShoppingBag, label: "Products", href: "/admin/dashboard/products" },
+  { icon: TagsIcon, label: "Categories", href: "/admin/dashboard/categories" },
   { icon: UserIcon, label: "Profile", href: "/profile" },
   { icon: Settings, label: "Settings", href: "/settings" },
 ];
@@ -31,8 +36,8 @@ const navItems: NavItem[] = [
 const Sidebar = () => {
   const [expanded, setExpanded] = useState(true);
   const pathname = usePathname();
+  const router = useRouter();
 
-  // Dummy user data. Replace with your actual user state or context.
   const user = {
     name: "John Doe",
     email: "john@example.com",
@@ -43,6 +48,12 @@ const Sidebar = () => {
     setExpanded(!expanded);
   };
 
+  const handleLogout = () => {
+    // Remove the "ecom_token" cookie using js-cookie
+    Cookies.remove("ecom_token");
+    // Redirect to the /admin page
+    router.push("/admin");
+  };
   return (
     <motion.div
       className="h-screen border-r border-border fixed left-0 top-0 z-40 flex flex-col bg-background"
@@ -135,7 +146,11 @@ const Sidebar = () => {
             )}
           </AnimatePresence>
         </div>
-        <Button variant="outline" className="w-full justify-start gap-x-3">
+        <Button
+          variant="outline"
+          className="w-full justify-start gap-x-3"
+          onClick={handleLogout}
+        >
           <LogOut size={18} />
           <AnimatePresence mode="wait">
             {expanded && (
