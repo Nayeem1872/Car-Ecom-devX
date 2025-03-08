@@ -1,9 +1,9 @@
 "use client";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { motion } from "framer-motion";
-import { Plus, Search, Edit, Trash2, Eye } from "lucide-react";
+import axios from "axios";
+import { Search } from "lucide-react";
 import { Input } from "@/components/ui/input";
-import { Button } from "@/components/ui/button";
 import {
   Card,
   CardContent,
@@ -11,86 +11,74 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import {
-  Table,
-  TableBody,
-  TableCell,
-  TableHead,
-  TableHeader,
-  TableRow,
-} from "@/components/ui/table";
-import {
-  Dialog,
-  DialogContent,
-  DialogDescription,
-  DialogFooter,
-  DialogHeader,
-  DialogTitle,
-  DialogTrigger,
-} from "@/components/ui/dialog";
-import { Label } from "@/components/ui/label";
 import { useToast } from "@/hooks/use-toast";
+import AddCategoryModal from "../../components/AddCategoryModal";
+import EditCategoryModal from "../../components/EditCategoryModal";
+import CategoriesTable, { Category } from "../../components/CategoriesTable";
 
-interface Category {
-  id: number;
+interface NewCategory {
   name: string;
   description: string;
   parentCategory: string;
-  productsCount: number;
+}
+interface CategoryFormData {
+  name: string;
+  description: string;
+  parentCategory: string | null;
 }
 
 const Categories = () => {
-  const [categories, setCategories] = useState<Category[]>([
-    {
-      id: 1,
-      name: "Furniture",
-      description: "Home and office furniture items",
-      parentCategory: "",
-      productsCount: 15,
-    },
-    {
-      id: 2,
-      name: "Lighting",
-      description: "Indoor and outdoor lighting solutions",
-      parentCategory: "",
-      productsCount: 8,
-    },
-    {
-      id: 3,
-      name: "Chairs",
-      description: "Office and dining chairs",
-      parentCategory: "Furniture",
-      productsCount: 7,
-    },
-    {
-      id: 4,
-      name: "Tables",
-      description: "Coffee and dining tables",
-      parentCategory: "Furniture",
-      productsCount: 6,
-    },
-    {
-      id: 5,
-      name: "Storage",
-      description: "Shelves and storage solutions",
-      parentCategory: "",
-      productsCount: 9,
-    },
-  ]);
-
-  const [newCategory, setNewCategory] = useState<
-    Omit<Category, "id" | "productsCount">
-  >({
+  const [newCategory, setNewCategory] = useState<NewCategory>({
     name: "",
     description: "",
     parentCategory: "",
   });
-
+  const [categories, setCategories] = useState<Category[]>([]);
   const [searchTerm, setSearchTerm] = useState("");
   const [open, setOpen] = useState(false);
   const { toast } = useToast();
 
-  const handleAddCategory = () => {
+  const [editForm, setEditForm] = useState<CategoryFormData>({
+    name: "",
+    description: "",
+    parentCategory: null,
+  });
+  const [selectedCategoryId, setSelectedCategoryId] = useState<string | null>(
+    null
+  );
+  const [openEditModal, setOpenEditModal] = useState(false);
+
+  useEffect(() => {
+    const fetchCategories = async () => {
+      try {
+        const response = await axios.get("/api/ecom/category/get");
+
+        const data = Array.isArray(response.data)
+          ? response.data
+          : response.data.category || [];
+
+        const transformed: Category[] = data.map((cat: any) => ({
+          id: cat._id,
+          name: cat.name,
+          description: cat.description,
+          parentCategory: cat.parentCategory,
+          productsCount: cat.subCategories ? cat.subCategories.length : 0,
+        }));
+        setCategories(transformed);
+      } catch (error) {
+        console.error("Error fetching categories:", error);
+        toast({
+          title: "Error",
+          description: "Failed to fetch categories",
+          variant: "destructive",
+        });
+      }
+    };
+
+    fetchCategories();
+  }, [toast]);
+
+  const handleAddCategory = async () => {
     if (!newCategory.name) {
       toast({
         title: "Error",
@@ -100,27 +88,85 @@ const Categories = () => {
       return;
     }
 
-    const category: Category = {
-      ...newCategory,
-      id:
-        categories.length > 0
-          ? Math.max(...categories.map((c) => c.id)) + 1
-          : 1,
-      productsCount: 0,
-    };
+    try {
+      const response = await axios.post("/api/ecom/category/craete", {
+        name: newCategory.name,
+        description: newCategory.description,
+        parentCategory: newCategory.parentCategory,
+      });
 
-    setCategories([...categories, category]);
-    setNewCategory({
-      name: "",
-      description: "",
-      parentCategory: "",
-    });
-    setOpen(false);
+      const createdCategory: Category = {
+        id: response.data._id,
+        name: response.data.name ?? newCategory.name,
+        description: response.data.description ?? newCategory.description,
+        parentCategory:
+          response.data.parentCategory ?? newCategory.parentCategory,
+        productsCount: response.data.subCategories
+          ? response.data.subCategories.length
+          : 0,
+      };
 
-    toast({
-      title: "Success",
-      description: "Category added successfully",
-    });
+      setCategories([...categories, createdCategory]);
+      setNewCategory({ name: "", description: "", parentCategory: "" });
+      setOpen(false);
+
+      toast({
+        title: "Success",
+        description: "Category added successfully",
+      });
+    } catch (error) {
+      console.error("Error adding category:", error);
+      toast({
+        title: "Error",
+        description: "Failed to add category",
+        variant: "destructive",
+      });
+    }
+  };
+
+  const handleEditCategory = async () => {
+    if (!selectedCategoryId) return;
+
+    try {
+      const response = await axios.patch(
+        `/api/ecom/category/edit?id=${selectedCategoryId}`,
+        {
+          name: editForm.name,
+          description: editForm.description,
+          parentCategory:
+            editForm.parentCategory === "" ? null : editForm.parentCategory,
+        }
+      );
+      const updatedCategory = {
+        id: response.data._id,
+        name: response.data.name ?? editForm.name,
+        description: response.data.description ?? editForm.description,
+        parentCategory: response.data.parentCategory ?? editForm.parentCategory,
+        productsCount: response.data.subCategories
+          ? response.data.subCategories.length
+          : 0,
+      };
+
+      setCategories((prevCategories) =>
+        prevCategories.map((cat) =>
+          cat.id === updatedCategory.id ? updatedCategory : cat
+        )
+      );
+      setOpenEditModal(false);
+      setSelectedCategoryId(null);
+
+      toast({
+        title: "Success",
+        description: "Category updated successfully",
+      });
+    } catch (error) {
+      console.error("Error updating category:", error);
+      toast({
+        title: "Error",
+        description: "Failed to update category",
+        variant: "destructive",
+      });
+    }
   };
 
   const filteredCategories = categories.filter(
@@ -128,6 +174,27 @@ const Categories = () => {
       category.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
       category.description.toLowerCase().includes(searchTerm.toLowerCase())
   );
+
+  // Callbacks for the table actions
+  const handleViewCategory = (category: Category) => {
+    // Implement your view functionality here
+    console.log("Viewing category:", category);
+  };
+
+  const handleEditCategoryClick = (category: Category) => {
+    setSelectedCategoryId(category.id);
+    setEditForm({
+      name: category.name,
+      description: category.description,
+      parentCategory: category.parentCategory, // keep null as null if it is null
+    });
+    setOpenEditModal(true);
+  };
+
+  const handleDeleteCategory = (category: Category) => {
+    // Implement your delete functionality here
+    console.log("Deleting category:", category);
+  };
 
   return (
     <>
@@ -165,137 +232,36 @@ const Categories = () => {
                     onChange={(e) => setSearchTerm(e.target.value)}
                   />
                 </div>
-                <Dialog open={open} onOpenChange={setOpen}>
-                  <DialogTrigger asChild>
-                    <Button size="sm" className="red-gradient text-white">
-                      <Plus className="mr-1 h-4 w-4" />
-                      Add Category
-                    </Button>
-                  </DialogTrigger>
-                  <DialogContent className="glass-card">
-                    <DialogHeader>
-                      <DialogTitle>Add New Category</DialogTitle>
-                      <DialogDescription>
-                        Fill in the details to add a new product category
-                      </DialogDescription>
-                    </DialogHeader>
-                    <div className="grid gap-4 py-4">
-                      <div className="grid grid-cols-4 items-center gap-4">
-                        <Label htmlFor="name" className="text-right">
-                          Name*
-                        </Label>
-                        <Input
-                          id="name"
-                          className="col-span-3"
-                          value={newCategory.name}
-                          onChange={(e) =>
-                            setNewCategory({
-                              ...newCategory,
-                              name: e.target.value,
-                            })
-                          }
-                        />
-                      </div>
-                      <div className="grid grid-cols-4 items-center gap-4">
-                        <Label htmlFor="description" className="text-right">
-                          Description
-                        </Label>
-                        <Input
-                          id="description"
-                          className="col-span-3"
-                          value={newCategory.description}
-                          onChange={(e) =>
-                            setNewCategory({
-                              ...newCategory,
-                              description: e.target.value,
-                            })
-                          }
-                        />
-                      </div>
-                      <div className="grid grid-cols-4 items-center gap-4">
-                        <Label htmlFor="parentCategory" className="text-right">
-                          Parent Category
-                        </Label>
-                        <Input
-                          id="parentCategory"
-                          className="col-span-3"
-                          value={newCategory.parentCategory}
-                          onChange={(e) =>
-                            setNewCategory({
-                              ...newCategory,
-                              parentCategory: e.target.value,
-                            })
-                          }
-                          placeholder="Leave empty for top-level category"
-                        />
-                      </div>
-                    </div>
-                    <DialogFooter>
-                      <Button variant="outline" onClick={() => setOpen(false)}>
-                        Cancel
-                      </Button>
-                      <Button
-                        onClick={handleAddCategory}
-                        className="red-gradient"
-                      >
-                        Add Category
-                      </Button>
-                    </DialogFooter>
-                  </DialogContent>
-                </Dialog>
+                <AddCategoryModal
+                  open={open}
+                  setOpen={setOpen}
+                  newCategory={newCategory}
+                  setNewCategory={setNewCategory}
+                  handleAddCategory={handleAddCategory}
+                />
               </div>
             </div>
           </CardHeader>
           <CardContent>
-            <div className="rounded-md border glass-effect overflow-hidden">
-              <Table>
-                <TableHeader>
-                  <TableRow>
-                    <TableHead>Name</TableHead>
-                    <TableHead>Description</TableHead>
-                    <TableHead>Parent Category</TableHead>
-                    <TableHead>Products</TableHead>
-                    <TableHead className="text-right">Actions</TableHead>
-                  </TableRow>
-                </TableHeader>
-                <TableBody>
-                  {filteredCategories.length > 0 ? (
-                    filteredCategories.map((category) => (
-                      <TableRow key={category.id}>
-                        <TableCell className="font-medium">
-                          {category.name}
-                        </TableCell>
-                        <TableCell>{category.description}</TableCell>
-                        <TableCell>{category.parentCategory || "—"}</TableCell>
-                        <TableCell>{category.productsCount}</TableCell>
-                        <TableCell className="text-right">
-                          <div className="flex justify-end gap-2">
-                            <Button variant="ghost" size="sm">
-                              <Eye className="h-4 w-4" />
-                            </Button>
-                            <Button variant="ghost" size="sm">
-                              <Edit className="h-4 w-4" />
-                            </Button>
-                            <Button variant="ghost" size="sm">
-                              <Trash2 className="h-4 w-4" />
-                            </Button>
-                          </div>
-                        </TableCell>
-                      </TableRow>
-                    ))
-                  ) : (
-                    <TableRow>
-                      <TableCell colSpan={5} className="h-24 text-center">
-                        No categories found.
-                      </TableCell>
-                    </TableRow>
-                  )}
-                </TableBody>
-              </Table>
-            </div>
+            <CategoriesTable
+              categories={filteredCategories}
+              onView={handleViewCategory}
+              onEdit={handleEditCategoryClick}
+              onDelete={handleDeleteCategory}
+            />
           </CardContent>
         </Card>
       </motion.div>
+
+      {openEditModal && (
+        <EditCategoryModal
+          open={openEditModal}
+          setOpen={setOpenEditModal}
+          category={editForm}
+          setCategory={setEditForm}
+          handleEditCategory={handleEditCategory}
+        />
+      )}
     </>
   );
 };
