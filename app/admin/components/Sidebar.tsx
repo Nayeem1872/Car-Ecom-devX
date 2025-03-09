@@ -13,6 +13,7 @@ import {
   ChevronRight,
   ShoppingBag,
   TagsIcon,
+  Tag,
 } from "lucide-react";
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
@@ -30,6 +31,7 @@ const navItems: NavItem[] = [
   { icon: ShoppingBag, label: "Products", href: "/admin/dashboard/products" },
   { icon: TagsIcon, label: "Categories", href: "/admin/dashboard/categories" },
   { icon: UserIcon, label: "Profile", href: "/profile" },
+  { icon: Tag, label: "Brands", href: "/admin/dashboard/brands" },
   { icon: Settings, label: "Settings", href: "/settings" },
 ];
 

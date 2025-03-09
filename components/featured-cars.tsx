@@ -1,14 +1,18 @@
-"use client"
-
-import { useState, useRef, useEffect } from "react"
-import { Button } from "@/components/ui/button"
-import { Card, CardContent, CardFooter, CardHeader } from "@/components/ui/card"
-import { Badge } from "@/components/ui/badge"
-import { useCart } from "@/context/cart-context"
-import { useToast } from "@/components/ui/use-toast"
-import { ShoppingCart, Heart, ChevronLeft, ChevronRight } from "lucide-react"
-import { motion, useInView } from "framer-motion"
-import Link from "next/link"
+"use client";
+import { useState, useRef, useEffect } from "react";
+import { Button } from "@/components/ui/button";
+import {
+  Card,
+  CardContent,
+  CardFooter,
+  CardHeader,
+} from "@/components/ui/card";
+import { Badge } from "@/components/ui/badge";
+import { useCart } from "@/context/cart-context";
+import { useToast } from "@/components/ui/use-toast";
+import { ShoppingCart, Heart, ChevronLeft, ChevronRight } from "lucide-react";
+import { motion, useInView } from "framer-motion";
+import Link from "next/link";
 
 const featuredCars = [
   {
@@ -16,7 +20,8 @@ const featuredCars = [
     name: "Mercedes-Benz S-Class",
     category: "Luxury Sedan",
     price: 110000,
-    image: "https://images.unsplash.com/photo-1622037022028-07f7f2d9b59e?q=80&w=2070&auto=format&fit=crop",
+    image:
+      "https://images.unsplash.com/photo-1622037022028-07f7f2d9b59e?q=80&w=2070&auto=format&fit=crop",
     features: ["Leather Interior", "Panoramic Roof", "Advanced Safety"],
   },
   {
@@ -24,7 +29,8 @@ const featuredCars = [
     name: "BMW X7",
     category: "Premium SUV",
     price: 85000,
-    image: "https://images.unsplash.com/photo-1601362840469-51e4d8d58785?q=80&w=2070&auto=format&fit=crop",
+    image:
+      "https://images.unsplash.com/photo-1601362840469-51e4d8d58785?q=80&w=2070&auto=format&fit=crop",
     features: ["7 Seats", "All-Wheel Drive", "Premium Sound System"],
   },
   {
@@ -32,7 +38,8 @@ const featuredCars = [
     name: "Audi e-tron GT",
     category: "Electric",
     price: 99000,
-    image: "https://images.unsplash.com/photo-1614200179396-2bdb77ebf81b?q=80&w=2070&auto=format&fit=crop",
+    image:
+      "https://images.unsplash.com/photo-1614200179396-2bdb77ebf81b?q=80&w=2070&auto=format&fit=crop",
     features: ["Electric", "Fast Charging", "Quattro AWD"],
   },
   {
@@ -40,7 +47,8 @@ const featuredCars = [
     name: "Porsche 911",
     category: "Sports Car",
     price: 120000,
-    image: "https://images.unsplash.com/photo-1611821064430-0d40291d0f0b?q=80&w=2071&auto=format&fit=crop",
+    image:
+      "https://images.unsplash.com/photo-1611821064430-0d40291d0f0b?q=80&w=2071&auto=format&fit=crop",
     features: ["Twin-Turbo", "Rear-Wheel Drive", "Sport Chrono Package"],
   },
   {
@@ -48,7 +56,8 @@ const featuredCars = [
     name: "Ferrari Roma",
     category: "Sports Car",
     price: 220000,
-    image: "https://images.unsplash.com/photo-1592198084033-aade902d1aae?q=80&w=2070&auto=format&fit=crop",
+    image:
+      "https://images.unsplash.com/photo-1592198084033-aade902d1aae?q=80&w=2070&auto=format&fit=crop",
     features: ["V8 Engine", "Carbon Fiber", "Italian Design"],
   },
   {
@@ -56,18 +65,29 @@ const featuredCars = [
     name: "Lamborghini Huracán",
     category: "Supercar",
     price: 260000,
-    image: "https://images.unsplash.com/photo-1580414057403-c5f451f30e1c?q=80&w=2073&auto=format&fit=crop",
+    image:
+      "https://images.unsplash.com/photo-1580414057403-c5f451f30e1c?q=80&w=2073&auto=format&fit=crop",
     features: ["V10 Engine", "Carbon Chassis", "Track Mode"],
   },
-]
+];
 
 export default function FeaturedCars() {
-  const { addToCart } = useCart()
-  const { toast } = useToast()
-  const [favorites, setFavorites] = useState<number[]>([])
-  const [currentIndex, setCurrentIndex] = useState(0)
-  const containerRef = useRef(null)
-  const isInView = useInView(containerRef, { once: false, amount: 0.2 })
+  const { addToCart } = useCart();
+  const { toast } = useToast();
+  const [favorites, setFavorites] = useState<number[]>([]);
+  const [currentIndex, setCurrentIndex] = useState(0);
+  const containerRef = useRef(null);
+  const isInView = useInView(containerRef, { once: false, amount: 0.2 });
+
+  // Track screen width on the client
+  const [screenWidth, setScreenWidth] = useState<number>(0);
+  useEffect(() => {
+    // Only run on client
+    const updateWidth = () => setScreenWidth(window.innerWidth);
+    updateWidth();
+    window.addEventListener("resize", updateWidth);
+    return () => window.removeEventListener("resize", updateWidth);
+  }, []);
 
   const handleAddToCart = (car: (typeof featuredCars)[0]) => {
     addToCart({
@@ -76,49 +96,49 @@ export default function FeaturedCars() {
       price: car.price,
       image: car.image,
       quantity: 1,
-    })
-
+    });
     toast({
       title: "Added to cart",
       description: `${car.name} has been added to your cart.`,
       duration: 3000,
-    })
-  }
+    });
+  };
 
   const toggleFavorite = (id: number) => {
-    setFavorites((prev) => (prev.includes(id) ? prev.filter((item) => item !== id) : [...prev, id]))
-  }
+    setFavorites((prev) =>
+      prev.includes(id) ? prev.filter((item) => item !== id) : [...prev, id]
+    );
+  };
 
   const nextSlide = () => {
     if (currentIndex < featuredCars.length - 4) {
-      setCurrentIndex(currentIndex + 1)
+      setCurrentIndex(currentIndex + 1);
     } else {
-      setCurrentIndex(0)
+      setCurrentIndex(0);
     }
-  }
+  };
 
   const prevSlide = () => {
     if (currentIndex > 0) {
-      setCurrentIndex(currentIndex - 1)
+      setCurrentIndex(currentIndex - 1);
     } else {
-      setCurrentIndex(featuredCars.length - 4)
+      setCurrentIndex(featuredCars.length - 4);
     }
-  }
+  };
 
   useEffect(() => {
     const interval = setInterval(() => {
-      nextSlide()
-    }, 5000)
-
-    return () => clearInterval(interval)
-  }, [nextSlide]) //Fixed dependency
+      nextSlide();
+    }, 5000);
+    return () => clearInterval(interval);
+  }, [currentIndex]); // adjust dependency if needed
 
   const visibleCars =
-    window?.innerWidth >= 1024
+    screenWidth >= 1024
       ? featuredCars.slice(currentIndex, currentIndex + 4)
-      : window?.innerWidth >= 768
-        ? featuredCars.slice(currentIndex, currentIndex + 2)
-        : featuredCars.slice(currentIndex, currentIndex + 1)
+      : screenWidth >= 768
+      ? featuredCars.slice(currentIndex, currentIndex + 2)
+      : featuredCars.slice(currentIndex, currentIndex + 1);
 
   return (
     <section className="py-20 bg-white" ref={containerRef}>
@@ -133,7 +153,8 @@ export default function FeaturedCars() {
             Featured <span className="text-primary">Cars</span>
           </h2>
           <p className="text-muted-foreground max-w-2xl mx-auto">
-            Discover our handpicked selection of premium vehicles that combine luxury, performance, and style.
+            Discover our handpicked selection of premium vehicles that combine
+            luxury, performance, and style.
           </p>
         </motion.div>
 
@@ -160,13 +181,22 @@ export default function FeaturedCars() {
           <div className="overflow-hidden">
             <div
               className="flex transition-transform duration-500 ease-in-out"
-              style={{ transform: `translateX(-${currentIndex * (100 / featuredCars.length)}%)` }}
+              style={{
+                transform: `translateX(-${
+                  currentIndex * (100 / featuredCars.length)
+                }%)`,
+              }}
             >
               {featuredCars.map((car, index) => (
-                <div key={car.id} className="min-w-full sm:min-w-[50%] lg:min-w-[25%] px-3">
+                <div
+                  key={car.id}
+                  className="min-w-full sm:min-w-[50%] lg:min-w-[25%] px-3"
+                >
                   <motion.div
                     initial={{ opacity: 0, y: 20 }}
-                    animate={isInView ? { opacity: 1, y: 0 } : { opacity: 0, y: 20 }}
+                    animate={
+                      isInView ? { opacity: 1, y: 0 } : { opacity: 0, y: 20 }
+                    }
                     transition={{ duration: 0.5, delay: index * 0.1 }}
                   >
                     <Card className="car-card h-full overflow-hidden border-none shadow-lg">
@@ -185,7 +215,9 @@ export default function FeaturedCars() {
                           >
                             <Heart
                               className={`h-5 w-5 transition-colors duration-300 ${
-                                favorites.includes(car.id) ? "fill-primary text-primary" : ""
+                                favorites.includes(car.id)
+                                  ? "fill-primary text-primary"
+                                  : ""
                               }`}
                             />
                           </Button>
@@ -195,11 +227,19 @@ export default function FeaturedCars() {
                         </div>
                       </CardHeader>
                       <CardContent className="p-5">
-                        <h3 className="text-xl font-semibold mb-2">{car.name}</h3>
-                        <p className="text-2xl font-bold text-primary mb-3">${car.price.toLocaleString()}</p>
+                        <h3 className="text-xl font-semibold mb-2">
+                          {car.name}
+                        </h3>
+                        <p className="text-2xl font-bold text-primary mb-3">
+                          ${car.price.toLocaleString()}
+                        </p>
                         <div className="flex flex-wrap gap-2 mt-2">
                           {car.features.map((feature, index) => (
-                            <Badge key={index} variant="secondary" className="font-normal">
+                            <Badge
+                              key={index}
+                              variant="secondary"
+                              className="font-normal"
+                            >
                               {feature}
                             </Badge>
                           ))}
@@ -248,6 +288,5 @@ export default function FeaturedCars() {
         </div>
       </div>
     </section>
-  )
+  );
 }
-

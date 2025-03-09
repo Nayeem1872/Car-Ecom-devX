@@ -18,6 +18,7 @@ import {
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog";
+import axios from "axios";
 
 export interface Category {
   id: string;
@@ -49,11 +50,19 @@ const CategoriesTable = ({
     setDeleteModalOpen(true);
   };
 
-  const confirmDelete = () => {
+  const confirmDelete = async () => {
     if (selectedCategoryForDelete) {
-      onDelete(selectedCategoryForDelete);
-      setDeleteModalOpen(false);
-      setSelectedCategoryForDelete(null);
+      try {
+        await axios.delete(
+          `/api/ecom/category/delete?id=${selectedCategoryForDelete.id}`
+        );
+        onDelete(selectedCategoryForDelete);
+        setDeleteModalOpen(false);
+        setSelectedCategoryForDelete(null);
+      } catch (error) {
+        console.error("Error deleting category:", error);
+        // Optionally, show an error toast here
+      }
     }
   };
 
