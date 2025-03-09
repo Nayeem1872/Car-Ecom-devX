@@ -15,8 +15,13 @@ import { Plus } from "lucide-react";
 
 export interface NewBrand {
   name: string;
-  logo: string;
+  logo: File | null;
   category: string;
+}
+
+export interface CategoryOption {
+  id: string;
+  name: string;
 }
 
 interface AddBrandModalProps {
@@ -25,6 +30,7 @@ interface AddBrandModalProps {
   newBrand: NewBrand;
   setNewBrand: (brand: NewBrand) => void;
   handleAddBrand: () => void;
+  categories: CategoryOption[]; // List of available categories
 }
 
 const AddBrandModal = ({
@@ -33,7 +39,15 @@ const AddBrandModal = ({
   newBrand,
   setNewBrand,
   handleAddBrand,
+  categories,
 }: AddBrandModalProps) => {
+  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    if (e.target.files && e.target.files.length > 0) {
+      setNewBrand({ ...newBrand, logo: e.target.files[0] });
+    }
+  };
+  console.log("newBrandasdadadasdasd", newBrand);
+
   return (
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>
@@ -71,35 +85,46 @@ const AddBrandModal = ({
             </Label>
             <div className="col-span-3 flex items-center gap-3">
               <div className="h-12 w-12 rounded-md overflow-hidden">
-                <img
-                  src={newBrand.logo}
-                  alt="Logo Preview"
-                  className="h-full w-full object-cover"
-                />
+                {newBrand.logo ? (
+                  <img
+                    src={URL.createObjectURL(newBrand.logo)}
+                    alt="Logo Preview"
+                    className="h-full w-full object-cover"
+                  />
+                ) : (
+                  <div className="h-full w-full bg-gray-200 flex items-center justify-center text-gray-500">
+                    No img
+                  </div>
+                )}
               </div>
               <Input
                 id="logo"
-                placeholder="Logo URL"
-                value={newBrand.logo}
-                onChange={(e) =>
-                  setNewBrand({ ...newBrand, logo: e.target.value })
-                }
+                type="file"
+                // Note: Do not use a "value" prop for file inputs
+                onChange={handleFileChange}
               />
             </div>
           </div>
-          {/* Brand Category */}
+          {/* Brand Category as a Select */}
           <div className="grid grid-cols-4 items-center gap-4">
             <Label htmlFor="category" className="text-right">
               Category*
             </Label>
-            <Input
+            <select
               id="category"
-              className="col-span-3"
+              className="col-span-3 border p-2 rounded"
               value={newBrand.category}
               onChange={(e) =>
                 setNewBrand({ ...newBrand, category: e.target.value })
               }
-            />
+            >
+              <option value="">Select a category</option>
+              {categories.map((cat) => (
+                <option key={cat.id} value={cat.id}>
+                  {cat.name}
+                </option>
+              ))}
+            </select>
           </div>
         </div>
         <DialogFooter>

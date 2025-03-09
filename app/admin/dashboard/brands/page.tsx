@@ -1,5 +1,5 @@
 "use client";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { motion } from "framer-motion";
 import { Search } from "lucide-react";
 import { Input } from "@/components/ui/input";
@@ -13,81 +13,171 @@ import {
 import { useToast } from "@/hooks/use-toast";
 import AddBrandModal from "../../components/AddBrandModal";
 import BrandsTable from "../../components/BrandsTable";
+import axios from "axios";
+import EditBrandModal from "./components/EditBrandModal";
 
 const Brands = () => {
-  const [brands, setBrands] = useState<any[]>([
-    {
-      id: 1,
-      name: "Acme Co",
-      logo: "https://api.dicebear.com/6.x/shapes/svg?seed=acme",
-      category: "Furniture",
-    },
-    {
-      id: 2,
-      name: "TechGear",
-      logo: "https://api.dicebear.com/6.x/shapes/svg?seed=techgear",
-      category: "Electronics",
-    },
-    {
-      id: 3,
-      name: "GreenLeaf",
-      logo: "https://api.dicebear.com/6.x/shapes/svg?seed=greenleaf",
-      category: "Home Decor",
-    },
-  ]);
+  const [brands, setBrands] = useState<any[]>([]);
   const [newBrand, setNewBrand] = useState<any>({
     name: "",
-    logo: "https://api.dicebear.com/6.x/shapes/svg?seed=default",
+    logo: null,
     category: "",
   });
   const [searchTerm, setSearchTerm] = useState("");
   const [open, setOpen] = useState(false);
+  const [availableCategories, setAvailableCategories] = useState<any[]>([]);
+  const [editBrand, setEditBrand] = useState<any | null>(null);
+  const [openEditModal, setOpenEditModal] = useState(false);
   const { toast } = useToast();
-
-  const handleAddBrand = () => {
-    if (!newBrand.name || !newBrand.category) {
+  const fetchBrands = async () => {
+    try {
+      const response = await axios.get("/api/ecom/brand/get");
+      setBrands(response.data.data);
+    } catch (error) {
+      console.error("Error fetching Brands:", error);
       toast({
         title: "Error",
-        description: "Please provide both name and category",
+        description: "Failed to fetch Brands",
+        variant: "destructive",
+      });
+    }
+  };
+  const fetchCategories = async () => {
+    try {
+      const response = await axios.get("/api/ecom/category/get");
+      const transformed = response.data.category.map((cat: any) => ({
+        id: cat._id,
+        name: cat.name,
+      }));
+      setAvailableCategories(transformed);
+    } catch (error) {
+      console.error("Error fetching categories:", error);
+      toast({
+        title: "Error",
+        description: "Failed to fetch categories",
+        variant: "destructive",
+      });
+    }
+  };
+  useEffect(() => {
+    fetchBrands();
+    fetchCategories();
+  }, [toast]);
+
+  const handleAddBrand = async () => {
+    if (!newBrand.name || !newBrand.category || !newBrand.logo) {
+      toast({
+        title: "Error",
+        description: "Please provide name, category, and logo",
         variant: "destructive",
       });
       return;
     }
 
-    const brand: any = {
-      ...newBrand,
-      id: brands.length > 0 ? Math.max(...brands.map((b) => b.id)) + 1 : 1,
-    };
+    try {
+      let logoUrl = "";
+      if (newBrand.logo instanceof File) {
+        const formData = new FormData();
+        formData.append("assets", newBrand.logo);
+        const uploadResponse = await axios.post("/api/ecom/upload", formData, {
+          headers: { "Content-Type": "multipart/form-data" },
+        });
+        logoUrl = uploadResponse.data.data[0].serverPath;
+      } else {
+        logoUrl = newBrand.logo;
+      }
 
-    setBrands([...brands, brand]);
-    setNewBrand({
-      name: "",
-      logo: "https://api.dicebear.com/6.x/shapes/svg?seed=default",
-      category: "",
-    });
-    setOpen(false);
+      const payload = {
+        name: newBrand.name,
+        category: newBrand.category,
+        logo: logoUrl,
+      };
 
-    toast({
-      title: "Success",
-      description: "Brand added successfully",
-    });
+      await axios.post("/api/ecom/brand/craete", payload, {
+        headers: { "Content-Type": "application/json" },
+      });
+      await fetchBrands();
+
+      setNewBrand({
+        name: "",
+        logo: null,
+        category: "",
+      });
+      setOpen(false);
+      toast({
+        title: "Success",
+        description: "Brand added successfully",
+      });
+    } catch (error) {
+      console.error("Error adding brand:", error);
+      toast({
+        title: "Error",
+        description: "Failed to add brand",
+        variant: "destructive",
+      });
+    }
   };
-
-  const filteredBrands = brands.filter(
-    (brand) =>
-      brand.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      brand.category.toLowerCase().includes(searchTerm.toLowerCase())
-  );
 
   const handleView = (brand: any) => {
     console.log("View", brand);
   };
   const handleEdit = (brand: any) => {
-    console.log("Edit", brand);
+    setEditBrand(brand);
+    setOpenEditModal(true);
   };
+  const handleEditBrand = async () => {
+    if (!editBrand) return;
+    try {
+      let logoUrl = editBrand.logo;
+      if (editBrand.newLogoFile instanceof File) {
+        const formData = new FormData();
+        formData.append("assets", editBrand.newLogoFile);
+        const uploadResponse = await axios.post("/api/ecom/upload", formData, {
+          headers: { "Content-Type": "multipart/form-data" },
+        });
+        logoUrl = uploadResponse.data.data[0].serverPath;
+      }
+
+      const payload = {
+        name: editBrand.name,
+        category: editBrand.category._id,
+        logo: logoUrl,
+      };
+
+      await axios.patch(`/api/ecom/brand/edit?id=${editBrand.id}`, payload, {
+        headers: { "Content-Type": "application/json" },
+      });
+      await fetchBrands();
+      setOpenEditModal(false);
+      setEditBrand(null);
+      toast({
+        title: "Success",
+        description: "Brand updated successfully",
+      });
+    } catch (error) {
+      console.error("Error updating brand:", error);
+      toast({
+        title: "Error",
+        description: "Failed to update brand",
+        variant: "destructive",
+      });
+    }
+  };
+
   const handleDelete = (brand: any) => {
     console.log("Delete", brand);
   };
+  const filteredBrands = brands.filter((brand) => {
+    if (!brand.name) return false;
+    const categoryName =
+      typeof brand.category === "object" && brand.category !== null
+        ? brand.category.name
+        : brand.category || "";
+    return (
+      brand.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      categoryName.toLowerCase().includes(searchTerm.toLowerCase())
+    );
+  });
 
   return (
     <>
@@ -131,6 +221,7 @@ const Brands = () => {
                   newBrand={newBrand}
                   setNewBrand={setNewBrand}
                   handleAddBrand={handleAddBrand}
+                  categories={availableCategories}
                 />
               </div>
             </div>
@@ -145,6 +236,16 @@ const Brands = () => {
           </CardContent>
         </Card>
       </motion.div>
+      {openEditModal && editBrand && (
+        <EditBrandModal
+          open={openEditModal}
+          setOpen={setOpenEditModal}
+          brand={editBrand}
+          setBrand={setEditBrand}
+          handleEditBrand={handleEditBrand}
+          categories={availableCategories}
+        />
+      )}
     </>
   );
 };

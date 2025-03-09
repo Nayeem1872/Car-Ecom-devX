@@ -6,10 +6,8 @@ const nextConfig = {
     return [
       {
         source: "/api/:path*",
-        // destination: "https://nerim.cloud/api/:path*",
-        // destination:"http://nerim.aloitconsultants.com/api/:path*",
         destination:"http://10.10.10.22:6002/api/:path*" 
-        // destination: "http://192.168.0.107:8005/api/:path*",
+        // destination: "http://192.168.0.108:6002/api/:path*",
       },
     ];
   },

@@ -15,7 +15,7 @@ export interface Brand {
   id: number;
   name: string;
   logo: string;
-  category: string;
+  category: any;
 }
 
 interface BrandsTableProps {
@@ -56,7 +56,12 @@ const BrandsTable = ({
                   </div>
                 </TableCell>
                 <TableCell className="font-medium">{brand.name}</TableCell>
-                <TableCell>{brand.category}</TableCell>
+                <TableCell>
+                  {typeof brand.category === "object"
+                    ? brand.category.name
+                    : brand.category}
+                </TableCell>
+
                 <TableCell className="text-right">
                   <div className="flex justify-end gap-2">
                     <Button
