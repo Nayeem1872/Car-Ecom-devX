@@ -1,5 +1,5 @@
 "use client";
-import React from "react";
+import React, { useState } from "react";
 import {
   Table,
   TableBody,
@@ -10,6 +10,15 @@ import {
 } from "@/components/ui/table";
 import { Button } from "@/components/ui/button";
 import { Eye, Edit, Trash2 } from "lucide-react";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+} from "@/components/ui/dialog";
+import axios from "axios";
 
 export interface Brand {
   id: number;
@@ -23,6 +32,7 @@ interface BrandsTableProps {
   onView: (brand: Brand) => void;
   onEdit: (brand: Brand) => void;
   onDelete: (brand: Brand) => void;
+  refreshBrands: () => void;
 }
 
 const BrandsTable = ({
@@ -30,8 +40,33 @@ const BrandsTable = ({
   onView,
   onEdit,
   onDelete,
+  refreshBrands,
+  
 }: BrandsTableProps) => {
+
+  const [deleteModalOpen, setDeleteModalOpen] = useState(false);
+  const [selectedBrandForDelete, setSelectedBrandForDelete] = useState<any | null>(null);
+
+  const handleDeleteClick = (brand: Brand) => {
+    setSelectedBrandForDelete(brand);
+    setDeleteModalOpen(true);
+  };
+
+  const confirmDelete = async () => {
+    if (selectedBrandForDelete) {
+      try {
+        await axios.delete(`/api/ecom/brand/delete?id=${selectedBrandForDelete._id}`);
+        onDelete(selectedBrandForDelete);
+        refreshBrands(); 
+        setDeleteModalOpen(false);
+        setSelectedBrandForDelete(null);
+      } catch (error) {
+        console.error("Error deleting brand:", error);
+      }
+    }
+  };
   return (
+    <>
     <div className="rounded-md border glass-effect overflow-hidden">
       <Table>
         <TableHeader>
@@ -78,13 +113,9 @@ const BrandsTable = ({
                     >
                       <Edit className="h-4 w-4" />
                     </Button>
-                    <Button
-                      variant="ghost"
-                      size="sm"
-                      onClick={() => onDelete(brand)}
-                    >
-                      <Trash2 className="h-4 w-4" />
-                    </Button>
+                    <Button variant="ghost" size="sm" onClick={() => handleDeleteClick(brand)}>
+                        <Trash2 className="h-4 w-4" />
+                      </Button>
                   </div>
                 </TableCell>
               </TableRow>
@@ -99,6 +130,27 @@ const BrandsTable = ({
         </TableBody>
       </Table>
     </div>
+       {deleteModalOpen && selectedBrandForDelete && (
+        <Dialog open={deleteModalOpen} onOpenChange={setDeleteModalOpen}>
+          <DialogContent className="glass-card">
+            <DialogHeader>
+              <DialogTitle>Delete Brand</DialogTitle>
+              <DialogDescription>
+                Are you sure you want to delete the brand "{selectedBrandForDelete.name}"?
+              </DialogDescription>
+            </DialogHeader>
+            <DialogFooter>
+              <Button variant="outline" onClick={() => setDeleteModalOpen(false)}>
+                Cancel
+              </Button>
+              <Button variant="destructive" onClick={confirmDelete}>
+                Delete
+              </Button>
+            </DialogFooter>
+          </DialogContent>
+        </Dialog>
+      )}
+      </>
   );
 };
 

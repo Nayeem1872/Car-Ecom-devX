@@ -14,11 +14,13 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { useRouter } from "next/navigation";
+import { useToast } from "@/hooks/use-toast";
 
 const AuthForm = () => {
   const [loginData, setLoginData] = useState({ email: "", password: "" });
   const [isLoading, setIsLoading] = useState(false);
   const router = useRouter();
+  const { toast } = useToast();
 
   const handleLoginSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -28,9 +30,19 @@ const AuthForm = () => {
         email: loginData.email,
         password: loginData.password,
       });
-      console.log("Login success:", response.data);
+      toast({
+        title: "Login Successful",
+        description: "You are being redirected to the dashboard...",
+        open: true, 
+      });
       router.push("/admin/dashboard");
     } catch (error) {
+      toast({
+        title: "Login Failed",
+        description: "Invalid credentials, please try again.",
+        variant: "destructive",
+        open: true, 
+      });
       console.error("Login error:", error);
     } finally {
       setIsLoading(false);

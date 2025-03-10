@@ -46,7 +46,7 @@ const AddBrandModal = ({
       setNewBrand({ ...newBrand, logo: e.target.files[0] });
     }
   };
-  console.log("newBrandasdadadasdasd", newBrand);
+
 
   return (
     <Dialog open={open} onOpenChange={setOpen}>

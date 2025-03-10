@@ -177,7 +177,7 @@ const Categories = () => {
 
   // Callbacks for the table actions
   const handleViewCategory = (category: Category) => {
-    // Implement your view functionality here
+
     console.log("Viewing category:", category);
   };
 

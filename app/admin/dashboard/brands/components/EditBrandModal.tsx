@@ -19,8 +19,9 @@ import { useToast } from "@/hooks/use-toast";
 export interface Brand {
   id: number;
   name: string;
-  logo: string; // URL string
-  category: string; // category id
+  logo: string;
+  category: string;
+  newLogoFile?: File;
 }
 
 export interface EditBrandModalProps {
@@ -41,12 +42,14 @@ const EditBrandModal = ({
   categories,
 }: EditBrandModalProps) => {
   const { toast } = useToast();
-  // Local state for a new logo file (if the user wishes to update the logo)
   const [newLogoFile, setNewLogoFile] = useState<File | null>(null);
 
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (e.target.files && e.target.files.length > 0) {
-      setNewLogoFile(e.target.files[0]);
+      const file = e.target.files[0];
+      setNewLogoFile(file);
+      // Update parent's brand state with the newLogoFile
+      setBrand({ ...brand, newLogoFile: file });
     }
   };
   console.log("brand", brand);

@@ -127,29 +127,41 @@ const Brands = () => {
   };
   const handleEditBrand = async () => {
     if (!editBrand) return;
+
     try {
       let logoUrl = editBrand.logo;
-      if (editBrand.newLogoFile instanceof File) {
+
+      if (editBrand.newLogoFile && editBrand.newLogoFile instanceof File) {
         const formData = new FormData();
         formData.append("assets", editBrand.newLogoFile);
+
         const uploadResponse = await axios.post("/api/ecom/upload", formData, {
           headers: { "Content-Type": "multipart/form-data" },
         });
+
         logoUrl = uploadResponse.data.data[0].serverPath;
       }
+      console.log("editBrand", editBrand);
 
       const payload = {
         name: editBrand.name,
-        category: editBrand.category._id,
+        category:
+          typeof editBrand.category === "object"
+            ? editBrand.category._id
+            : editBrand.category,
         logo: logoUrl,
       };
 
-      await axios.patch(`/api/ecom/brand/edit?id=${editBrand.id}`, payload, {
+      // Use editBrand.id (not editBrand._id) if your Brand interface defines "id"
+      await axios.patch(`/api/ecom/brand/edit?id=${editBrand._id}`, payload, {
         headers: { "Content-Type": "application/json" },
       });
+
+      // Refresh brand list after the update
       await fetchBrands();
       setOpenEditModal(false);
       setEditBrand(null);
+
       toast({
         title: "Success",
         description: "Brand updated successfully",
@@ -232,6 +244,7 @@ const Brands = () => {
               onView={handleView}
               onEdit={handleEdit}
               onDelete={handleDelete}
+              refreshBrands={fetchBrands}
             />
           </CardContent>
         </Card>
