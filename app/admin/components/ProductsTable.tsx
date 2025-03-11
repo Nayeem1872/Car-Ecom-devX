@@ -1,5 +1,5 @@
 "use client";
-import React from "react";
+import React, { useState } from "react";
 import {
   Table,
   TableBody,
@@ -10,15 +10,23 @@ import {
 } from "@/components/ui/table";
 import { Button } from "@/components/ui/button";
 import { Eye, Edit, Trash2 } from "lucide-react";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+} from "@/components/ui/dialog";
+import axios from "axios";
 
-// Updated interface: id is now a string.
 export interface Product {
   id: string;
   name: string;
   category: string | { _id: string; name: string };
   price: number;
   stock: number;
-  images: string;
+  images: string[];
   status?: "in-stock" | "low-stock" | "out-of-stock";
 }
 
@@ -31,6 +39,7 @@ interface ProductsTableProps {
   onEdit?: (product: Product) => void;
   onDelete?: (product: Product) => void;
   isLoading?: boolean;
+  refreshProducts?: () => void;
 }
 
 const ProductsTable = ({
@@ -40,7 +49,35 @@ const ProductsTable = ({
   onEdit,
   onDelete,
   isLoading = false,
+  refreshProducts,
 }: ProductsTableProps) => {
+  const [deleteModalOpen, setDeleteModalOpen] = useState(false);
+  const [selectedProductForDelete, setSelectedProductForDelete] = useState<
+    any | null
+  >(null);
+
+  const handleDeleteClick = (product: Product) => {
+    setSelectedProductForDelete(product);
+    setDeleteModalOpen(true);
+  };
+
+  const confirmDelete = async () => {
+    if (selectedProductForDelete) {
+      try {
+        // Call your deletion API
+        await axios.delete(
+          `/api/ecom/product/delete?id=${selectedProductForDelete._id}`
+        );
+        if (onDelete) onDelete(selectedProductForDelete);
+        if (refreshProducts) refreshProducts();
+        setDeleteModalOpen(false);
+        setSelectedProductForDelete(null);
+      } catch (error) {
+        console.error("Error deleting product:", error);
+      }
+    }
+  };
+
   if (isLoading) {
     return (
       <div className="flex items-center justify-center h-24">
@@ -50,104 +87,136 @@ const ProductsTable = ({
   }
 
   return (
-    <div className="rounded-md border glass-effect overflow-hidden">
-      <Table>
-        <TableHeader>
-          <TableRow>
-            <TableHead className="w-[70px]">Image</TableHead>
-            <TableHead>Product Name</TableHead>
-            <TableHead>Category</TableHead>
-            <TableHead>Price</TableHead>
-            <TableHead>Stock</TableHead>
-            <TableHead>Status</TableHead>
-            <TableHead className="text-right">Actions</TableHead>
-          </TableRow>
-        </TableHeader>
-        <TableBody>
-          {products.length > 0 ? (
-            products.map((product) => {
-              // Compute fallback status if product.status is undefined.
-              const status =
-                product.status !== undefined
-                  ? product.status
-                  : product.stock === 0
-                  ? "out-of-stock"
-                  : product.stock < 10
-                  ? "low-stock"
-                  : "in-stock";
-
-              // If category is an object, extract its name; otherwise, use it directly.
-              const categoryName =
-                typeof product.category === "object"
-                  ? product.category.name
-                  : product.category;
-
-              return (
-                <TableRow key={product.id}>
-                  <TableCell>
-                    {product.images ? (
-                      <img
-                        src={product.images[0]}
-                        alt={product.name}
-                        className="w-10 h-10 rounded object-cover"
-                      />
-                    ) : (
-                      <div className="w-10 h-10 rounded bg-gray-200 flex items-center justify-center text-gray-500">
-                        No img
-                      </div>
-                    )}
-                  </TableCell>
-                  <TableCell className="font-medium">{product.name}</TableCell>
-                  <TableCell>{categoryName}</TableCell>
-                  <TableCell>${product.price.toFixed(2)}</TableCell>
-                  <TableCell>{product.stock}</TableCell>
-                  <TableCell>
-                    <span
-                      className={`inline-flex items-center rounded-full px-2.5 py-0.5 text-xs font-medium ${getStatusBadgeStyles(
-                        status
-                      )}`}
-                    >
-                      {status.replace("-", " ")}
-                    </span>
-                  </TableCell>
-                  <TableCell className="text-right">
-                    <div className="flex justify-end gap-2">
-                      <Button
-                        variant="ghost"
-                        size="sm"
-                        onClick={() => onView && onView(product)}
-                      >
-                        <Eye className="h-4 w-4" />
-                      </Button>
-                      <Button
-                        variant="ghost"
-                        size="sm"
-                        onClick={() => onEdit && onEdit(product)}
-                      >
-                        <Edit className="h-4 w-4" />
-                      </Button>
-                      <Button
-                        variant="ghost"
-                        size="sm"
-                        onClick={() => onDelete && onDelete(product)}
-                      >
-                        <Trash2 className="h-4 w-4" />
-                      </Button>
-                    </div>
-                  </TableCell>
-                </TableRow>
-              );
-            })
-          ) : (
+    <>
+      <div className="rounded-md border glass-effect overflow-hidden">
+        <Table>
+          <TableHeader>
             <TableRow>
-              <TableCell colSpan={7} className="h-24 text-center">
-                No products found.
-              </TableCell>
+              <TableHead className="w-[70px]">Image</TableHead>
+              <TableHead>Product Name</TableHead>
+              <TableHead>Category</TableHead>
+              <TableHead>Price</TableHead>
+              <TableHead>Stock</TableHead>
+              <TableHead>Status</TableHead>
+              <TableHead className="text-right">Actions</TableHead>
             </TableRow>
-          )}
-        </TableBody>
-      </Table>
-    </div>
+          </TableHeader>
+          <TableBody>
+            {products.length > 0 ? (
+              products.map((product) => {
+                // Compute fallback status if product.status is undefined.
+                const status =
+                  product.status !== undefined
+                    ? product.status
+                    : product.stock === 0
+                    ? "out-of-stock"
+                    : product.stock < 10
+                    ? "low-stock"
+                    : "in-stock";
+
+                // If category is an object, extract its name; otherwise, use it directly.
+                const categoryName =
+                  typeof product.category === "object"
+                    ? product.category.name
+                    : product.category;
+
+                return (
+                  <TableRow key={product.id}>
+                    <TableCell>
+                      {product.images && product.images.length > 0 ? (
+                        <img
+                          src={product.images[0]}
+                          alt={product.name}
+                          className="w-10 h-10 rounded object-cover"
+                        />
+                      ) : (
+                        <div className="w-10 h-10 rounded bg-gray-200 flex items-center justify-center text-gray-500">
+                          No img
+                        </div>
+                      )}
+                    </TableCell>
+                    <TableCell className="font-medium">
+                      {product.name}
+                    </TableCell>
+                    <TableCell>{categoryName}</TableCell>
+                    <TableCell>${product.price.toFixed(2)}</TableCell>
+                    <TableCell>{product.stock}</TableCell>
+                    <TableCell>
+                      <span
+                        className={`inline-flex items-center rounded-full px-2.5 py-0.5 text-xs font-medium ${getStatusBadgeStyles(
+                          status
+                        )}`}
+                      >
+                        {status.replace("-", " ")}
+                      </span>
+                    </TableCell>
+                    <TableCell className="text-right">
+                      <div className="flex justify-end gap-2">
+                        <Button
+                          variant="ghost"
+                          size="sm"
+                          // onClick={() => onView(product)}
+                        >
+                          <Eye className="h-4 w-4" />
+                        </Button>
+
+                        <Button
+                          variant="ghost"
+                          size="sm"
+                          // onClick={() => onEdit(product)}
+                        >
+                          <Edit className="h-4 w-4" />
+                        </Button>
+
+                        <Button
+                          variant="ghost"
+                          size="sm"
+                          onClick={() => handleDeleteClick(product)}
+                        >
+                          <Trash2 className="h-4 w-4" />
+                        </Button>
+                      </div>
+                    </TableCell>
+                  </TableRow>
+                );
+              })
+            ) : (
+              <TableRow>
+                <TableCell colSpan={7} className="h-24 text-center">
+                  No products found.
+                </TableCell>
+              </TableRow>
+            )}
+          </TableBody>
+        </Table>
+      </div>
+
+      {/* Delete Confirmation Modal */}
+      <Dialog open={deleteModalOpen} onOpenChange={setDeleteModalOpen}>
+        {selectedProductForDelete && (
+          <DialogContent className="glass-card">
+            <DialogHeader>
+              <DialogTitle>Delete Product</DialogTitle>
+              <DialogDescription>
+                Are you sure you want to delete the product "
+                {selectedProductForDelete.name}"?
+              </DialogDescription>
+            </DialogHeader>
+            <DialogFooter>
+              <Button
+                variant="outline"
+                onClick={() => setDeleteModalOpen(false)}
+              >
+                Cancel
+              </Button>
+              <Button variant="destructive" onClick={confirmDelete}>
+                Delete
+              </Button>
+            </DialogFooter>
+          </DialogContent>
+        )}
+      </Dialog>
+    </>
   );
 };
 

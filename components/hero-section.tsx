@@ -1,27 +1,27 @@
-"use client"
+"use client";
 
-import { Button } from "@/components/ui/button"
-import Link from "next/link"
-import { ChevronRight, ArrowRight } from "lucide-react"
-import { motion } from "framer-motion"
-import { useEffect, useState } from "react"
+import { Button } from "@/components/ui/button";
+import Link from "next/link";
+import { ChevronRight, ArrowRight } from "lucide-react";
+import { motion } from "framer-motion";
+import { useEffect, useState } from "react";
 
 const heroImages = [
   "https://images.unsplash.com/photo-1583121274602-3e2820c69888?q=80&w=2070&auto=format&fit=crop",
   "https://images.unsplash.com/photo-1618843479313-40f8afb4b4d8?q=80&w=2070&auto=format&fit=crop",
   "https://images.unsplash.com/photo-1605559424843-9e4c228bf1c2?q=80&w=2064&auto=format&fit=crop",
-]
+];
 
 export default function HeroSection() {
-  const [currentImageIndex, setCurrentImageIndex] = useState(0)
+  const [currentImageIndex, setCurrentImageIndex] = useState(0);
 
   useEffect(() => {
     const interval = setInterval(() => {
-      setCurrentImageIndex((prevIndex) => (prevIndex + 1) % heroImages.length)
-    }, 5000)
+      setCurrentImageIndex((prevIndex) => (prevIndex + 1) % heroImages.length);
+    }, 5000);
 
-    return () => clearInterval(interval)
-  }, [])
+    return () => clearInterval(interval);
+  }, []);
 
   return (
     <section className="relative h-[90vh] min-h-[600px] w-full overflow-hidden">
@@ -51,7 +51,9 @@ export default function HeroSection() {
             animate={{ opacity: 1, x: 0 }}
             transition={{ duration: 0.6, delay: 0.4 }}
           >
-            <h2 className="text-primary font-bold text-xl md:text-2xl mb-2">PREMIUM SELECTION</h2>
+            <h2 className="text-primary font-bold text-xl md:text-2xl mb-2">
+              PREMIUM SELECTION
+            </h2>
           </motion.div>
 
           <motion.h1
@@ -69,8 +71,8 @@ export default function HeroSection() {
             animate={{ opacity: 1 }}
             transition={{ duration: 0.8, delay: 0.8 }}
           >
-            Explore our exclusive collection of luxury vehicles. From elegant sedans to powerful sports cars, find your
-            perfect match.
+            Explore our exclusive collection of luxury vehicles. From elegant
+            sedans to powerful sports cars, find your perfect match.
           </motion.p>
 
           <motion.div
@@ -80,7 +82,10 @@ export default function HeroSection() {
             transition={{ duration: 0.6, delay: 1 }}
           >
             <Link href="/cars">
-              <Button size="lg" className="w-full sm:w-auto group bg-primary hover:bg-primary/90">
+              <Button
+                size="lg"
+                className="w-full sm:w-auto group bg-primary hover:bg-primary/90"
+              >
                 Browse Cars
                 <ChevronRight className="ml-2 h-4 w-4 transition-transform group-hover:translate-x-1" />
               </Button>
@@ -120,7 +125,9 @@ export default function HeroSection() {
               />
             </div>
             <div className="ml-4">
-              <p className="text-white font-medium">Trusted by 10,000+ customers</p>
+              <p className="text-white font-medium">
+                Trusted by 10,000+ customers
+              </p>
               <div className="flex items-center text-yellow-400">
                 <span>★★★★★</span>
                 <span className="text-white/80 ml-1">4.9/5</span>
@@ -140,9 +147,12 @@ export default function HeroSection() {
               <ArrowRight className="h-6 w-6 text-white" />
             </div>
             <div>
-              <h3 className="text-white font-semibold text-lg mb-1">Quick Delivery</h3>
+              <h3 className="text-white font-semibold text-lg mb-1">
+                Quick Delivery
+              </h3>
               <p className="text-white/80 text-sm">
-                Get your dream car delivered to your doorstep within 24 hours of purchase
+                Get your dream car delivered to your doorstep within 24 hours of
+                purchase
               </p>
             </div>
           </div>
@@ -159,6 +169,5 @@ export default function HeroSection() {
         </svg>
       </div>
     </section>
-  )
+  );
 }
-
