@@ -28,12 +28,11 @@ interface NavItem {
 
 const navItems: NavItem[] = [
   { icon: LayoutDashboard, label: "Dashboard", href: "/admin/dashboard" },
-  { icon: BarChartBig, label: "Analytics", href: "/analytics" },
   { icon: ShoppingBag, label: "Products", href: "/admin/dashboard/products" },
   { icon: TagsIcon, label: "Categories", href: "/admin/dashboard/categories" },
-  { icon: UserIcon, label: "Profile", href: "/profile" },
   { icon: Image, label: "Banners", href: "/admin/dashboard/banners" },
   { icon: Tag, label: "Brands", href: "/admin/dashboard/brands" },
+  { icon: UserIcon, label: "Profile", href: "/profile" },
   { icon: Settings, label: "Settings", href: "/settings" },
 ];
 
@@ -53,9 +52,8 @@ const Sidebar = () => {
   };
 
   const handleLogout = () => {
-    // Remove the "ecom_token" cookie using js-cookie
     Cookies.remove("ecom_token");
-    // Redirect to the /admin page
+
     router.push("/admin");
   };
   return (

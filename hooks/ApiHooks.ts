@@ -25,3 +25,7 @@ export const fetchProducts = async (
     pagination: response.data.pagination,
   };
 };
+export const fetchBanners = async () => {
+  const response = await axios.get("/api/ecom/banner/get");
+  return response.data.data;
+};

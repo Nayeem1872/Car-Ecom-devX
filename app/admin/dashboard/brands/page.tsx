@@ -1,7 +1,7 @@
 "use client";
 import { useEffect, useState } from "react";
 import { motion } from "framer-motion";
-import { Search } from "lucide-react";
+import { Loader, Search } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import {
   Card,
@@ -20,6 +20,7 @@ import { handleAddBrandAction, handleEditBrandAction } from "./brandActions";
 
 const Brands = () => {
   const [brands, setBrands] = useState<any[]>([]);
+  const [isLoading, setIsLoading] = useState(true);
   const [newBrand, setNewBrand] = useState<any>({
     name: "",
     logo: null,
@@ -33,6 +34,7 @@ const Brands = () => {
   const { toast } = useToast();
   useEffect(() => {
     const loadData = async () => {
+      setIsLoading(true);
       try {
         const brandsData = await fetchBrands();
         setBrands(brandsData);
@@ -59,6 +61,8 @@ const Brands = () => {
           description: "Failed to fetch categories",
           variant: "destructive",
         });
+      } finally {
+        setIsLoading(false);
       }
     };
 
@@ -162,13 +166,24 @@ const Brands = () => {
             </div>
           </CardHeader>
           <CardContent>
-            <BrandsTable
-              brands={filteredBrands}
-              onView={handleView}
-              onEdit={handleEdit}
-              onDelete={handleDelete}
-              refreshBrands={fetchBrands}
-            />
+            {isLoading ? (
+              <div className="flex items-center justify-center h-56 w-full">
+                <div className="flex flex-col items-center gap-2">
+                  <Loader className="h-8 w-8 animate-spin text-primary" />
+                  <p className="text-sm text-muted-foreground">
+                    Loading brands...
+                  </p>
+                </div>
+              </div>
+            ) : (
+              <BrandsTable
+                brands={filteredBrands}
+                onView={handleView}
+                onEdit={handleEdit}
+                onDelete={handleDelete}
+                refreshBrands={fetchBrands}
+              />
+            )}
           </CardContent>
         </Card>
       </motion.div>

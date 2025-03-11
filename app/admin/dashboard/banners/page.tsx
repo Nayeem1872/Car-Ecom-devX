@@ -13,6 +13,8 @@ import {
 import { useToast } from "@/hooks/use-toast";
 import AddBannerDialog from "./components/AddBannerDialog";
 import BannerTable from "./components/BannerTable";
+import axios from "axios";
+import { fetchBanners } from "@/hooks/ApiHooks";
 
 export interface Banner {
   id: number;
@@ -21,28 +23,9 @@ export interface Banner {
 }
 
 const BannerManagement = () => {
-  const [banners, setBanners] = useState<Banner[]>([
-    {
-      id: 1,
-      name: "Summer Sale",
-      image:
-        "https://images.unsplash.com/photo-1488590528505-98d2b5aba04b?w=800&h=400&fit=crop",
-    },
-    {
-      id: 2,
-      name: "New Collection",
-      image:
-        "https://images.unsplash.com/photo-1461749280684-dccba630e2f6?w=800&h=400&fit=crop",
-    },
-    {
-      id: 3,
-      name: "Holiday Special",
-      image:
-        "https://images.unsplash.com/photo-1518770660439-4636190af475?w=800&h=400&fit=crop",
-    },
-  ]);
+  const [banners, setBanners] = useState<any[]>([]);
 
-  const [newBanner, setNewBanner] = useState<Omit<Banner, "id">>({
+  const [newBanner, setNewBanner] = useState<any>({
     name: "",
     image: "",
   });
@@ -51,42 +34,81 @@ const BannerManagement = () => {
   const [open, setOpen] = useState(false);
   const { toast } = useToast();
 
-  // Simulate data loading (e.g., fetching from an API)
   useEffect(() => {
-    const timer = setTimeout(() => {
-      setIsLoading(false);
-    }, 1500);
-    return () => clearTimeout(timer);
-  }, []);
+    const loadData = async () => {
+      setIsLoading(true);
+      try {
+        const brandsData = await fetchBanners();
+        setBanners(brandsData);
+      } catch (error) {
+        console.error("Error fetching Brands:", error);
+      } finally {
+        setIsLoading(false);
+      }
+    };
 
-  const handleAddBanner = () => {
+    loadData();
+  }, [toast]);
+  const handleAddBanner = async () => {
     if (!newBanner.name || !newBanner.image) {
       toast({
         title: "Error",
-        description: "Please provide both name and image URL",
+        description: "Please provide both name and image",
         variant: "destructive",
       });
       return;
     }
 
-    const banner: Banner = {
-      ...newBanner,
-      id: banners.length > 0 ? Math.max(...banners.map((b) => b.id)) + 1 : 1,
-    };
+    try {
+      let imageUrl = "";
+      if (newBanner.image instanceof File) {
+        const formData = new FormData();
+        formData.append("assets", newBanner.image);
+        const uploadResponse = await axios.post("/api/ecom/upload", formData, {
+          headers: { "Content-Type": "multipart/form-data" },
+        });
+        imageUrl = uploadResponse.data.data[0].serverPath;
+      } else {
+        imageUrl = newBanner.image;
+      }
 
-    setBanners([...banners, banner]);
-    setNewBanner({ name: "", image: "" });
-    setOpen(false);
+      const payload = {
+        name: newBanner.name,
+        image: imageUrl,
+      };
 
-    toast({
-      title: "Success",
-      description: "Banner added successfully",
-    });
+      await axios.post("/api/ecom/banner/craete", payload, {
+        headers: { "Content-Type": "application/json" },
+      });
+
+      // Optionally, update the local state.
+      const newId =
+        banners.length > 0 ? Math.max(...banners.map((b) => b.id)) + 1 : 1;
+      setBanners([
+        ...banners,
+        { id: newId, name: newBanner.name, image: imageUrl },
+      ]);
+      setNewBanner({ name: "", image: "" });
+      setOpen(false);
+
+      toast({
+        title: "Success",
+        description: "Banner added successfully",
+      });
+    } catch (error) {
+      console.error("Error adding banner:", error);
+      toast({
+        title: "Error",
+        description: "Failed to add banner",
+        variant: "destructive",
+      });
+    }
   };
 
   const filteredBanners = banners.filter((banner) =>
     banner.name.toLowerCase().includes(searchTerm.toLowerCase())
   );
+  console.log("banners", banners);
 
   return (
     <>

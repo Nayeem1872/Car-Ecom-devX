@@ -1,4 +1,3 @@
-// AddBannerDialog.tsx
 "use client";
 import React from "react";
 import {
@@ -17,7 +16,7 @@ import { Plus } from "lucide-react";
 
 interface BannerData {
   name: string;
-  image: string;
+  image: File | string;
 }
 
 interface AddBannerDialogProps {
@@ -35,6 +34,12 @@ const AddBannerDialog = ({
   setNewBanner,
   handleAddBanner,
 }: AddBannerDialogProps) => {
+  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    if (e.target.files && e.target.files[0]) {
+      setNewBanner({ ...newBanner, image: e.target.files[0] });
+    }
+  };
+
   return (
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>
@@ -66,26 +71,31 @@ const AddBannerDialog = ({
           </div>
           <div className="grid grid-cols-4 items-center gap-4">
             <Label htmlFor="image" className="text-right">
-              Image URL*
+              Image
             </Label>
-            <div className="col-span-3 flex flex-col gap-3">
-              <Input
-                id="image"
-                placeholder="Image URL"
-                value={newBanner.image}
-                onChange={(e) =>
-                  setNewBanner({ ...newBanner, image: e.target.value })
-                }
-              />
-              {newBanner.image && (
-                <div className="h-28 rounded-md overflow-hidden">
-                  <img
-                    src={newBanner.image}
-                    alt="Banner Preview"
-                    className="h-full w-full object-cover"
-                  />
-                </div>
-              )}
+            <div className="col-span-3 flex items-center gap-3">
+              <div className="h-12 w-12 rounded-md overflow-hidden">
+                {newBanner.image ? (
+                  typeof newBanner.image === "object" ? (
+                    <img
+                      src={URL.createObjectURL(newBanner.image)}
+                      alt="Banner Preview"
+                      className="h-full w-full object-cover"
+                    />
+                  ) : (
+                    <img
+                      src={newBanner.image}
+                      alt="Banner Preview"
+                      className="h-full w-full object-cover"
+                    />
+                  )
+                ) : (
+                  <div className="h-full w-full bg-gray-200 flex items-center justify-center text-gray-500">
+                    No img
+                  </div>
+                )}
+              </div>
+              <Input id="image" type="file" onChange={handleFileChange} />
             </div>
           </div>
         </div>
