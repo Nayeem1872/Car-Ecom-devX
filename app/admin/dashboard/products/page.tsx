@@ -1,5 +1,5 @@
 "use client";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { motion } from "framer-motion";
 import { Search } from "lucide-react";
 import { Input } from "@/components/ui/input";
@@ -13,6 +13,8 @@ import {
 import { useToast } from "@/hooks/use-toast";
 import AddProductModal from "../../components/AddProductModal";
 import ProductsTable, { Product } from "../../components/ProductsTable";
+import { fetchBrands, fetchCategories } from "@/hooks/ApiHooks";
+import axios from "axios";
 
 const Products = () => {
   const [products, setProducts] = useState<Product[]>([
@@ -80,54 +82,126 @@ const Products = () => {
     },
     category: "",
     images: [],
+    imageFiles: [],
     varients: {
       label: "",
       varient: [],
     },
     features: [],
   });
-
+  const [brands, setBrands] = useState<any[]>([]);
+  const [categories, setCategories] = useState<any[]>([]);
   const [searchTerm, setSearchTerm] = useState("");
   const [open, setOpen] = useState(false);
   const { toast } = useToast();
+  useEffect(() => {
+    const loadData = async () => {
+      try {
+        const brandsData = await fetchBrands();
+        setBrands(brandsData);
+      } catch (error) {
+        console.error("Error fetching Brands:", error);
+      }
 
-  const handleAddProduct = () => {
-    if (!newProduct.name || !newProduct.category || newProduct.price <= 0) {
-      toast({
-        title: "Error",
-        description: "Please fill all required fields",
-        variant: "destructive",
-      });
-      return;
-    }
-
-    const status: Product["status"] =
-      newProduct.stock === 0
-        ? "out-of-stock"
-        : newProduct.stock < 10
-        ? "low-stock"
-        : "in-stock";
-
-    const product: Product = {
-      ...newProduct,
-      id: products.length > 0 ? Math.max(...products.map((p) => p.id)) + 1 : 1,
-      status,
+      try {
+        const categoriesData = await fetchCategories();
+        setCategories(categoriesData);
+      } catch (error) {
+        console.error("Error fetching categories:", error);
+      }
     };
 
-    setProducts([...products, product]);
-    setNewProduct({
-      name: "",
-      category: "",
-      price: 0,
-      stock: 0,
-      image: "",
-    });
-    setOpen(false);
+    loadData();
+  }, [toast]);
+  const handleAddProduct = async () => {
+    // if (!newProduct.name || !newProduct.category || newProduct.price <= 0) {
+    //   toast({
+    //     title: "Error",
+    //     description: "Please fill all required fields",
+    //     variant: "destructive",
+    //   });
+    //   return;
+    // }
 
-    toast({
-      title: "Success",
-      description: "Product added successfully",
-    });
+    try {
+      let imageUrls: string[] = [];
+      console.log("Image Files:", newProduct.imageFiles);
+      console.log("Image Previews:", newProduct.images);
+      if (newProduct.imageFiles && newProduct.imageFiles.length > 0) {
+        const formData = new FormData();
+        newProduct.imageFiles.forEach((file: File) => {
+          formData.append("assets", file);
+        });
+        const uploadResponse = await axios.post("/api/ecom/upload", formData, {
+          headers: { "Content-Type": "multipart/form-data" },
+        });
+        imageUrls = uploadResponse.data.data.map(
+          (item: any) => item.serverPath
+        );
+      } else {
+        imageUrls = newProduct.images; // fallback if they are already URLs
+      }
+      // Construct payload for product creation
+      const payload = {
+        name: newProduct.name,
+        description: newProduct.description,
+        featured: false, // Set to false by default or adjust as needed
+        brand: newProduct.brand,
+        price: newProduct.price,
+        stock: newProduct.stock,
+        discount: {
+          price: newProduct.discount.price,
+          startAt: newProduct.discount.startAt,
+          endAt: newProduct.discount.endAt,
+        },
+        category: newProduct.category,
+        images: imageUrls, // Array of image URLs from the upload process
+        varients: {
+          label: newProduct.varients.label,
+          varient: newProduct.varients.varient,
+        },
+        features: newProduct.features,
+      };
+
+      await axios.post("/api/ecom/product/craete", payload, {
+        headers: { "Content-Type": "application/json" },
+      });
+
+      // await fetchProducts();
+
+      setNewProduct({
+        name: "",
+        description: "",
+        brand: "",
+        price: 0,
+        stock: 0,
+        discount: {
+          price: 0,
+          startAt: "",
+          endAt: "",
+        },
+        category: "",
+        images: [],
+        varients: {
+          label: "",
+          varient: [],
+        },
+        features: [],
+      });
+      setOpen(false);
+
+      toast({
+        title: "Success",
+        description: "Product added successfully",
+      });
+    } catch (error) {
+      console.error("Error adding product:", error);
+      toast({
+        title: "Error",
+        description: "Failed to add product",
+        variant: "destructive",
+      });
+    }
   };
 
   const filteredProducts = products.filter(
@@ -191,6 +265,8 @@ const Products = () => {
                   open={open}
                   setOpen={setOpen}
                   newProduct={newProduct}
+                  brands={brands}
+                  categories={categories}
                   setNewProduct={setNewProduct}
                   handleAddProduct={handleAddProduct}
                 />

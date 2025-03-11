@@ -8,11 +8,19 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Plus } from "lucide-react";
 import { Textarea } from "@/components/ui/textarea";
+import { Switch } from "@/components/ui/switch";
 
 export interface NewProduct {
   name: string;
@@ -26,6 +34,7 @@ export interface NewProduct {
     endAt: string;
   };
   category: string;
+  imageFiles: File[];
   images: string[];
   varients: {
     label: string;
@@ -40,6 +49,8 @@ interface AddProductModalProps {
   newProduct: NewProduct;
   setNewProduct: (product: NewProduct) => void;
   handleAddProduct: () => void;
+  brands: any[];
+  categories: any[];
 }
 
 const AddProductModal = ({
@@ -48,6 +59,8 @@ const AddProductModal = ({
   newProduct,
   setNewProduct,
   handleAddProduct,
+  brands,
+  categories,
 }: AddProductModalProps) => {
   return (
     <Dialog open={open} onOpenChange={setOpen}>
@@ -57,7 +70,7 @@ const AddProductModal = ({
           Add Product
         </Button>
       </DialogTrigger>
-      <DialogContent className="glass-card w-[1500px]">
+      <DialogContent className="glass-card w-[90vw] max-w-[1500px] sm:w-[80vw] md:w-[70vw] lg:w-[60vw] p-6">
         <DialogHeader>
           <DialogTitle>Add New Product</DialogTitle>
           <DialogDescription>
@@ -77,16 +90,45 @@ const AddProductModal = ({
               }
             />
           </div>
-
+          <div className="flex flex-col gap-2">
+            <Label htmlFor="category">Category*</Label>
+            <Select
+              value={newProduct.category}
+              onValueChange={(value) =>
+                setNewProduct({ ...newProduct, category: value })
+              }
+            >
+              <SelectTrigger id="category" className="w-full">
+                <SelectValue placeholder="Select Category" />
+              </SelectTrigger>
+              <SelectContent>
+                {categories.map((category: any) => (
+                  <SelectItem key={category._id} value={category._id}>
+                    {category.name}
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
+          </div>
           <div className="flex flex-col gap-2">
             <Label htmlFor="brand">Brand*</Label>
-            <Input
-              id="brand"
+            <Select
               value={newProduct.brand}
-              onChange={(e) =>
-                setNewProduct({ ...newProduct, brand: e.target.value })
+              onValueChange={(value) =>
+                setNewProduct({ ...newProduct, brand: value })
               }
-            />
+            >
+              <SelectTrigger id="brand" className="w-full">
+                <SelectValue placeholder="Select Brand" />
+              </SelectTrigger>
+              <SelectContent>
+                {brands.map((brand: any) => (
+                  <SelectItem key={brand._id} value={brand._id}>
+                    {brand.name}
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
           </div>
           <div className="flex flex-col gap-2">
             <Label htmlFor="price">Price ($)*</Label>
@@ -167,30 +209,7 @@ const AddProductModal = ({
               }
             />
           </div>
-          <div className="flex flex-col gap-2">
-            <Label htmlFor="category">Category*</Label>
-            <Input
-              id="category"
-              value={newProduct.category}
-              onChange={(e) =>
-                setNewProduct({ ...newProduct, category: e.target.value })
-              }
-            />
-          </div>
-          <div className="flex flex-col gap-2">
-            <Label htmlFor="images">Images (comma separated)</Label>
-            <Input
-              id="images"
-              type="file"
-              value={newProduct.images.join(", ")}
-              onChange={(e) =>
-                setNewProduct({
-                  ...newProduct,
-                  images: e.target.value.split(",").map((img) => img.trim()),
-                })
-              }
-            />
-          </div>
+
           <div className="flex flex-col gap-2">
             <Label htmlFor="varientsLabel">Varients Label</Label>
             <Input
@@ -224,17 +243,53 @@ const AddProductModal = ({
             />
           </div>
           <div className="flex flex-col gap-2">
-            <Label htmlFor="features">Features (comma separated)</Label>
-            <Input
-              id="features"
-              value={newProduct.features.join(", ")}
-              onChange={(e) =>
+            <Label htmlFor="active" className="flex-1">
+              Feature
+            </Label>
+            <Switch
+              id="active"
+              checked={newProduct.features.length > 0}
+              onCheckedChange={(checked) =>
                 setNewProduct({
                   ...newProduct,
-                  features: e.target.value.split(",").map((f) => f.trim()),
+                  features: checked ? ["Feature"] : [],
                 })
               }
             />
+          </div>
+          <div className="flex flex-col gap-2 col-span-2">
+            <Label htmlFor="images">Images</Label>
+            <Input
+              id="images"
+              type="file"
+              multiple
+              onChange={(e) => {
+                const files = e.target.files;
+                if (!files) return;
+                const fileArray = Array.from(files);
+                const imagePreviews = fileArray.map((file) =>
+                  URL.createObjectURL(file)
+                );
+                // Save both the file objects and their preview URLs
+                setNewProduct({
+                  ...newProduct,
+                  imageFiles: fileArray,
+                  images: imagePreviews,
+                });
+              }}
+            />
+            {newProduct.images && newProduct.images.length > 0 && (
+              <div className="flex flex-wrap gap-2 mt-2">
+                {newProduct.images.map((img, index) => (
+                  <img
+                    key={index}
+                    src={img}
+                    alt={`Preview ${index}`}
+                    className="w-20 h-20 object-cover rounded"
+                  />
+                ))}
+              </div>
+            )}
           </div>
           <div className="flex flex-col gap-2 col-span-2">
             <Label htmlFor="description">Description*</Label>

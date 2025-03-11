@@ -15,6 +15,8 @@ import AddBrandModal from "../../components/AddBrandModal";
 import BrandsTable from "../../components/BrandsTable";
 import axios from "axios";
 import EditBrandModal from "./components/EditBrandModal";
+import { fetchBrands, fetchCategories } from "@/hooks/ApiHooks";
+import { handleAddBrandAction, handleEditBrandAction } from "./brandActions";
 
 const Brands = () => {
   const [brands, setBrands] = useState<any[]>([]);
@@ -29,93 +31,64 @@ const Brands = () => {
   const [editBrand, setEditBrand] = useState<any | null>(null);
   const [openEditModal, setOpenEditModal] = useState(false);
   const { toast } = useToast();
-  const fetchBrands = async () => {
-    try {
-      const response = await axios.get("/api/ecom/brand/get");
-      setBrands(response.data.data);
-    } catch (error) {
-      console.error("Error fetching Brands:", error);
-      toast({
-        title: "Error",
-        description: "Failed to fetch Brands",
-        variant: "destructive",
-      });
-    }
-  };
-  const fetchCategories = async () => {
-    try {
-      const response = await axios.get("/api/ecom/category/get");
-      const transformed = response.data.category.map((cat: any) => ({
-        id: cat._id,
-        name: cat.name,
-      }));
-      setAvailableCategories(transformed);
-    } catch (error) {
-      console.error("Error fetching categories:", error);
-      toast({
-        title: "Error",
-        description: "Failed to fetch categories",
-        variant: "destructive",
-      });
-    }
-  };
   useEffect(() => {
-    fetchBrands();
-    fetchCategories();
+    const loadData = async () => {
+      try {
+        const brandsData = await fetchBrands();
+        setBrands(brandsData);
+      } catch (error) {
+        console.error("Error fetching Brands:", error);
+        toast({
+          title: "Error",
+          description: "Failed to fetch Brands",
+          variant: "destructive" as
+            | "default"
+            | "destructive"
+            | null
+            | undefined,
+        });
+      }
+
+      try {
+        const categoriesData = await fetchCategories();
+        setAvailableCategories(categoriesData);
+      } catch (error) {
+        console.error("Error fetching categories:", error);
+        toast({
+          title: "Error",
+          description: "Failed to fetch categories",
+          variant: "destructive",
+        });
+      }
+    };
+
+    loadData();
   }, [toast]);
 
   const handleAddBrand = async () => {
-    if (!newBrand.name || !newBrand.category || !newBrand.logo) {
-      toast({
-        title: "Error",
-        description: "Please provide name, category, and logo",
-        variant: "destructive",
-      });
-      return;
-    }
+    await handleAddBrandAction({
+      newBrand,
+      toast,
+      fetchBrands: async () => {
+        const brandsData = await fetchBrands();
+        setBrands(brandsData);
+      },
+      setNewBrand,
+      setOpen,
+    });
+  };
 
-    try {
-      let logoUrl = "";
-      if (newBrand.logo instanceof File) {
-        const formData = new FormData();
-        formData.append("assets", newBrand.logo);
-        const uploadResponse = await axios.post("/api/ecom/upload", formData, {
-          headers: { "Content-Type": "multipart/form-data" },
-        });
-        logoUrl = uploadResponse.data.data[0].serverPath;
-      } else {
-        logoUrl = newBrand.logo;
-      }
-
-      const payload = {
-        name: newBrand.name,
-        category: newBrand.category,
-        logo: logoUrl,
-      };
-
-      await axios.post("/api/ecom/brand/craete", payload, {
-        headers: { "Content-Type": "application/json" },
-      });
-      await fetchBrands();
-
-      setNewBrand({
-        name: "",
-        logo: null,
-        category: "",
-      });
-      setOpen(false);
-      toast({
-        title: "Success",
-        description: "Brand added successfully",
-      });
-    } catch (error) {
-      console.error("Error adding brand:", error);
-      toast({
-        title: "Error",
-        description: "Failed to add brand",
-        variant: "destructive",
-      });
-    }
+  const handleEditBrand = async () => {
+    await handleEditBrandAction({
+      editBrand,
+      toast,
+      fetchBrands: async () => {
+        const brandsData = await fetchBrands();
+        setBrands(brandsData);
+      },
+      setOpenEditModal,
+      setEditBrand,
+    });
   };
 
   const handleView = (brand: any) => {
@@ -124,56 +97,6 @@ const Brands = () => {
   const handleEdit = (brand: any) => {
     setEditBrand(brand);
     setOpenEditModal(true);
-  };
-  const handleEditBrand = async () => {
-    if (!editBrand) return;
-
-    try {
-      let logoUrl = editBrand.logo;
-
-      if (editBrand.newLogoFile && editBrand.newLogoFile instanceof File) {
-        const formData = new FormData();
-        formData.append("assets", editBrand.newLogoFile);
-
-        const uploadResponse = await axios.post("/api/ecom/upload", formData, {
-          headers: { "Content-Type": "multipart/form-data" },
-        });
-
-        logoUrl = uploadResponse.data.data[0].serverPath;
-      }
-      console.log("editBrand", editBrand);
-
-      const payload = {
-        name: editBrand.name,
-        category:
-          typeof editBrand.category === "object"
-            ? editBrand.category._id
-            : editBrand.category,
-        logo: logoUrl,
-      };
-
-      // Use editBrand.id (not editBrand._id) if your Brand interface defines "id"
-      await axios.patch(`/api/ecom/brand/edit?id=${editBrand._id}`, payload, {
-        headers: { "Content-Type": "application/json" },
-      });
-
-      // Refresh brand list after the update
-      await fetchBrands();
-      setOpenEditModal(false);
-      setEditBrand(null);
-
-      toast({
-        title: "Success",
-        description: "Brand updated successfully",
-      });
-    } catch (error) {
-      console.error("Error updating brand:", error);
-      toast({
-        title: "Error",
-        description: "Failed to update brand",
-        variant: "destructive",
-      });
-    }
   };
 
   const handleDelete = (brand: any) => {
