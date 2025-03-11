@@ -1,18 +1,36 @@
-"use client"
+"use client";
 
-import { useState } from "react"
-import { Button } from "@/components/ui/button"
-import { Card, CardContent, CardFooter, CardHeader } from "@/components/ui/card"
-import { Badge } from "@/components/ui/badge"
-import { Input } from "@/components/ui/input"
-import { Slider } from "@/components/ui/slider"
-import { Checkbox } from "@/components/ui/checkbox"
-import { useCart } from "@/context/cart-context"
-import { useToast } from "@/components/ui/use-toast"
-import { ShoppingCart, Heart, Search, SlidersHorizontal } from "lucide-react"
-import { motion } from "framer-motion"
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
-import { Sheet, SheetContent, SheetDescription, SheetHeader, SheetTitle, SheetTrigger } from "@/components/ui/sheet"
+import { useState } from "react";
+import { Button } from "@/components/ui/button";
+import {
+  Card,
+  CardContent,
+  CardFooter,
+  CardHeader,
+} from "@/components/ui/card";
+import { Badge } from "@/components/ui/badge";
+import { Input } from "@/components/ui/input";
+import { Slider } from "@/components/ui/slider";
+import { Checkbox } from "@/components/ui/checkbox";
+import { useCart } from "@/context/cart-context";
+import { useToast } from "@/components/ui/use-toast";
+import { ShoppingCart, Heart, Search, SlidersHorizontal } from "lucide-react";
+import { motion } from "framer-motion";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+import {
+  Sheet,
+  SheetContent,
+  SheetDescription,
+  SheetHeader,
+  SheetTitle,
+  SheetTrigger,
+} from "@/components/ui/sheet";
 
 const cars = [
   {
@@ -81,7 +99,11 @@ const cars = [
     category: "Premium SUV",
     price: 95000,
     image: "/placeholder.svg?height=600&width=800",
-    features: ["Off-Road Capability", "Air Suspension", "Meridian Sound System"],
+    features: [
+      "Off-Road Capability",
+      "Air Suspension",
+      "Meridian Sound System",
+    ],
     year: 2022,
     brand: "Land Rover",
   },
@@ -95,21 +117,38 @@ const cars = [
     year: 2023,
     brand: "Bentley",
   },
-]
+];
 
-const categories = ["All", "Luxury Sedan", "Premium SUV", "Electric", "Sports Car", "Luxury Coupe"]
-const brands = ["All", "Mercedes-Benz", "BMW", "Audi", "Porsche", "Tesla", "Lexus", "Land Rover", "Bentley"]
-const years = ["All", "2023", "2022", "2021", "2020"]
+const categories = [
+  "All",
+  "Luxury Sedan",
+  "Premium SUV",
+  "Electric",
+  "Sports Car",
+  "Luxury Coupe",
+];
+const brands = [
+  "All",
+  "Mercedes-Benz",
+  "BMW",
+  "Audi",
+  "Porsche",
+  "Tesla",
+  "Lexus",
+  "Land Rover",
+  "Bentley",
+];
+const years = ["All", "2023", "2022", "2021", "2020"];
 
 export default function CarsPage() {
-  const { addToCart } = useCart()
-  const { toast } = useToast()
-  const [favorites, setFavorites] = useState<number[]>([])
-  const [searchTerm, setSearchTerm] = useState("")
-  const [selectedCategory, setSelectedCategory] = useState("All")
-  const [selectedBrand, setSelectedBrand] = useState("All")
-  const [selectedYear, setSelectedYear] = useState("All")
-  const [priceRange, setPriceRange] = useState([0, 250000])
+  const { addToCart } = useCart();
+  const { toast } = useToast();
+  const [favorites, setFavorites] = useState<number[]>([]);
+  const [searchTerm, setSearchTerm] = useState("");
+  const [selectedCategory, setSelectedCategory] = useState("All");
+  const [selectedBrand, setSelectedBrand] = useState("All");
+  const [selectedYear, setSelectedYear] = useState("All");
+  const [priceRange, setPriceRange] = useState([0, 250000]);
 
   const handleAddToCart = (car: (typeof cars)[0]) => {
     addToCart({
@@ -118,37 +157,52 @@ export default function CarsPage() {
       price: car.price,
       image: car.image,
       quantity: 1,
-    })
+    });
 
     toast({
       title: "Added to cart",
       description: `${car.name} has been added to your cart.`,
       duration: 3000,
-    })
-  }
+    });
+  };
 
   const toggleFavorite = (id: number) => {
-    setFavorites((prev) => (prev.includes(id) ? prev.filter((item) => item !== id) : [...prev, id]))
-  }
+    setFavorites((prev) =>
+      prev.includes(id) ? prev.filter((item) => item !== id) : [...prev, id]
+    );
+  };
 
   const filteredCars = cars.filter((car) => {
-    const matchesSearch = car.name.toLowerCase().includes(searchTerm.toLowerCase())
-    const matchesCategory = selectedCategory === "All" || car.category === selectedCategory
-    const matchesBrand = selectedBrand === "All" || car.brand === selectedBrand
-    const matchesYear = selectedYear === "All" || car.year.toString() === selectedYear
-    const matchesPrice = car.price >= priceRange[0] && car.price <= priceRange[1]
+    const matchesSearch = car.name
+      .toLowerCase()
+      .includes(searchTerm.toLowerCase());
+    const matchesCategory =
+      selectedCategory === "All" || car.category === selectedCategory;
+    const matchesBrand = selectedBrand === "All" || car.brand === selectedBrand;
+    const matchesYear =
+      selectedYear === "All" || car.year.toString() === selectedYear;
+    const matchesPrice =
+      car.price >= priceRange[0] && car.price <= priceRange[1];
 
-    return matchesSearch && matchesCategory && matchesBrand && matchesYear && matchesPrice
-  })
+    return (
+      matchesSearch &&
+      matchesCategory &&
+      matchesBrand &&
+      matchesYear &&
+      matchesPrice
+    );
+  });
 
   return (
     <main className="min-h-screen py-12">
       <div className="container mx-auto px-4">
         <div className="mb-8">
-          <h1 className="text-3xl md:text-4xl font-bold mb-4">Our Car Collection</h1>
+          <h1 className="text-3xl md:text-4xl font-bold mb-4">
+            Our Car Collection
+          </h1>
           <p className="text-muted-foreground max-w-3xl">
-            Browse our extensive collection of premium vehicles. Use the filters to find the perfect car that matches
-            your preferences.
+            Browse our extensive collection of premium vehicles. Use the filters
+            to find the perfect car that matches your preferences.
           </p>
         </div>
 
@@ -165,13 +219,18 @@ export default function CarsPage() {
               <SheetContent side="left" className="w-[300px] sm:w-[400px]">
                 <SheetHeader>
                   <SheetTitle>Filters</SheetTitle>
-                  <SheetDescription>Refine your search with these filters</SheetDescription>
+                  <SheetDescription>
+                    Refine your search with these filters
+                  </SheetDescription>
                 </SheetHeader>
                 <div className="py-4 space-y-6">
                   {/* Mobile Filters */}
                   <div>
                     <h3 className="text-sm font-medium mb-2">Category</h3>
-                    <Select value={selectedCategory} onValueChange={setSelectedCategory}>
+                    <Select
+                      value={selectedCategory}
+                      onValueChange={setSelectedCategory}
+                    >
                       <SelectTrigger>
                         <SelectValue placeholder="Select category" />
                       </SelectTrigger>
@@ -187,7 +246,10 @@ export default function CarsPage() {
 
                   <div>
                     <h3 className="text-sm font-medium mb-2">Brand</h3>
-                    <Select value={selectedBrand} onValueChange={setSelectedBrand}>
+                    <Select
+                      value={selectedBrand}
+                      onValueChange={setSelectedBrand}
+                    >
                       <SelectTrigger>
                         <SelectValue placeholder="Select brand" />
                       </SelectTrigger>
@@ -203,7 +265,10 @@ export default function CarsPage() {
 
                   <div>
                     <h3 className="text-sm font-medium mb-2">Year</h3>
-                    <Select value={selectedYear} onValueChange={setSelectedYear}>
+                    <Select
+                      value={selectedYear}
+                      onValueChange={setSelectedYear}
+                    >
                       <SelectTrigger>
                         <SelectValue placeholder="Select year" />
                       </SelectTrigger>
@@ -335,7 +400,10 @@ export default function CarsPage() {
                   onChange={(e) => setSearchTerm(e.target.value)}
                 />
               </div>
-              <Select value={selectedCategory} onValueChange={setSelectedCategory} className="w-full sm:w-[200px]">
+              <Select
+                value={selectedCategory}
+                onValueChange={setSelectedCategory}
+              >
                 <SelectTrigger>
                   <SelectValue placeholder="Category" />
                 </SelectTrigger>
@@ -352,7 +420,9 @@ export default function CarsPage() {
             {filteredCars.length === 0 ? (
               <div className="text-center py-12">
                 <h3 className="text-lg font-medium mb-2">No cars found</h3>
-                <p className="text-muted-foreground">Try adjusting your filters to find what you're looking for.</p>
+                <p className="text-muted-foreground">
+                  Try adjusting your filters to find what you're looking for.
+                </p>
               </div>
             ) : (
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
@@ -378,25 +448,43 @@ export default function CarsPage() {
                             onClick={() => toggleFavorite(car.id)}
                           >
                             <Heart
-                              className={`h-5 w-5 ${favorites.includes(car.id) ? "fill-red-500 text-red-500" : ""}`}
+                              className={`h-5 w-5 ${
+                                favorites.includes(car.id)
+                                  ? "fill-red-500 text-red-500"
+                                  : ""
+                              }`}
                             />
                           </Button>
-                          <Badge className="absolute top-2 left-2">{car.category}</Badge>
+                          <Badge className="absolute top-2 left-2">
+                            {car.category}
+                          </Badge>
                         </div>
                       </CardHeader>
                       <CardContent className="p-4">
-                        <h3 className="text-xl font-semibold mb-2">{car.name}</h3>
-                        <p className="text-2xl font-bold text-primary mb-3">${car.price.toLocaleString()}</p>
+                        <h3 className="text-xl font-semibold mb-2">
+                          {car.name}
+                        </h3>
+                        <p className="text-2xl font-bold text-primary mb-3">
+                          ${car.price.toLocaleString()}
+                        </p>
                         <div className="flex flex-wrap gap-2 mt-2">
                           {car.features.map((feature, index) => (
-                            <Badge key={index} variant="secondary" className="font-normal">
+                            <Badge
+                              key={index}
+                              variant="secondary"
+                              className="font-normal"
+                            >
                               {feature}
                             </Badge>
                           ))}
                         </div>
                       </CardContent>
                       <CardFooter className="p-4 pt-0 flex gap-2">
-                        <Button variant="default" className="w-full" onClick={() => handleAddToCart(car)}>
+                        <Button
+                          variant="default"
+                          className="w-full"
+                          onClick={() => handleAddToCart(car)}
+                        >
                           <ShoppingCart className="mr-2 h-4 w-4" />
                           Add to Cart
                         </Button>
@@ -410,6 +498,5 @@ export default function CarsPage() {
         </div>
       </div>
     </main>
-  )
+  );
 }
-

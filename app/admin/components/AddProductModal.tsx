@@ -40,14 +40,14 @@ export interface NewProduct {
     label: string;
     varient: string[];
   };
-  features: string[];
+  features: boolean;
 }
 
 interface AddProductModalProps {
   open: boolean;
   setOpen: (open: boolean) => void;
-  newProduct: NewProduct;
-  setNewProduct: (product: NewProduct) => void;
+  newProduct: any;
+  setNewProduct: (product: any) => void;
   handleAddProduct: () => void;
   brands: any[];
   categories: any[];
@@ -249,12 +249,9 @@ const AddProductModal = ({
             </Label>
             <Switch
               id="active"
-              checked={newProduct.features.length > 0}
+              checked={newProduct.featured}
               onCheckedChange={(checked) =>
-                setNewProduct({
-                  ...newProduct,
-                  features: checked ? ["Feature"] : [],
-                })
+                setNewProduct({ ...newProduct, featured: checked })
               }
             />
           </div>
@@ -281,7 +278,7 @@ const AddProductModal = ({
             />
             {newProduct.images && newProduct.images.length > 0 && (
               <div className="flex flex-wrap gap-2 mt-2">
-                {newProduct.images.map((img, index) => (
+                {newProduct.images.map((img: any, index: any) => (
                   <img
                     key={index}
                     src={img}

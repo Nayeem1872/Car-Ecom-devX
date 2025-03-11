@@ -38,7 +38,7 @@ const Products = () => {
       label: "",
       varient: [],
     },
-    features: [],
+    featured: false,
   });
   const [brands, setBrands] = useState<any[]>([]);
   const [categories, setCategories] = useState<any[]>([]);
@@ -101,11 +101,12 @@ const Products = () => {
       } else {
         imageUrls = newProduct.images;
       }
+      console.log("newProduct", newProduct);
 
       const payload = {
         name: newProduct.name,
         description: newProduct.description,
-        featured: false,
+        featured: newProduct.featured,
         brand: newProduct.brand,
         price: newProduct.price,
         stock: newProduct.stock,

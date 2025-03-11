@@ -1,44 +1,56 @@
 "use client";
-
-import { Button } from "@/components/ui/button";
-import Link from "next/link";
-import { ChevronRight, ArrowRight } from "lucide-react";
-import { motion } from "framer-motion";
 import { useEffect, useState } from "react";
-
-const heroImages = [
-  "https://images.unsplash.com/photo-1583121274602-3e2820c69888?q=80&w=2070&auto=format&fit=crop",
-  "https://images.unsplash.com/photo-1618843479313-40f8afb4b4d8?q=80&w=2070&auto=format&fit=crop",
-  "https://images.unsplash.com/photo-1605559424843-9e4c228bf1c2?q=80&w=2064&auto=format&fit=crop",
-];
+import { motion } from "framer-motion";
+import { Search, ChevronRight, ArrowRight } from "lucide-react";
+import { Input } from "@/components/ui/input";
+import Link from "next/link";
+import { fetchBanners } from "@/hooks/ApiHooks";
+import { Button } from "./ui/button";
 
 export default function HeroSection() {
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
+  const [banners, setBanners] = useState<any[]>([]);
 
   useEffect(() => {
-    const interval = setInterval(() => {
-      setCurrentImageIndex((prevIndex) => (prevIndex + 1) % heroImages.length);
-    }, 5000);
+    const loadBanners = async () => {
+      try {
+        const bannersData = await fetchBanners();
+        setBanners(bannersData);
+      } catch (error) {
+        console.error("Error fetching banners:", error);
+      }
+    };
 
-    return () => clearInterval(interval);
+    loadBanners();
   }, []);
+
+  // Update current image index every 5 seconds.
+  useEffect(() => {
+    // Use the number of banners if available; otherwise, default to 1 to avoid division by zero.
+    const total = banners.length > 0 ? banners.length : 1;
+    const interval = setInterval(() => {
+      setCurrentImageIndex((prevIndex) => (prevIndex + 1) % total);
+    }, 5000);
+    return () => clearInterval(interval);
+  }, [banners]);
 
   return (
     <section className="relative h-[90vh] min-h-[600px] w-full overflow-hidden">
-      {heroImages.map((image, index) => (
-        <div
-          key={index}
-          className={`absolute inset-0 bg-cover bg-center transition-opacity duration-1000 ${
-            index === currentImageIndex ? "opacity-100" : "opacity-0"
-          }`}
-          style={{
-            backgroundImage: `url('${image}')`,
-          }}
-        >
-          <div className="absolute inset-0 hero-gradient"></div>
-        </div>
-      ))}
+      {/* Render banner backgrounds from API */}
+      {banners.length > 0 &&
+        banners.map((banner, index) => (
+          <div
+            key={banner._id}
+            className={`absolute inset-0 bg-cover bg-center transition-opacity duration-1000 ${
+              index === currentImageIndex ? "opacity-100" : "opacity-0"
+            }`}
+            style={{ backgroundImage: `url('${banner.image}')` }}
+          >
+            <div className="absolute inset-0 hero-gradient"></div>
+          </div>
+        ))}
 
+      {/* Content overlay */}
       <div className="container relative h-full mx-auto px-4 flex items-center">
         <motion.div
           initial={{ opacity: 0, y: 30 }}
