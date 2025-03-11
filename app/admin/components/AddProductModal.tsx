@@ -103,13 +103,14 @@ const AddProductModal = ({
               </SelectTrigger>
               <SelectContent>
                 {categories.map((category: any) => (
-                  <SelectItem key={category._id} value={category._id}>
+                  <SelectItem key={category.id} value={category.id}>
                     {category.name}
                   </SelectItem>
                 ))}
               </SelectContent>
             </Select>
           </div>
+
           <div className="flex flex-col gap-2">
             <Label htmlFor="brand">Brand*</Label>
             <Select
@@ -210,7 +211,7 @@ const AddProductModal = ({
             />
           </div>
 
-          <div className="flex flex-col gap-2">
+          {/* <div className="flex flex-col gap-2">
             <Label htmlFor="varientsLabel">Varients Label</Label>
             <Input
               id="varientsLabel"
@@ -241,7 +242,7 @@ const AddProductModal = ({
                 })
               }
             />
-          </div>
+          </div> */}
           <div className="flex flex-col gap-2">
             <Label htmlFor="active" className="flex-1">
               Feature

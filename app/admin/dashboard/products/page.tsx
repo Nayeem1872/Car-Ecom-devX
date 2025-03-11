@@ -1,7 +1,7 @@
 "use client";
 import { useEffect, useState } from "react";
 import { motion } from "framer-motion";
-import { Search } from "lucide-react";
+import { Search, Loader } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import {
   Card,
@@ -13,62 +13,13 @@ import {
 import { useToast } from "@/hooks/use-toast";
 import AddProductModal from "../../components/AddProductModal";
 import ProductsTable, { Product } from "../../components/ProductsTable";
-import { fetchBrands, fetchCategories } from "@/hooks/ApiHooks";
+import { fetchBrands, fetchCategories, fetchProducts } from "@/hooks/ApiHooks";
 import axios from "axios";
+import { Button } from "@/components/ui/button";
 
 const Products = () => {
-  const [products, setProducts] = useState<Product[]>([
-    {
-      id: 1,
-      name: "Modern Chair",
-      category: "Furniture",
-      price: 149.99,
-      stock: 45,
-      image:
-        "https://images.unsplash.com/photo-1592078615290-033ee584e267?w=800&auto=format&fit=crop&q=60",
-      status: "in-stock",
-    },
-    {
-      id: 2,
-      name: "Desk Lamp",
-      category: "Lighting",
-      price: 89.99,
-      stock: 12,
-      image:
-        "https://images.unsplash.com/photo-1507473885765-e6ed057f782c?w=800&auto=format&fit=crop&q=60",
-      status: "low-stock",
-    },
-    {
-      id: 3,
-      name: "Sofa Set",
-      category: "Furniture",
-      price: 899.99,
-      stock: 8,
-      image:
-        "https://images.unsplash.com/photo-1555041469-a586c61ea9bc?w=800&auto=format&fit=crop&q=60",
-      status: "low-stock",
-    },
-    {
-      id: 4,
-      name: "Coffee Table",
-      category: "Furniture",
-      price: 249.99,
-      stock: 0,
-      image:
-        "https://images.unsplash.com/photo-1567538096630-e0c55bd6374c?w=800&auto=format&fit=crop&q=60",
-      status: "out-of-stock",
-    },
-    {
-      id: 5,
-      name: "Bookshelf",
-      category: "Storage",
-      price: 199.99,
-      stock: 23,
-      image:
-        "https://images.unsplash.com/photo-1594620302200-9a762244a156?w=800&auto=format&fit=crop&q=60",
-      status: "in-stock",
-    },
-  ]);
+  const [products, setProducts] = useState<Product[]>([]);
+  const [isLoading, setIsLoading] = useState(true);
   const [newProduct, setNewProduct] = useState<any>({
     name: "",
     description: "",
@@ -92,10 +43,15 @@ const Products = () => {
   const [brands, setBrands] = useState<any[]>([]);
   const [categories, setCategories] = useState<any[]>([]);
   const [searchTerm, setSearchTerm] = useState("");
+  const [currentPage, setCurrentPage] = useState(1);
+  const [pageSize, setPageSize] = useState(10);
+  const [totalPages, setTotalPages] = useState(1);
   const [open, setOpen] = useState(false);
   const { toast } = useToast();
+
   useEffect(() => {
     const loadData = async () => {
+      setIsLoading(true);
       try {
         const brandsData = await fetchBrands();
         setBrands(brandsData);
@@ -109,24 +65,28 @@ const Products = () => {
       } catch (error) {
         console.error("Error fetching categories:", error);
       }
+      try {
+        const { products: productsData, pagination } = await fetchProducts(
+          currentPage,
+          pageSize,
+          false
+        );
+        setProducts(productsData);
+        setTotalPages(pagination.totalPages);
+      } catch (error) {
+        console.error("Error fetching products:", error);
+      } finally {
+        setIsLoading(false);
+      }
     };
 
     loadData();
-  }, [toast]);
-  const handleAddProduct = async () => {
-    // if (!newProduct.name || !newProduct.category || newProduct.price <= 0) {
-    //   toast({
-    //     title: "Error",
-    //     description: "Please fill all required fields",
-    //     variant: "destructive",
-    //   });
-    //   return;
-    // }
+  }, [toast, currentPage, pageSize]);
 
+  const handleAddProduct = async () => {
     try {
       let imageUrls: string[] = [];
-      console.log("Image Files:", newProduct.imageFiles);
-      console.log("Image Previews:", newProduct.images);
+
       if (newProduct.imageFiles && newProduct.imageFiles.length > 0) {
         const formData = new FormData();
         newProduct.imageFiles.forEach((file: File) => {
@@ -139,13 +99,13 @@ const Products = () => {
           (item: any) => item.serverPath
         );
       } else {
-        imageUrls = newProduct.images; // fallback if they are already URLs
+        imageUrls = newProduct.images;
       }
-      // Construct payload for product creation
+
       const payload = {
         name: newProduct.name,
         description: newProduct.description,
-        featured: false, // Set to false by default or adjust as needed
+        featured: false,
         brand: newProduct.brand,
         price: newProduct.price,
         stock: newProduct.stock,
@@ -155,19 +115,12 @@ const Products = () => {
           endAt: newProduct.discount.endAt,
         },
         category: newProduct.category,
-        images: imageUrls, // Array of image URLs from the upload process
-        varients: {
-          label: newProduct.varients.label,
-          varient: newProduct.varients.varient,
-        },
-        features: newProduct.features,
+        images: imageUrls,
       };
 
       await axios.post("/api/ecom/product/craete", payload, {
         headers: { "Content-Type": "application/json" },
       });
-
-      // await fetchProducts();
 
       setNewProduct({
         name: "",
@@ -194,6 +147,15 @@ const Products = () => {
         title: "Success",
         description: "Product added successfully",
       });
+
+      // Re-fetch products after adding a new one.
+      const { products: productsData, pagination } = await fetchProducts(
+        currentPage,
+        pageSize,
+        false
+      );
+      setProducts(productsData);
+      setTotalPages(pagination.totalPages);
     } catch (error) {
       console.error("Error adding product:", error);
       toast({
@@ -207,7 +169,10 @@ const Products = () => {
   const filteredProducts = products.filter(
     (product) =>
       product.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      product.category.toLowerCase().includes(searchTerm.toLowerCase())
+      (typeof product.category === "string"
+        ? product.category.toLowerCase()
+        : product.category.name.toLowerCase()
+      ).includes(searchTerm.toLowerCase())
   );
 
   const getStatusBadgeStyles = (status: Product["status"]) => {
@@ -221,6 +186,13 @@ const Products = () => {
       default:
         return "";
     }
+  };
+  const handlePrevPage = () => {
+    setCurrentPage((prev) => Math.max(prev - 1, 1));
+  };
+
+  const handleNextPage = () => {
+    setCurrentPage((prev) => Math.min(prev + 1, totalPages));
   };
 
   return (
@@ -274,10 +246,46 @@ const Products = () => {
             </div>
           </CardHeader>
           <CardContent>
-            <ProductsTable
-              products={filteredProducts}
-              getStatusBadgeStyles={getStatusBadgeStyles}
-            />
+            {isLoading ? (
+              <div className="flex items-center justify-center h-56 w-full">
+                <div className="flex flex-col items-center gap-2">
+                  <Loader className="h-8 w-8 animate-spin text-primary" />
+                  <p className="text-sm text-muted-foreground">
+                    Loading products...
+                  </p>
+                </div>
+              </div>
+            ) : (
+              <>
+                <ProductsTable
+                  products={filteredProducts}
+                  getStatusBadgeStyles={getStatusBadgeStyles}
+                  isLoading={false}
+                />
+                {/* API Pagination Controls */}
+                <div className="flex items-center justify-between p-4">
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    disabled={currentPage === 1}
+                    onClick={handlePrevPage}
+                  >
+                    Previous
+                  </Button>
+                  <span>
+                    Page {currentPage} of {totalPages}
+                  </span>
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    disabled={currentPage === totalPages}
+                    onClick={handleNextPage}
+                  >
+                    Next
+                  </Button>
+                </div>
+              </>
+            )}
           </CardContent>
         </Card>
       </motion.div>

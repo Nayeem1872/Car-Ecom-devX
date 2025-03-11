@@ -11,22 +11,26 @@ import {
 import { Button } from "@/components/ui/button";
 import { Eye, Edit, Trash2 } from "lucide-react";
 
+// Updated interface: id is now a string.
 export interface Product {
-  id: number;
+  id: string;
   name: string;
-  category: string;
+  category: string | { _id: string; name: string };
   price: number;
   stock: number;
-  image: string;
-  status: "in-stock" | "low-stock" | "out-of-stock";
+  images: string;
+  status?: "in-stock" | "low-stock" | "out-of-stock";
 }
 
 interface ProductsTableProps {
   products: Product[];
-  getStatusBadgeStyles: (status: Product["status"]) => string;
+  getStatusBadgeStyles: (
+    status: "in-stock" | "low-stock" | "out-of-stock"
+  ) => string;
   onView?: (product: Product) => void;
   onEdit?: (product: Product) => void;
   onDelete?: (product: Product) => void;
+  isLoading?: boolean;
 }
 
 const ProductsTable = ({
@@ -35,7 +39,16 @@ const ProductsTable = ({
   onView,
   onEdit,
   onDelete,
+  isLoading = false,
 }: ProductsTableProps) => {
+  if (isLoading) {
+    return (
+      <div className="flex items-center justify-center h-24">
+        <div className="w-10 h-10 border-4 border-primary border-t-transparent rounded-full animate-spin"></div>
+      </div>
+    );
+  }
+
   return (
     <div className="rounded-md border glass-effect overflow-hidden">
       <Table>
@@ -52,61 +65,79 @@ const ProductsTable = ({
         </TableHeader>
         <TableBody>
           {products.length > 0 ? (
-            products.map((product) => (
-              <TableRow key={product.id}>
-                <TableCell>
-                  {product.image ? (
-                    <img
-                      src={product.image}
-                      alt={product.name}
-                      className="w-10 h-10 rounded object-cover"
-                    />
-                  ) : (
-                    <div className="w-10 h-10 rounded bg-gray-200 flex items-center justify-center text-gray-500">
-                      No img
+            products.map((product) => {
+              // Compute fallback status if product.status is undefined.
+              const status =
+                product.status !== undefined
+                  ? product.status
+                  : product.stock === 0
+                  ? "out-of-stock"
+                  : product.stock < 10
+                  ? "low-stock"
+                  : "in-stock";
+
+              // If category is an object, extract its name; otherwise, use it directly.
+              const categoryName =
+                typeof product.category === "object"
+                  ? product.category.name
+                  : product.category;
+
+              return (
+                <TableRow key={product.id}>
+                  <TableCell>
+                    {product.images ? (
+                      <img
+                        src={product.images[0]}
+                        alt={product.name}
+                        className="w-10 h-10 rounded object-cover"
+                      />
+                    ) : (
+                      <div className="w-10 h-10 rounded bg-gray-200 flex items-center justify-center text-gray-500">
+                        No img
+                      </div>
+                    )}
+                  </TableCell>
+                  <TableCell className="font-medium">{product.name}</TableCell>
+                  <TableCell>{categoryName}</TableCell>
+                  <TableCell>${product.price.toFixed(2)}</TableCell>
+                  <TableCell>{product.stock}</TableCell>
+                  <TableCell>
+                    <span
+                      className={`inline-flex items-center rounded-full px-2.5 py-0.5 text-xs font-medium ${getStatusBadgeStyles(
+                        status
+                      )}`}
+                    >
+                      {status.replace("-", " ")}
+                    </span>
+                  </TableCell>
+                  <TableCell className="text-right">
+                    <div className="flex justify-end gap-2">
+                      <Button
+                        variant="ghost"
+                        size="sm"
+                        onClick={() => onView && onView(product)}
+                      >
+                        <Eye className="h-4 w-4" />
+                      </Button>
+                      <Button
+                        variant="ghost"
+                        size="sm"
+                        onClick={() => onEdit && onEdit(product)}
+                      >
+                        <Edit className="h-4 w-4" />
+                      </Button>
+                      <Button
+                        variant="ghost"
+                        size="sm"
+                        onClick={() => onDelete && onDelete(product)}
+                      >
+                        <Trash2 className="h-4 w-4" />
+                      </Button>
                     </div>
-                  )}
-                </TableCell>
-                <TableCell className="font-medium">{product.name}</TableCell>
-                <TableCell>{product.category}</TableCell>
-                <TableCell>${product.price.toFixed(2)}</TableCell>
-                <TableCell>{product.stock}</TableCell>
-                <TableCell>
-                  <span
-                    className={`inline-flex items-center rounded-full px-2.5 py-0.5 text-xs font-medium ${getStatusBadgeStyles(
-                      product.status
-                    )}`}
-                  >
-                    {product.status.replace("-", " ")}
-                  </span>
-                </TableCell>
-                <TableCell className="text-right">
-                  <div className="flex justify-end gap-2">
-                    <Button
-                      variant="ghost"
-                      size="sm"
-                      onClick={() => onView && onView(product)}
-                    >
-                      <Eye className="h-4 w-4" />
-                    </Button>
-                    <Button
-                      variant="ghost"
-                      size="sm"
-                      onClick={() => onEdit && onEdit(product)}
-                    >
-                      <Edit className="h-4 w-4" />
-                    </Button>
-                    <Button
-                      variant="ghost"
-                      size="sm"
-                      onClick={() => onDelete && onDelete(product)}
-                    >
-                      <Trash2 className="h-4 w-4" />
-                    </Button>
-                  </div>
-                </TableCell>
-              </TableRow>
-            ))
+                  </TableCell>
+                </TableRow>
+              );
+            })
           ) : (
             <TableRow>
               <TableCell colSpan={7} className="h-24 text-center">

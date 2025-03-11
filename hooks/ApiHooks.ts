@@ -12,3 +12,16 @@ export const fetchCategories = async () => {
     name: cat.name,
   }));
 };
+export const fetchProducts = async (
+  page: number = 1,
+  pageSize: number = 10,
+  all: boolean = false
+) => {
+  const response = await axios.get(
+    `/api/ecom/product/get?page=${page}&pageSize=${pageSize}&all=${all}`
+  );
+  return {
+    products: response.data.data,
+    pagination: response.data.pagination,
+  };
+};

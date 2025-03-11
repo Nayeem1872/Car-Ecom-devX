@@ -1,13 +1,34 @@
 "use client";
-import { ReactNode } from "react";
+import { ReactNode, useEffect } from "react";
 import { motion } from "framer-motion";
 import Sidebar from "../components/Sidebar";
+import axios from "axios";
+import { useRouter } from "next/navigation";
 
 interface DashboardLayoutProps {
   children: ReactNode;
 }
 
 const DashboardLayout = ({ children }: DashboardLayoutProps) => {
+  const router = useRouter();
+  useEffect(() => {
+    const fetchCategories = async () => {
+      try {
+        const response = await axios.get("/api/ecom/user");
+        if (
+          response.data &&
+          response.data.success === false &&
+          response.data.message === "Not authorized"
+        ) {
+          router.push("/admin");
+        }
+      } catch (error) {
+        console.error("Error fetching categories:", error);
+      }
+    };
+
+    fetchCategories();
+  }, []);
   //   if (isLoading) {
   //     return (
   //       <div className="flex items-center justify-center w-screen h-screen">
