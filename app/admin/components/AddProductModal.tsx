@@ -18,10 +18,17 @@ import {
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { Plus } from "lucide-react";
+import { Plus, Trash2 } from "lucide-react";
 import { Textarea } from "@/components/ui/textarea";
 import { Switch } from "@/components/ui/switch";
-
+export interface AdditionalItem {
+  fieldName: string;
+  fieldLabel: string;
+  type: "string" | "boolean";
+  required: boolean;
+  fieldValue: string | boolean;
+  defaultValue: string | boolean;
+}
 export interface NewProduct {
   name: string;
   description: string;
@@ -62,6 +69,46 @@ const AddProductModal = ({
   brands,
   categories,
 }: AddProductModalProps) => {
+  const handleAdditionalItemChange = (
+    index: number,
+    key: keyof AdditionalItem,
+    value: any
+  ) => {
+    const updatedAdditionalItems = newProduct.additionalItems
+      ? [...newProduct.additionalItems]
+      : [];
+    updatedAdditionalItems[index] = {
+      ...updatedAdditionalItems[index],
+      [key]: value,
+    };
+    setNewProduct({ ...newProduct, additionalItems: updatedAdditionalItems });
+  };
+
+  // Add a new additional item (default type is "string")
+  const addAdditionalItem = () => {
+    const newItem: AdditionalItem = {
+      fieldName: "",
+      fieldLabel: "",
+      type: "string",
+      required: false,
+      fieldValue: "",
+      defaultValue: "",
+    };
+    const updatedItems = newProduct.additionalItems
+      ? [...newProduct.additionalItems, newItem]
+      : [newItem];
+    setNewProduct({ ...newProduct, additionalItems: updatedItems });
+  };
+
+  // Remove an additional item at index
+  const removeAdditionalItem = (index: number) => {
+    const updatedAdditionalItems = newProduct.additionalItems
+      ? [...newProduct.additionalItems]
+      : [];
+    updatedAdditionalItems.splice(index, 1);
+    setNewProduct({ ...newProduct, additionalItems: updatedAdditionalItems });
+  };
+
   return (
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>
@@ -70,7 +117,7 @@ const AddProductModal = ({
           Add Product
         </Button>
       </DialogTrigger>
-      <DialogContent className="glass-card w-[90vw] max-w-[1500px] sm:w-[80vw] md:w-[70vw] lg:w-[60vw] p-6">
+      <DialogContent className="glass-card w-[90vw] max-w-[1500px] sm:w-[80vw] md:w-[70vw] lg:w-[60vw] p-6 max-h-[80vh] overflow-y-auto">
         <DialogHeader>
           <DialogTitle>Add New Product</DialogTitle>
           <DialogDescription>
@@ -299,6 +346,72 @@ const AddProductModal = ({
               }
             />
           </div>
+        </div>
+        <div className="py-4">
+          <h3 className="text-lg font-semibold mb-2">Additional Items</h3>
+          {newProduct.additionalItems &&
+            newProduct.additionalItems.map((item: any, index: any) => (
+              <div
+                key={index}
+                className="grid grid-cols-3 gap-4 py-2 border-b items-center"
+              >
+                <div className="col-span-1 flex flex-col gap-2">
+                  <Label htmlFor={`fieldName-${index}`}>Field Name*</Label>
+                  <Input
+                    id={`fieldName-${index}`}
+                    value={item.fieldName}
+                    onChange={(e) =>
+                      handleAdditionalItemChange(
+                        index,
+                        "fieldName",
+                        e.target.value
+                      )
+                    }
+                  />
+                </div>
+                <div className="col-span-1 flex flex-col gap-2">
+                  <Label htmlFor={`fieldLabel-${index}`}>Field Label*</Label>
+                  <Input
+                    id={`fieldLabel-${index}`}
+                    value={item.fieldLabel}
+                    onChange={(e) =>
+                      handleAdditionalItemChange(
+                        index,
+                        "fieldLabel",
+                        e.target.value
+                      )
+                    }
+                  />
+                </div>
+                <div className="col-span-1 flex flex-col gap-2">
+                  <div>
+                    <Label htmlFor={`fieldValue-${index}`}>Field Value</Label>
+                    <Input
+                      id={`fieldValue-${index}`}
+                      value={item.fieldValue as string}
+                      onChange={(e) =>
+                        handleAdditionalItemChange(
+                          index,
+                          "fieldValue",
+                          e.target.value
+                        )
+                      }
+                    />
+                  </div>
+                  <div className="col-span-1 flex justify-end">
+                    <Button
+                      variant="destructive"
+                      onClick={() => removeAdditionalItem(index)}
+                    >
+                      <Trash2 className="h-4 w-4" />
+                    </Button>
+                  </div>
+                </div>
+              </div>
+            ))}
+          <Button onClick={addAdditionalItem} className="mt-2">
+            Add Additional Item
+          </Button>
         </div>
         <DialogFooter>
           <Button variant="outline" onClick={() => setOpen(false)}>
