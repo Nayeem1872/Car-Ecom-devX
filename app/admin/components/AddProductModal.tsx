@@ -383,8 +383,8 @@ const AddProductModal = ({
                     }
                   />
                 </div>
-                <div className="col-span-1 flex flex-col gap-2">
-                  <div>
+                <div className="col-span-1 flex w-full justify-between items-center ">
+                  <div className="flex flex-col w-full gap-2">
                     <Label htmlFor={`fieldValue-${index}`}>Field Value</Label>
                     <Input
                       id={`fieldValue-${index}`}
@@ -396,16 +396,16 @@ const AddProductModal = ({
                           e.target.value
                         )
                       }
+                      className="w-full"
                     />
                   </div>
-                  <div className="col-span-1 flex justify-end">
-                    <Button
-                      variant="destructive"
-                      onClick={() => removeAdditionalItem(index)}
-                    >
-                      <Trash2 className="h-4 w-4" />
-                    </Button>
-                  </div>
+                  <Button
+                    variant="destructive"
+                    onClick={() => removeAdditionalItem(index)}
+                    className="ml-4 mt-4"
+                  >
+                    <Trash2 className="h-4 w-4 " />
+                  </Button>
                 </div>
               </div>
             ))}

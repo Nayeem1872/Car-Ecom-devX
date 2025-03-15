@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Button } from "@/components/ui/button";
 import {
   Card,
@@ -34,158 +34,105 @@ import {
 import Link from "next/link";
 import Navbar from "@/components/navbar";
 import Footer from "@/components/footer";
+import { fetchBrands, fetchCategories } from "@/hooks/ApiHooks";
+import axios from "axios";
 
-const cars = [
-  {
-    id: 1,
-    name: "Mercedes-Benz S-Class",
-    category: "Luxury Sedan",
-    price: 110000,
-    image: "/placeholder.svg?height=600&width=800",
-    features: ["Leather Interior", "Panoramic Roof", "Advanced Safety"],
-    year: 2023,
-    brand: "Mercedes-Benz",
-  },
-  {
-    id: 2,
-    name: "BMW X7",
-    category: "Premium SUV",
-    price: 85000,
-    image: "/placeholder.svg?height=600&width=800",
-    features: ["7 Seats", "All-Wheel Drive", "Premium Sound System"],
-    year: 2023,
-    brand: "BMW",
-  },
-  {
-    id: 3,
-    name: "Audi e-tron GT",
-    category: "Electric",
-    price: 99000,
-    image: "/placeholder.svg?height=600&width=800",
-    features: ["Electric", "Fast Charging", "Quattro AWD"],
-    year: 2023,
-    brand: "Audi",
-  },
-  {
-    id: 4,
-    name: "Porsche 911",
-    category: "Sports Car",
-    price: 120000,
-    image: "/placeholder.svg?height=600&width=800",
-    features: ["Twin-Turbo", "Rear-Wheel Drive", "Sport Chrono Package"],
-    year: 2023,
-    brand: "Porsche",
-  },
-  {
-    id: 5,
-    name: "Tesla Model S",
-    category: "Electric",
-    price: 89000,
-    image: "/placeholder.svg?height=600&width=800",
-    features: ["Autopilot", "Long Range", "Minimalist Interior"],
-    year: 2023,
-    brand: "Tesla",
-  },
-  {
-    id: 6,
-    name: "Lexus LS",
-    category: "Luxury Sedan",
-    price: 78000,
-    image: "/placeholder.svg?height=600&width=800",
-    features: ["Hybrid Option", "Mark Levinson Audio", "Shiatsu Massage Seats"],
-    year: 2023,
-    brand: "Lexus",
-  },
-  {
-    id: 7,
-    name: "Range Rover",
-    category: "Premium SUV",
-    price: 95000,
-    image: "/placeholder.svg?height=600&width=800",
-    features: [
-      "Off-Road Capability",
-      "Air Suspension",
-      "Meridian Sound System",
-    ],
-    year: 2022,
-    brand: "Land Rover",
-  },
-  {
-    id: 8,
-    name: "Bentley Continental GT",
-    category: "Luxury Coupe",
-    price: 202000,
-    image: "/placeholder.svg?height=600&width=800",
-    features: ["Handcrafted Interior", "W12 Engine", "Dynamic Ride System"],
-    year: 2023,
-    brand: "Bentley",
-  },
-];
-
-const categories = [
-  "All",
-  "Luxury Sedan",
-  "Premium SUV",
-  "Electric",
-  "Sports Car",
-  "Luxury Coupe",
-];
-const brands = [
-  "All",
-  "Mercedes-Benz",
-  "BMW",
-  "Audi",
-  "Porsche",
-  "Tesla",
-  "Lexus",
-  "Land Rover",
-  "Bentley",
-];
 const years = ["All", "2023", "2022", "2021", "2020"];
 
 export default function CarsPage() {
   const { addToCart } = useCart();
   const { toast } = useToast();
-  const [favorites, setFavorites] = useState<number[]>([]);
+  const [favorites, setFavorites] = useState<string[]>([]);
+  const [brands, setBrands] = useState<string[]>([]);
+  const [categories, setCategories] = useState<string[]>([]);
   const [searchTerm, setSearchTerm] = useState("");
+  const [products, setProducts] = useState<any[]>([]);
+  const [isLoading, setIsLoading] = useState(true);
   const [selectedCategory, setSelectedCategory] = useState("All");
   const [selectedBrand, setSelectedBrand] = useState("All");
   const [selectedYear, setSelectedYear] = useState("All");
   const [priceRange, setPriceRange] = useState([0, 250000]);
 
-  const handleAddToCart = (car: (typeof cars)[0]) => {
+  useEffect(() => {
+    const loadData = async () => {
+      setIsLoading(true);
+      // Fetch brands and categories then transform the data to a simple string array
+      try {
+        const brandsData = await fetchBrands();
+        const brandNames = [
+          "All",
+          ...brandsData.map((brand: any) => brand.name),
+        ];
+        setBrands(brandNames);
+      } catch (error) {
+        console.error("Error fetching Brands:", error);
+      }
+
+      try {
+        const categoriesData = await fetchCategories();
+        const categoryNames = [
+          "All",
+          ...categoriesData.map((cat: any) => cat.name),
+        ];
+        setCategories(categoryNames);
+      } catch (error) {
+        console.error("Error fetching Categories:", error);
+      }
+
+      // Fetch products from your API
+      try {
+        const response = await axios.get("/api/ecom/product/get?all=true");
+        setProducts(response.data.data);
+      } catch (error) {
+        console.error("Error fetching products:", error);
+      } finally {
+        setIsLoading(false);
+      }
+    };
+
+    loadData();
+  }, []);
+
+  const handleAddToCart = (product: any) => {
     addToCart({
-      id: car.id,
-      name: car.name,
-      price: car.price,
-      image: car.image,
+      id: product._id,
+      name: product.name,
+      price: product.price,
+      // Use the first image if available
+      image:
+        product.images && product.images.length
+          ? product.images[0]
+          : "/placeholder.svg",
       quantity: 1,
     });
 
     toast({
       title: "Added to cart",
-      description: `${car.name} has been added to your cart.`,
+      description: `${product.name} has been added to your cart.`,
       duration: 3000,
     });
   };
 
-  const toggleFavorite = (id: number) => {
+  const toggleFavorite = (id: string) => {
     setFavorites((prev) =>
       prev.includes(id) ? prev.filter((item) => item !== id) : [...prev, id]
     );
   };
 
-  const filteredCars = cars.filter((car) => {
-    const matchesSearch = car.name
+  // Filter products using API data.
+  const filteredCars = products.filter((product) => {
+    const matchesSearch = product.name
       .toLowerCase()
       .includes(searchTerm.toLowerCase());
     const matchesCategory =
-      selectedCategory === "All" || car.category === selectedCategory;
-    const matchesBrand = selectedBrand === "All" || car.brand === selectedBrand;
-    const matchesYear =
-      selectedYear === "All" || car.year.toString() === selectedYear;
+      selectedCategory === "All" || product.category.name === selectedCategory;
+    const matchesBrand =
+      selectedBrand === "All" || product.brand.name === selectedBrand;
+    // Derive year from createdAt date
+    const productYear = new Date(product.createdAt).getFullYear().toString();
+    const matchesYear = selectedYear === "All" || productYear === selectedYear;
     const matchesPrice =
-      car.price >= priceRange[0] && car.price <= priceRange[1];
+      product.price >= priceRange[0] && product.price <= priceRange[1];
 
     return (
       matchesSearch &&
@@ -327,7 +274,7 @@ export default function CarsPage() {
                           />
                           <label
                             htmlFor={`category-${category}`}
-                            className="ml-2 text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
+                            className="ml-2 text-sm font-medium leading-none"
                           >
                             {category}
                           </label>
@@ -348,7 +295,7 @@ export default function CarsPage() {
                           />
                           <label
                             htmlFor={`brand-${brand}`}
-                            className="ml-2 text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
+                            className="ml-2 text-sm font-medium leading-none"
                           >
                             {brand}
                           </label>
@@ -369,7 +316,7 @@ export default function CarsPage() {
                           />
                           <label
                             htmlFor={`year-${year}`}
-                            className="ml-2 text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
+                            className="ml-2 text-sm font-medium leading-none"
                           >
                             {year}
                           </label>
@@ -408,24 +355,11 @@ export default function CarsPage() {
                     onChange={(e) => setSearchTerm(e.target.value)}
                   />
                 </div>
-                <Select
-                  value={selectedCategory}
-                  onValueChange={setSelectedCategory}
-                >
-                  <SelectTrigger>
-                    <SelectValue placeholder="Category" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    {categories.map((category) => (
-                      <SelectItem key={category} value={category}>
-                        {category}
-                      </SelectItem>
-                    ))}
-                  </SelectContent>
-                </Select>
               </div>
 
-              {filteredCars.length === 0 ? (
+              {isLoading ? (
+                <div className="text-center py-12">Loading...</div>
+              ) : filteredCars.length === 0 ? (
                 <div className="text-center py-12">
                   <h3 className="text-lg font-medium mb-2">No cars found</h3>
                   <p className="text-muted-foreground">
@@ -434,20 +368,24 @@ export default function CarsPage() {
                 </div>
               ) : (
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                  {filteredCars.map((car, index) => (
+                  {filteredCars.map((product, index) => (
                     <motion.div
-                      key={car.id}
+                      key={product._id}
                       initial={{ opacity: 0, y: 20 }}
                       animate={{ opacity: 1, y: 0 }}
                       transition={{ duration: 0.3, delay: index * 0.05 }}
                     >
-                      <Link href={`/cars/${car.id}`} className="block">
+                      <Link href={`/cars/${product._id}`} className="block">
                         <Card className="car-card h-full overflow-hidden">
                           <CardHeader className="p-0">
                             <div className="relative h-48 overflow-hidden">
                               <img
-                                src={car.image || "/placeholder.svg"}
-                                alt={car.name}
+                                src={
+                                  product.images && product.images.length
+                                    ? product.images[0]
+                                    : "/placeholder.svg"
+                                }
+                                alt={product.name}
                                 className="w-full h-full object-cover transition-transform duration-500 hover:scale-110"
                               />
                               <Button
@@ -456,46 +394,48 @@ export default function CarsPage() {
                                 className="absolute top-2 right-2 bg-background/80 backdrop-blur-sm hover:bg-background/90 z-10"
                                 onClick={(e) => {
                                   e.preventDefault();
-                                  toggleFavorite(car.id);
+                                  toggleFavorite(product._id);
                                 }}
                               >
                                 <Heart
                                   className={`h-5 w-5 ${
-                                    favorites.includes(car.id)
+                                    favorites.includes(product._id)
                                       ? "fill-red-500 text-red-500"
                                       : ""
                                   }`}
                                 />
                               </Button>
                               <Badge className="absolute top-2 left-2">
-                                {car.category}
+                                {product.category.name}
                               </Badge>
                             </div>
                           </CardHeader>
                           <CardContent className="p-4">
                             <h3 className="text-xl font-semibold mb-2">
-                              {car.name}
+                              {product.name}
                             </h3>
                             <p className="text-2xl font-bold text-primary mb-3">
-                              ${car.price.toLocaleString()}
+                              ${product.price.toLocaleString()}
                             </p>
                             <div className="flex flex-wrap gap-2 mt-2">
-                              {car.features.map((feature, index) => (
-                                <Badge
-                                  key={index}
-                                  variant="secondary"
-                                  className="font-normal"
-                                >
-                                  {feature}
-                                </Badge>
-                              ))}
+                              {product.features.map(
+                                (feature: any, index: number) => (
+                                  <Badge
+                                    key={index}
+                                    variant="secondary"
+                                    className="font-normal"
+                                  >
+                                    {feature}
+                                  </Badge>
+                                )
+                              )}
                             </div>
                           </CardContent>
                           <CardFooter className="p-4 pt-0 flex gap-2">
                             <Button
                               variant="default"
                               className="w-full"
-                              onClick={() => handleAddToCart(car)}
+                              onClick={() => handleAddToCart(product)}
                             >
                               <ShoppingCart className="mr-2 h-4 w-4" />
                               Add to Cart
