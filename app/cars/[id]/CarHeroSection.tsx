@@ -1,29 +1,32 @@
 "use client";
-
 import { motion } from "framer-motion";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { ChevronLeft, Calendar, Gauge } from "lucide-react";
 
-interface CarHeroSectionProps {
-  car: {
-    images: string[];
-    category: string;
-    name: string;
-    year: number;
-    mileage: number;
-    condition: string;
-    price: number;
+export default function CarHeroSection() {
+  // Static car data with online images from source.unsplash.com
+  const car = {
+    images: [
+      "https://source.unsplash.com/featured/1200x800/?car,exterior",
+      "https://source.unsplash.com/featured/1200x800/?luxury,car",
+      "https://source.unsplash.com/featured/1200x800/?sports,car",
+      "https://source.unsplash.com/featured/1200x800/?vehicle",
+    ],
+    category: "SUV",
+    name: "Static Car Model",
+    year: 2023,
+    mileage: 12000,
+    condition: "Brand New",
+    price: 35000,
   };
-  currentImageIndex: number;
-  onBack: () => void;
-}
 
-export default function CarHeroSection({
-  car,
-  currentImageIndex,
-  onBack,
-}: CarHeroSectionProps) {
+  // Use a fixed image index and a no-op for back button for this static example
+  const currentImageIndex = 0;
+  const onBack = () => {
+    console.log("Back button clicked");
+  };
+
   return (
     <section className="relative h-[60vh] md:h-[70vh] overflow-hidden">
       <motion.div
@@ -33,7 +36,8 @@ export default function CarHeroSection({
         transition={{ duration: 1.5 }}
         style={{ backgroundImage: `url(${car.images[currentImageIndex]})` }}
       >
-        <div className="absolute inset-0 bg-gradient-to-t from-background via-background/40 to-background/10"></div>
+        {/* You can adjust the gradient colors as needed */}
+        <div className="absolute inset-0 bg-gradient-to-t from-black via-transparent to-transparent"></div>
       </motion.div>
 
       <div className="container mx-auto px-4 h-full relative z-10">
