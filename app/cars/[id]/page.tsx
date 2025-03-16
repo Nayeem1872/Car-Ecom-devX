@@ -40,344 +40,7 @@ import {
   Mail,
 } from "lucide-react";
 import BookTestDriveButton from "@/components/book-test-drive-button";
-
-// Mock car data - in a real app, this would come from an API or database
-const carsData = [
-  {
-    id: 1,
-    name: "Mercedes-Benz S-Class",
-    category: "Luxury Sedan",
-    price: 110000,
-    images: [
-      "https://images.unsplash.com/photo-1622037022028-07f7f2d9b59e?q=80&w=2070&auto=format&fit=crop",
-      "https://images.unsplash.com/photo-1618843479313-40f8afb4b4d8?q=80&w=2070&auto=format&fit=crop",
-      "https://images.unsplash.com/photo-1605559424843-9e4c228bf1c2?q=80&w=2064&auto=format&fit=crop",
-      "https://images.unsplash.com/photo-1583121274602-3e2820c69888?q=80&w=2070&auto=format&fit=crop",
-    ],
-    features: [
-      "Leather Interior",
-      "Panoramic Roof",
-      "Advanced Safety",
-      "Heated Seats",
-      "Ambient Lighting",
-    ],
-    description:
-      "The Mercedes-Benz S-Class is the flagship luxury sedan that sets the standard for comfort, technology, and prestige. With its elegant design, powerful performance, and innovative features, the S-Class offers an unparalleled driving experience.",
-    specs: {
-      engine: "3.0L Inline-6 Turbo",
-      power: "429 hp",
-      torque: "384 lb-ft",
-      acceleration: "4.9 seconds (0-60 mph)",
-      topSpeed: "155 mph (limited)",
-      transmission: "9-speed automatic",
-      drivetrain: "Rear-wheel drive",
-      fuelEconomy: "22 mpg city / 29 mpg highway",
-      weight: "4,740 lbs",
-      dimensions: '208.2" L x 76.9" W x 59.2" H',
-    },
-    year: 2023,
-    mileage: 0,
-    condition: "New",
-    exteriorColor: "Obsidian Black",
-    interiorColor: "Black Nappa Leather",
-    vin: "WDDUG8DB1LA456789",
-    stockNumber: "MB12345",
-    relatedCars: [2, 3, 6],
-  },
-  {
-    id: 2,
-    name: "BMW X7",
-    category: "Premium SUV",
-    price: 85000,
-    images: [
-      "https://images.unsplash.com/photo-1601362840469-51e4d8d58785?q=80&w=2070&auto=format&fit=crop",
-      "https://images.unsplash.com/photo-1543854589-fdd934cf96fe?q=80&w=2070&auto=format&fit=crop",
-      "https://images.unsplash.com/photo-1556189250-72ba954cfc2b?q=80&w=2070&auto=format&fit=crop",
-      "https://images.unsplash.com/photo-1549399542-7e3f8b79c341?q=80&w=2070&auto=format&fit=crop",
-    ],
-    features: [
-      "7 Seats",
-      "All-Wheel Drive",
-      "Premium Sound System",
-      "Air Suspension",
-      "Panoramic Sunroof",
-    ],
-    description:
-      "The BMW X7 is the ultimate luxury SUV, combining spacious versatility with dynamic performance. This flagship model offers three rows of seating, cutting-edge technology, and the premium craftsmanship that defines the BMW brand.",
-    specs: {
-      engine: "3.0L TwinPower Turbo inline-6",
-      power: "335 hp",
-      torque: "330 lb-ft",
-      acceleration: "5.8 seconds (0-60 mph)",
-      topSpeed: "152 mph",
-      transmission: "8-speed automatic",
-      drivetrain: "All-wheel drive",
-      fuelEconomy: "19 mpg city / 24 mpg highway",
-      weight: "5,370 lbs",
-      dimensions: '203.3" L x 78.7" W x 71.1" H',
-    },
-    year: 2023,
-    mileage: 0,
-    condition: "New",
-    exteriorColor: "Alpine White",
-    interiorColor: "Cognac Vernasca Leather",
-    vin: "5UXCW2C01L9B12345",
-    stockNumber: "BMW54321",
-    relatedCars: [1, 3, 7],
-  },
-  {
-    id: 3,
-    name: "Audi e-tron GT",
-    category: "Electric",
-    price: 99000,
-    images: [
-      "https://images.unsplash.com/photo-1614200179396-2bdb77ebf81b?q=80&w=2070&auto=format&fit=crop",
-      "https://images.unsplash.com/photo-1606152421802-db97b9c7a11b?q=80&w=2074&auto=format&fit=crop",
-      "https://images.unsplash.com/photo-1617814076367-b759c7d7e738?q=80&w=2072&auto=format&fit=crop",
-      "https://images.unsplash.com/photo-1606152421802-db97b9c7a11b?q=80&w=2074&auto=format&fit=crop",
-    ],
-    features: [
-      "Electric",
-      "Fast Charging",
-      "Quattro AWD",
-      "Virtual Cockpit",
-      "Matrix LED Headlights",
-    ],
-    description:
-      "The Audi e-tron GT is a fully electric grand tourer that combines stunning design with exhilarating performance. With its dual electric motors and quattro all-wheel drive, the e-tron GT delivers instant acceleration and precise handling.",
-    specs: {
-      engine: "Dual Electric Motors",
-      power: "522 hp (637 hp in boost mode)",
-      torque: "472 lb-ft",
-      acceleration: "3.9 seconds (0-60 mph)",
-      topSpeed: "152 mph",
-      transmission: "2-speed automatic",
-      drivetrain: "All-wheel drive",
-      range: "238 miles",
-      batteryCapacity: "93.4 kWh",
-      chargingTime:
-        "22.5 hours (240V) / 10.5 hours (Level 2) / 5 hours (DC Fast)",
-      weight: "5,060 lbs",
-      dimensions: '196.4" L x 77.3" W x 55.6" H',
-    },
-    year: 2023,
-    mileage: 0,
-    condition: "New",
-    exteriorColor: "Tactical Green",
-    interiorColor: "Black Leather with Red Stitching",
-    vin: "WAUEAAFEXLN123456",
-    stockNumber: "AUDI98765",
-    relatedCars: [1, 4, 5],
-  },
-  {
-    id: 4,
-    name: "Porsche 911",
-    category: "Sports Car",
-    price: 120000,
-    images: [
-      "https://images.unsplash.com/photo-1611821064430-0d40291d0f0b?q=80&w=2071&auto=format&fit=crop",
-      "https://images.unsplash.com/photo-1503376780353-7e6692767b70?q=80&w=2070&auto=format&fit=crop",
-      "https://images.unsplash.com/photo-1580414057403-c5f451f30e1c?q=80&w=2073&auto=format&fit=crop",
-      "https://images.unsplash.com/photo-1544636331-e26879cd4d9b?q=80&w=2067&auto=format&fit=crop",
-    ],
-    features: [
-      "Twin-Turbo",
-      "Rear-Wheel Drive",
-      "Sport Chrono Package",
-      "Adaptive Sport Seats",
-      "Bose Sound System",
-    ],
-    description:
-      "The Porsche 911 is an iconic sports car that has been setting the standard for performance and design for decades. With its distinctive silhouette, rear-mounted engine, and precise handling, the 911 delivers an exhilarating driving experience.",
-    specs: {
-      engine: "3.0L Twin-Turbo Flat-6",
-      power: "379 hp",
-      torque: "331 lb-ft",
-      acceleration: "4.0 seconds (0-60 mph)",
-      topSpeed: "182 mph",
-      transmission: "8-speed PDK",
-      drivetrain: "Rear-wheel drive",
-      fuelEconomy: "18 mpg city / 24 mpg highway",
-      weight: "3,354 lbs",
-      dimensions: '177.9" L x 72.9" W x 51.1" H',
-    },
-    year: 2023,
-    mileage: 0,
-    condition: "New",
-    exteriorColor: "Guards Red",
-    interiorColor: "Black Leather",
-    vin: "WP0AB2A98KS123456",
-    stockNumber: "POR54321",
-    relatedCars: [3, 5, 6],
-  },
-  {
-    id: 5,
-    name: "Tesla Model S",
-    category: "Electric",
-    price: 89000,
-    images: [
-      "https://images.unsplash.com/photo-1560958089-b8a1929cea89?q=80&w=2071&auto=format&fit=crop",
-      "https://images.unsplash.com/photo-1617704548623-340376564e68?q=80&w=2070&auto=format&fit=crop",
-      "https://images.unsplash.com/photo-1554744512-d6c603f27c54?q=80&w=2070&auto=format&fit=crop",
-      "https://images.unsplash.com/photo-1536700503339-1e4b06520771?q=80&w=2070&auto=format&fit=crop",
-    ],
-    features: [
-      "Autopilot",
-      "Long Range",
-      "Minimalist Interior",
-      "17-inch Touchscreen",
-      "Over-the-air Updates",
-    ],
-    description:
-      "The Tesla Model S is a revolutionary electric sedan that combines luxury with cutting-edge technology. With its sleek design, impressive range, and advanced Autopilot capabilities, the Model S offers a glimpse into the future of automotive transportation.",
-    specs: {
-      engine: "Dual Electric Motors",
-      power: "670 hp",
-      torque: "723 lb-ft",
-      acceleration: "3.1 seconds (0-60 mph)",
-      topSpeed: "155 mph",
-      transmission: "Single-speed fixed gear",
-      drivetrain: "All-wheel drive",
-      range: "405 miles",
-      batteryCapacity: "100 kWh",
-      chargingTime:
-        "12 hours (240V) / 8 hours (Level 2) / 30 minutes (Supercharger)",
-      weight: "4,561 lbs",
-      dimensions: '196.0" L x 77.3" W x 56.9" H',
-    },
-    year: 2023,
-    mileage: 0,
-    condition: "New",
-    exteriorColor: "Pearl White",
-    interiorColor: "Black",
-    vin: "5YJSA1E47LF123456",
-    stockNumber: "TES12345",
-    relatedCars: [3, 4, 6],
-  },
-  {
-    id: 6,
-    name: "Lexus LS",
-    category: "Luxury Sedan",
-    price: 78000,
-    images: [
-      "https://images.unsplash.com/photo-1583267746897-2cf415887172?q=80&w=2070&auto=format&fit=crop",
-      "https://images.unsplash.com/photo-1542230387-bfc77d70e34f?q=80&w=2070&auto=format&fit=crop",
-      "https://images.unsplash.com/photo-1542282088-72c9c27ed0cd?q=80&w=2070&auto=format&fit=crop",
-      "https://images.unsplash.com/photo-1542230387-bfc77d70e34f?q=80&w=2070&auto=format&fit=crop",
-    ],
-    features: [
-      "Hybrid Option",
-      "Mark Levinson Audio",
-      "Shiatsu Massage Seats",
-      "Air Suspension",
-      "Kiriko Glass",
-    ],
-    description:
-      "The Lexus LS is the flagship luxury sedan that embodies Japanese craftsmanship and attention to detail. With its serene cabin, smooth ride, and innovative technology, the LS offers a unique and refined luxury experience.",
-    specs: {
-      engine: "3.5L V6 Twin-Turbo",
-      power: "416 hp",
-      torque: "442 lb-ft",
-      acceleration: "4.6 seconds (0-60 mph)",
-      topSpeed: "136 mph",
-      transmission: "10-speed automatic",
-      drivetrain: "Rear-wheel drive",
-      fuelEconomy: "18 mpg city / 29 mpg highway",
-      weight: "4,707 lbs",
-      dimensions: '206.1" L x 74.8" W x 57.5" H',
-    },
-    year: 2023,
-    mileage: 0,
-    condition: "New",
-    exteriorColor: "Manganese Luster",
-    interiorColor: "White Leather",
-    vin: "JTHCM1D28M0123456",
-    stockNumber: "LEX67890",
-    relatedCars: [1, 2, 7],
-  },
-  {
-    id: 7,
-    name: "Range Rover",
-    category: "Premium SUV",
-    price: 95000,
-    images: [
-      "https://images.unsplash.com/photo-1606016159991-dfe4f2746ad5?q=80&w=2067&auto=format&fit=crop",
-      "https://images.unsplash.com/photo-1546614042-7df3c24c9e5d?q=80&w=2070&auto=format&fit=crop",
-      "https://images.unsplash.com/photo-1580273916550-e323be2ae537?q=80&w=2034&auto=format&fit=crop",
-      "https://images.unsplash.com/photo-1546614042-7df3c24c9e5d?q=80&w=2070&auto=format&fit=crop",
-    ],
-    features: [
-      "Off-Road Capability",
-      "Air Suspension",
-      "Meridian Sound System",
-      "Terrain Response",
-      "Wade Sensing",
-    ],
-    description:
-      "The Range Rover is the definitive luxury SUV, combining unmatched off-road capability with sophisticated design and premium comfort. With its commanding presence and refined interior, the Range Rover offers versatility without compromise.",
-    specs: {
-      engine: "3.0L Inline-6 Turbo with MHEV",
-      power: "395 hp",
-      torque: "406 lb-ft",
-      acceleration: "5.9 seconds (0-60 mph)",
-      topSpeed: "140 mph",
-      transmission: "8-speed automatic",
-      drivetrain: "All-wheel drive",
-      fuelEconomy: "18 mpg city / 23 mpg highway",
-      weight: "5,530 lbs",
-      dimensions: '197.0" L x 80.6" W x 73.6" H',
-    },
-    year: 2022,
-    mileage: 0,
-    condition: "New",
-    exteriorColor: "Santorini Black",
-    interiorColor: "Ebony/Ivory Leather",
-    vin: "SALGS2SU0MA123456",
-    stockNumber: "RR98765",
-    relatedCars: [2, 6, 8],
-  },
-  {
-    id: 8,
-    name: "Bentley Continental GT",
-    category: "Luxury Coupe",
-    price: 202000,
-    images: [
-      "https://images.unsplash.com/photo-1580274455191-1c62238fa333?q=80&w=2070&auto=format&fit=crop",
-      "https://images.unsplash.com/photo-1503376780353-7e6692767b70?q=80&w=2070&auto=format&fit=crop",
-      "https://images.unsplash.com/photo-1503376780353-7e6692767b70?q=80&w=2070&auto=format&fit=crop",
-      "https://images.unsplash.com/photo-1503376780353-7e6692767b70?q=80&w=2070&auto=format&fit=crop",
-    ],
-    features: [
-      "Handcrafted Interior",
-      "W12 Engine",
-      "Dynamic Ride System",
-      "Rotating Display",
-      "Naim Audio",
-    ],
-    description:
-      "The Bentley Continental GT is the ultimate grand touring luxury coupe, combining breathtaking performance with handcrafted British luxury. With its powerful engine, exquisite materials, and timeless design, the Continental GT offers an unparalleled driving experience.",
-    specs: {
-      engine: "6.0L Twin-Turbo W12",
-      power: "626 hp",
-      torque: "664 lb-ft",
-      acceleration: "3.6 seconds (0-60 mph)",
-      topSpeed: "207 mph",
-      transmission: "8-speed dual-clutch",
-      drivetrain: "All-wheel drive",
-      fuelEconomy: "12 mpg city / 20 mpg highway",
-      weight: "5,018 lbs",
-      dimensions: '190.9" L x 77.4" W x 55.3" H',
-    },
-    year: 2023,
-    mileage: 0,
-    condition: "New",
-    exteriorColor: "Glacier White",
-    interiorColor: "Beluga Leather",
-    vin: "SCBCR1ZA5KC123456",
-    stockNumber: "BEN12345",
-    relatedCars: [1, 4, 6],
-  },
-];
+import axios from "axios";
 
 export default function CarDetailsPage() {
   const { id } = useParams();
@@ -389,6 +52,7 @@ export default function CarDetailsPage() {
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
   const [isFavorite, setIsFavorite] = useState(false);
   const [relatedCars, setRelatedCars] = useState<any[]>([]);
+  const [products, setProducts] = useState<any[]>([]);
 
   const containerRef = useRef(null);
   const { scrollYProgress } = useScroll({
@@ -399,28 +63,116 @@ export default function CarDetailsPage() {
   const opacity = useTransform(scrollYProgress, [0, 0.5], [1, 0.3]);
   const scale = useTransform(scrollYProgress, [0, 0.5], [1, 0.9]);
 
+  // useEffect(() => {
+  //   // Simulate fetching car data
+  //   // const carId = Number(id);
+
+  //   const carId = 5;
+  //   const foundCar = carsData.find((c) => c.id === carId);
+
+  //   if (foundCar) {
+  //     setCar(foundCar);
+
+  //     // Get related cars
+  //     if (foundCar.relatedCars && foundCar.relatedCars.length > 0) {
+  //       const related = carsData.filter((c) =>
+  //         foundCar.relatedCars.includes(c.id)
+  //       );
+  //       setRelatedCars(related);
+  //     }
+  //   } else {
+  //     // Handle car not found
+  //     router.push("/cars");
+  //   }
+
+  //   setLoading(false);
+  // }, [id, router]);
+
   useEffect(() => {
-    // Simulate fetching car data
-    // const carId = Number(id);
-    const carId = 5;
-    const foundCar = carsData.find((c) => c.id === carId);
+    if (!id) return;
 
-    if (foundCar) {
-      setCar(foundCar);
+    const loadData = async () => {
+      try {
+        const response = await axios.get("/api/ecom/product/get?all=true");
+        const productsData = response.data.data;
+        setProducts(productsData);
+        console.log("productsData", productsData);
 
-      // Get related cars
-      if (foundCar.relatedCars && foundCar.relatedCars.length > 0) {
-        const related = carsData.filter((c) =>
-          foundCar.relatedCars.includes(c.id)
-        );
-        setRelatedCars(related);
+        const carId = id; // use the id from useParams()
+        const foundCar = productsData.find((c: any) => c._id === carId);
+        console.log("foundCar", foundCar);
+
+        if (foundCar) {
+          // Destructure to remove category and brand from the found object
+          const { category, brand, ...rest } = foundCar;
+
+          // Define your default fallback data
+          const defaults = {
+            specs: {
+              engine: "3.0L Inline-6 Turbo",
+              power: "429 hp",
+              torque: "384 lb-ft",
+              acceleration: "4.9 seconds (0-60 mph)",
+              topSpeed: "155 mph (limited)",
+              transmission: "9-speed automatic",
+              drivetrain: "Rear-wheel drive",
+              fuelEconomy: "22 mpg city / 29 mpg highway",
+              weight: "4,740 lbs",
+              dimensions: '208.2" L x 76.9" W x 59.2" H',
+            },
+            features: [
+              "Leather Interior",
+              "Panoramic Roof",
+              "Advanced Safety",
+              "Heated Seats",
+              "Ambient Lighting",
+            ],
+            year: 2023,
+            mileage: 0,
+            condition: "New",
+            exteriorColor: "Obsidian Black",
+            interiorColor: "Black Nappa Leather",
+            vin: "WDDUG8DB1LA456789",
+            stockNumber: "MB12345",
+            relatedCars: [2, 3, 6],
+          };
+
+          // Merge defaults with the rest of the foundCar data.
+          // For nested objects like specs, merge them separately.
+          const mergedCar = {
+            id: foundCar._id,
+            ...defaults,
+            ...rest,
+            specs: {
+              ...defaults.specs,
+              ...(rest.specs || {}), // merge specs: if foundCar.specs is missing, defaults are used
+            },
+            features:
+              rest.features && rest.features.length > 0
+                ? rest.features
+                : defaults.features,
+          };
+
+          setCar(mergedCar);
+
+          // Get related cars based on product _id values if available
+          if (mergedCar.relatedCars && mergedCar.relatedCars.length > 0) {
+            const related = productsData.filter((c: any) =>
+              mergedCar.relatedCars.includes(c._id)
+            );
+            setRelatedCars(related);
+          }
+        } else {
+          // Optionally, redirect if no car was found
+          // router.push("/cars");
+        }
+      } catch (error) {
+        console.error("Error fetching products:", error);
       }
-    } else {
-      // Handle car not found
-      router.push("/cars");
-    }
+      setLoading(false);
+    };
 
-    setLoading(false);
+    loadData();
   }, [id, router]);
 
   const handleAddToCart = () => {
@@ -931,7 +683,7 @@ export default function CarDetailsPage() {
             <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
               {relatedCars.map((relatedCar, index) => (
                 <motion.div
-                  key={relatedCar.id}
+                  key={relatedCar._id}
                   initial={{ opacity: 0, y: 20 }}
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ duration: 0.5, delay: index * 0.1 }}
