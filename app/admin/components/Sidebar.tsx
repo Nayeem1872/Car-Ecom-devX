@@ -1,5 +1,5 @@
 "use client";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
@@ -19,11 +19,25 @@ import {
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
 import Cookies from "js-cookie";
+import axios from "axios";
 
 interface NavItem {
   icon: React.ElementType;
   label: string;
   href: string;
+}
+interface UserInfo {
+  _id: string;
+  firstName: string;
+  lastName: string;
+  email: string;
+  phoneNo: string;
+  mfaEnabled: boolean;
+  vendor: string;
+  role: string;
+  createdAt: string;
+  updatedAt: string;
+  __v: number;
 }
 
 const navItems: NavItem[] = [
@@ -32,19 +46,38 @@ const navItems: NavItem[] = [
   { icon: TagsIcon, label: "Categories", href: "/admin/dashboard/categories" },
   { icon: Image, label: "Banners", href: "/admin/dashboard/banners" },
   { icon: Tag, label: "Brands", href: "/admin/dashboard/brands" },
+  { icon: BarChartBig, label: "Features", href: "/admin/dashboard/features" },
   { icon: UserIcon, label: "Profile", href: "/profile" },
   { icon: Settings, label: "Settings", href: "/settings" },
 ];
 
 const Sidebar = () => {
   const [expanded, setExpanded] = useState(true);
+  const [isLoading, setIsLoading] = useState(false);
+  const [userInfo, setUserInfo] = useState<UserInfo | null>(null);
   const pathname = usePathname();
   const router = useRouter();
 
+  useEffect(() => {
+    const fetchFeatures = async () => {
+      try {
+        setIsLoading(true);
+        const response = await axios.get("/api/ecom/user");
+        setUserInfo(response.data.data);
+      } catch (error) {
+        console.error("Error fetching features:", error);
+      } finally {
+        setIsLoading(false);
+      }
+    };
+
+    fetchFeatures();
+  }, []);
+
   const user = {
-    name: "John Doe",
-    email: "john@example.com",
-    avatar: "https://api.dicebear.com/6.x/avataaars/svg?seed=john",
+    name: userInfo ? `${userInfo.firstName} ${userInfo.lastName}` : "User",
+    email: userInfo ? userInfo.email : "user@example.com",
+    avatar: "https://api.dicebear.com/6.x/avataaars/svg?seed=default",
   };
 
   const toggleSidebar = () => {
