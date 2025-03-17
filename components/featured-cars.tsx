@@ -160,71 +160,74 @@ export default function FeaturedCars() {
                   key={car._id}
                   className="min-w-full sm:min-w-[50%] lg:min-w-[25%] px-3"
                 >
-                  <motion.div
-                    initial={{ opacity: 0, y: 20 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    transition={{ duration: 0.5, delay: index * 0.1 }}
-                  >
-                    <div className="bg-white shadow-lg rounded-lg overflow-hidden">
-                      <div className="relative h-56">
-                        <img
-                          src={car.images?.[0] || "/placeholder.svg"}
-                          alt={car.name}
-                          className="w-full h-full object-cover"
-                        />
-                        <Button
-                          variant="ghost"
-                          size="icon"
-                          className="absolute top-2 right-2 bg-white/80 backdrop-blur-sm hover:bg-white shadow-lg"
-                          onClick={() => toggleFavorite(car.id)}
-                        >
-                          <Heart
-                            className={`h-5 w-5 transition-colors duration-300 ${
-                              favorites.includes(car.id)
-                                ? "fill-primary text-primary"
-                                : ""
-                            }`}
+                  <Link href={`/cars/${car._id}`}>
+                    <motion.div
+                      initial={{ opacity: 0, y: 20 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      transition={{ duration: 0.5, delay: index * 0.1 }}
+                      className="cursor-pointer"
+                    >
+                      <div className="bg-white shadow-lg rounded-lg overflow-hidden">
+                        <div className="relative h-56">
+                          <img
+                            src={car.images?.[0] || "/placeholder.svg"}
+                            alt={car.name}
+                            className="w-full h-full object-cover"
                           />
-                        </Button>
-                        <Badge className="absolute top-2 left-2 bg-primary hover:bg-primary/90 z-10">
-                          {typeof car.category === "object"
-                            ? car.category.name
-                            : car.category}
-                        </Badge>
-                      </div>
-                      <div className="p-5">
-                        <h3 className="text-xl font-semibold mb-2">
-                          {car.name}
-                        </h3>
-                        <p className="text-2xl font-bold text-primary mb-3">
-                          ${car.price.toLocaleString()}
-                        </p>
-                        <div className="flex flex-wrap gap-2 mt-2">
-                          {car.features?.map(
-                            (feature: string, index: number) => (
-                              <Badge
-                                key={index}
-                                variant="secondary"
-                                className="font-normal"
-                              >
-                                {feature}
-                              </Badge>
-                            )
-                          )}
+                          <Button
+                            variant="ghost"
+                            size="icon"
+                            className="absolute top-2 right-2 bg-white/80 backdrop-blur-sm hover:bg-white shadow-lg"
+                            onClick={() => toggleFavorite(car.id)}
+                          >
+                            <Heart
+                              className={`h-5 w-5 transition-colors duration-300 ${
+                                favorites.includes(car.id)
+                                  ? "fill-primary text-primary"
+                                  : ""
+                              }`}
+                            />
+                          </Button>
+                          <Badge className="absolute top-2 left-2 bg-primary hover:bg-primary/90 z-10">
+                            {typeof car.category === "object"
+                              ? car.category.name
+                              : car.category}
+                          </Badge>
+                        </div>
+                        <div className="p-5">
+                          <h3 className="text-xl font-semibold mb-2">
+                            {car.name}
+                          </h3>
+                          <p className="text-2xl font-bold text-primary mb-3">
+                            ${car.price.toLocaleString()}
+                          </p>
+                          <div className="flex flex-wrap gap-2 mt-2">
+                            {car.features?.map(
+                              (feature: string, index: number) => (
+                                <Badge
+                                  key={index}
+                                  variant="secondary"
+                                  className="font-normal"
+                                >
+                                  {feature}
+                                </Badge>
+                              )
+                            )}
+                          </div>
+                        </div>
+                        <div className="p-5 pt-0 flex gap-2">
+                          <Button
+                            variant="default"
+                            className="w-full bg-primary hover:bg-primary/90 group"
+                            onClick={() => handleAddToCart(car)}
+                          >
+                            <BookOpen className="mr-2 h-4 w-4 transition-transform group-hover:scale-110" />
+                            Book Now
+                          </Button>
                         </div>
                       </div>
-                      <div className="p-5 pt-0 flex gap-2">
-                        <Button
-                          variant="default"
-                          className="w-full bg-primary hover:bg-primary/90 group"
-                          onClick={() => handleAddToCart(car)}
-                        >
-                          <BookOpen className="mr-2 h-4 w-4 transition-transform group-hover:scale-110" />
-                          Book Now
-                        </Button>
-                      </div>
-                    </div>
-                  </motion.div>
+                    </motion.div>
+                  </Link>
                 </div>
               ))}
             </div>

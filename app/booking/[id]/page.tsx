@@ -166,14 +166,18 @@ export default function BookingPage() {
       </div>
     );
   }
-
+  if (!car) {
+    return null;
+  }
   return (
     <div className="min-h-screen py-12 relative overflow-hidden">
       {/* Background Image with Overlay */}
       <div className="absolute inset-0 -z-10">
         <div
           className="absolute inset-0 bg-cover bg-center bg-no-repeat opacity-20"
-          style={{ backgroundImage: `url(${car.image})` }}
+          style={{
+            backgroundImage: `url(${car?.image || "/placeholder.svg"})`,
+          }}
         ></div>
         <div className="absolute inset-0 bg-gradient-to-b from-white via-white/90 to-white/80"></div>
       </div>
@@ -397,11 +401,11 @@ export default function BookingPage() {
                 }}
               >
                 <div className="relative h-48 overflow-hidden">
-                  <img
+                  {/* <img
                     src={car.image || "/placeholder.svg"}
                     alt={car.name}
                     className="w-full h-full object-cover"
-                  />
+                  /> */}
                   <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/70 to-transparent p-4">
                     <h3 className="text-white font-bold">{car.name}</h3>
                     <p className="text-white/80 text-sm">{car.category}</p>

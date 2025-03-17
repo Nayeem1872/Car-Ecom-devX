@@ -1,31 +1,21 @@
 "use client";
+
 import { motion } from "framer-motion";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { ChevronLeft, Calendar, Gauge } from "lucide-react";
+import { useRouter } from "next/navigation";
 
-export default function CarHeroSection() {
-  // Static car data with online images from source.unsplash.com
-  const car = {
-    images: [
-      "https://source.unsplash.com/featured/1200x800/?car,exterior",
-      "https://source.unsplash.com/featured/1200x800/?luxury,car",
-      "https://source.unsplash.com/featured/1200x800/?sports,car",
-      "https://source.unsplash.com/featured/1200x800/?vehicle",
-    ],
-    category: "SUV",
-    name: "Static Car Model",
-    year: 2023,
-    mileage: 12000,
-    condition: "Brand New",
-    price: 35000,
-  };
+interface HeroSectionProps {
+  car: any;
+  currentImageIndex: number;
+}
 
-  // Use a fixed image index and a no-op for back button for this static example
-  const currentImageIndex = 0;
-  const onBack = () => {
-    console.log("Back button clicked");
-  };
+const HeroSection: React.FC<HeroSectionProps> = ({
+  car,
+  currentImageIndex,
+}) => {
+  const router = useRouter();
 
   return (
     <section className="relative h-[60vh] md:h-[70vh] overflow-hidden">
@@ -36,8 +26,7 @@ export default function CarHeroSection() {
         transition={{ duration: 1.5 }}
         style={{ backgroundImage: `url(${car.images[currentImageIndex]})` }}
       >
-        {/* You can adjust the gradient colors as needed */}
-        <div className="absolute inset-0 bg-gradient-to-t from-black via-transparent to-transparent"></div>
+        <div className="absolute inset-0 bg-gradient-to-t from-background via-background/40 to-background/10"></div>
       </motion.div>
 
       <div className="container mx-auto px-4 h-full relative z-10">
@@ -51,7 +40,7 @@ export default function CarHeroSection() {
               variant="outline"
               size="sm"
               className="mb-4 bg-white/20 backdrop-blur-sm"
-              onClick={onBack}
+              onClick={() => router.back()}
             >
               <ChevronLeft className="mr-2 h-4 w-4" />
               Back
@@ -86,4 +75,6 @@ export default function CarHeroSection() {
       </div>
     </section>
   );
-}
+};
+
+export default HeroSection;

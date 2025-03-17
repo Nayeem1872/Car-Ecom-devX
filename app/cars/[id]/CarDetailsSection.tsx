@@ -1,82 +1,44 @@
 "use client";
+
 import { motion, AnimatePresence } from "framer-motion";
 import { Button } from "@/components/ui/button";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Separator } from "@/components/ui/separator";
 import {
-  ShoppingCart,
-  Heart,
-  ChevronLeft,
-  ChevronRight,
-  Check,
-  CreditCard,
+  Calendar,
+  Gauge,
   Car,
   Fuel,
-  Gauge,
-  Calendar,
+  Info,
+  Check,
+  ChevronLeft,
+  ChevronRight,
   ArrowRight,
   Share2,
-  Info,
-  Shield,
+  CreditCard,
+  ShoppingCart,
   Phone,
   Mail,
+  Shield,
+  Heart,
 } from "lucide-react";
 import BookTestDriveButton from "@/components/book-test-drive-button";
 
-export default function CarDetailsSection() {
-  // Static car data with online images
-  const car = {
-    id: "123",
-    images: [
-      "https://images.unsplash.com/photo-1622037022028-07f7f2d9b59e?q=80&w=2070&auto=format&fit=crop",
-      "https://images.unsplash.com/photo-1618843479313-40f8afb4b4d8?q=80&w=2070&auto=format&fit=crop",
-      "https://images.unsplash.com/photo-1605559424843-9e4c228bf1c2?q=80&w=2064&auto=format&fit=crop",
-      "https://images.unsplash.com/photo-1583121274602-3e2820c69888?q=80&w=2070&auto=format&fit=crop",
-    ],
-    name: "Static Luxury Car",
-    description:
-      "This is a luxurious, high-performance vehicle built for comfort and speed. It features cutting-edge technology and premium materials.",
-    year: 2022,
-    mileage: 15000,
-    condition: "Excellent",
-    price: 75000,
-    specs: {
-      engine: "V8 Turbo",
-      power: "450 HP",
-      torque: "500 Nm",
-      acceleration: "3.8 sec (0-60 mph)",
-      topSpeed: "200 mph",
-      transmission: "Automatic",
-      drivetrain: "All-Wheel Drive",
-      fuelEconomy: "20 MPG",
-      range: "400 miles",
-      weight: "4000 lbs",
-      dimensions: "Length: 4.8m, Width: 2.0m, Height: 1.4m",
-    },
-    exteriorColor: "Metallic Silver",
-    interiorColor: "Black Leather",
-    vin: "1HGBH41JXMN109186",
-    stockNumber: "LX-2022-001",
-    features: [
-      "Heated Seats",
-      "Sunroof",
-      "Bluetooth Connectivity",
-      "Advanced Navigation System",
-      "Premium Sound System",
-    ],
-    category: "Sedan",
-  };
+interface CarDetailsContentProps {
+  car: any;
+  currentImageIndex: number;
+  setCurrentImageIndex: (index: number) => void;
+  handlePrevImage: () => void;
+  handleNextImage: () => void;
+}
 
-  // Static state and dummy handlers for demonstration
-  const currentImageIndex = 0;
-  const handlePrevImage = () => console.log("Previous image clicked");
-  const handleNextImage = () => console.log("Next image clicked");
-  const setCurrentImageIndex = (index: number) =>
-    console.log("Set image index to:", index);
-  const handleAddToCart = () => console.log("Add to cart clicked");
-  const toggleFavorite = () => console.log("Toggle favorite clicked");
-  const isFavorite = false;
-
+const CarDetailsContent: React.FC<CarDetailsContentProps> = ({
+  car,
+  currentImageIndex,
+  setCurrentImageIndex,
+  handlePrevImage,
+  handleNextImage,
+}) => {
   return (
     <section className="container mx-auto px-4 -mt-10 relative z-20">
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
@@ -139,7 +101,7 @@ export default function CarDetailsSection() {
                   whileTap={{ scale: 0.95 }}
                 >
                   <img
-                    src={image}
+                    src={image || "/placeholder.svg"}
                     alt={`${car.name} - View ${index + 1}`}
                     className="w-full h-full object-cover"
                   />
@@ -353,36 +315,12 @@ export default function CarDetailsSection() {
             <p className="text-muted-foreground mb-6">Plus taxes & licensing</p>
 
             <div className="space-y-4 mb-6">
-              <Button
-                className="w-full bg-primary hover:bg-primary/90 group"
-                onClick={handleAddToCart}
-              >
-                <ShoppingCart className="mr-2 h-4 w-4 transition-transform group-hover:scale-110" />
-                Add to Cart
-              </Button>
-
-              <BookTestDriveButton
-                carId={parseInt(car.id)}
-                className="w-full"
-              />
+              <BookTestDriveButton carId={car.id} className="w-full" />
 
               <Button className="w-full bg-green-600 hover:bg-green-700 group">
                 <CreditCard className="mr-2 h-4 w-4 transition-transform group-hover:scale-110" />
                 Finance Options
                 <ArrowRight className="ml-2 h-4 w-4 transition-transform group-hover:translate-x-1" />
-              </Button>
-
-              <Button
-                variant="outline"
-                className="w-full group"
-                onClick={toggleFavorite}
-              >
-                <Heart
-                  className={`mr-2 h-4 w-4 transition-colors duration-300 ${
-                    isFavorite ? "fill-primary text-primary" : ""
-                  }`}
-                />
-                {isFavorite ? "Saved to Favorites" : "Save to Favorites"}
               </Button>
 
               <Button variant="outline" className="w-full">
@@ -431,4 +369,6 @@ export default function CarDetailsSection() {
       </div>
     </section>
   );
-}
+};
+
+export default CarDetailsContent;

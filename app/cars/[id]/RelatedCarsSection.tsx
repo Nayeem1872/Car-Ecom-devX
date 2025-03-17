@@ -1,16 +1,17 @@
 "use client";
-
-import { Card, CardContent, CardHeader } from "@/components/ui/card";
+import React from "react";
+import { motion } from "framer-motion";
+import Link from "next/link";
+import { Card, CardHeader, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Calendar, Gauge } from "lucide-react";
-import Link from "next/link";
-import { motion } from "framer-motion";
 
 interface RelatedCar {
-  id: number;
+  _id: string;
+  id?: string;
   name: string;
-  images: string[];
   category: string;
+  images: string[];
   price: number;
   year: number;
   mileage: number;
@@ -20,9 +21,11 @@ interface RelatedCarsSectionProps {
   relatedCars: RelatedCar[];
 }
 
-export default function RelatedCarsSection({
+const RelatedCarsSection: React.FC<RelatedCarsSectionProps> = ({
   relatedCars,
-}: RelatedCarsSectionProps) {
+}) => {
+  if (relatedCars.length === 0) return null;
+
   return (
     <section className="container mx-auto px-4 mt-16">
       <motion.div
@@ -34,12 +37,12 @@ export default function RelatedCarsSection({
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
           {relatedCars.map((relatedCar, index) => (
             <motion.div
-              key={relatedCar.id}
+              key={relatedCar._id}
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.5, delay: index * 0.1 }}
             >
-              <Link href={`/cars/${relatedCar.id}`}>
+              <Link href={`/cars/${relatedCar.id || relatedCar._id}`}>
                 <Card className="car-card h-full overflow-hidden border-none shadow-lg hover:shadow-xl transition-all duration-300">
                   <CardHeader className="p-0">
                     <div className="relative h-48 car-image-container">
@@ -76,4 +79,6 @@ export default function RelatedCarsSection({
       </motion.div>
     </section>
   );
-}
+};
+
+export default RelatedCarsSection;
