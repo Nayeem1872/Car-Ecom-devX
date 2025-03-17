@@ -101,6 +101,17 @@ const Products = () => {
       } else {
         imageUrls = newProduct.images;
       }
+      const featuresArray = newProduct.customFields
+        ? Object.entries(newProduct.customFields).map(
+            ([fieldName, fieldObj]: [string, any]) => ({
+              fieldName,
+              fieldLabel: fieldObj.fieldLabel,
+              fieldType: fieldObj.fieldType,
+              fieldValue: fieldObj.value,
+            })
+          )
+        : [];
+
       console.log("newProduct", newProduct);
 
       const payload = {
@@ -117,6 +128,7 @@ const Products = () => {
         },
         category: newProduct.category,
         images: imageUrls,
+        features: featuresArray,
       };
 
       await axios.post("/api/ecom/product/craete", payload, {

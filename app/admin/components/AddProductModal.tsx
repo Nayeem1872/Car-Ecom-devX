@@ -86,7 +86,7 @@ const AddProductModal = ({
         <Tabs defaultValue="general">
           <TabsList className="grid grid-cols-3 gap-4 mb-6">
             <TabsTrigger value="general">General</TabsTrigger>
-            <TabsTrigger value="dynamics">Dynamics</TabsTrigger>
+            <TabsTrigger value="dynamics">Features</TabsTrigger>
             <TabsTrigger value="variants">Variants</TabsTrigger>
           </TabsList>
 
