@@ -92,7 +92,7 @@ const Categories = () => {
       const response = await axios.post("/api/ecom/category/craete", {
         name: newCategory.name,
         description: newCategory.description,
-        parentCategory: newCategory.parentCategory,
+        parentCategory: newCategory.parentCategory ?? "",
       });
 
       const createdCategory: Category = {
@@ -100,7 +100,7 @@ const Categories = () => {
         name: response.data.name ?? newCategory.name,
         description: response.data.description ?? newCategory.description,
         parentCategory:
-          response.data.parentCategory ?? newCategory.parentCategory,
+          response.data.parentCategory ?? newCategory.parentCategory ?? "",
         productsCount: response.data.subCategories
           ? response.data.subCategories.length
           : 0,
@@ -128,20 +128,26 @@ const Categories = () => {
     if (!selectedCategoryId) return;
 
     try {
+      const payload: any = {
+        name: editForm.name,
+        description: editForm.description,
+      };
+
+      if (editForm.parentCategory) {
+        payload.parentCategory = editForm.parentCategory;
+      }
+
       const response = await axios.patch(
         `/api/ecom/category/edit?id=${selectedCategoryId}`,
-        {
-          name: editForm.name,
-          description: editForm.description,
-          parentCategory:
-            editForm.parentCategory === "" ? null : editForm.parentCategory,
-        }
+        payload
       );
+
       const updatedCategory = {
         id: response.data._id,
         name: response.data.name ?? editForm.name,
         description: response.data.description ?? editForm.description,
-        parentCategory: response.data.parentCategory ?? editForm.parentCategory,
+        parentCategory:
+          response.data.parentCategory ?? (editForm.parentCategory || ""),
         productsCount: response.data.subCategories
           ? response.data.subCategories.length
           : 0,
@@ -175,9 +181,7 @@ const Categories = () => {
       category.description.toLowerCase().includes(searchTerm.toLowerCase())
   );
 
-  // Callbacks for the table actions
   const handleViewCategory = (category: Category) => {
-
     console.log("Viewing category:", category);
   };
 
@@ -186,13 +190,12 @@ const Categories = () => {
     setEditForm({
       name: category.name,
       description: category.description,
-      parentCategory: category.parentCategory, // keep null as null if it is null
+      parentCategory: category.parentCategory,
     });
     setOpenEditModal(true);
   };
 
   const handleDeleteCategory = (category: Category) => {
-    // Implement your delete functionality here
     console.log("Deleting category:", category);
   };
 

@@ -195,6 +195,19 @@ const Products = () => {
   const handleNextPage = () => {
     setCurrentPage((prev) => Math.min(prev + 1, totalPages));
   };
+  const refreshProducts = async () => {
+    try {
+      const { products: productsData, pagination } = await fetchProducts(
+        currentPage,
+        pageSize,
+        false
+      );
+      setProducts(productsData);
+      setTotalPages(pagination.totalPages);
+    } catch (error) {
+      console.error("Error refreshing products:", error);
+    }
+  };
 
   return (
     <>
@@ -262,6 +275,7 @@ const Products = () => {
                   products={filteredProducts}
                   getStatusBadgeStyles={getStatusBadgeStyles}
                   isLoading={false}
+                  refreshProducts={refreshProducts}
                 />
                 {/* API Pagination Controls */}
                 <div className="flex items-center justify-between p-4">

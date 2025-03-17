@@ -8,19 +8,13 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
-import { Plus, Trash2 } from "lucide-react";
-import { Textarea } from "@/components/ui/textarea";
-import { Switch } from "@/components/ui/switch";
+import { Plus } from "lucide-react";
+import GeneralTab from "../dashboard/products/productTabs/GeneralTab";
+import DynamicsTab from "../dashboard/products/productTabs/DynamicsTab";
+import VariantsTab from "../dashboard/products/productTabs/VariantsTab";
+
 export interface AdditionalItem {
   fieldName: string;
   fieldLabel: string;
@@ -29,6 +23,7 @@ export interface AdditionalItem {
   fieldValue: string | boolean;
   defaultValue: string | boolean;
 }
+
 export interface NewProduct {
   name: string;
   description: string;
@@ -47,14 +42,16 @@ export interface NewProduct {
     label: string;
     varient: string[];
   };
-  features: boolean;
+  featured: boolean;
+  additionalItems?: AdditionalItem[];
+  dynamicField?: string;
 }
 
 interface AddProductModalProps {
   open: boolean;
   setOpen: (open: boolean) => void;
-  newProduct: any;
-  setNewProduct: (product: any) => void;
+  newProduct: NewProduct;
+  setNewProduct: (product: NewProduct) => void;
   handleAddProduct: () => void;
   brands: any[];
   categories: any[];
@@ -69,46 +66,6 @@ const AddProductModal = ({
   brands,
   categories,
 }: AddProductModalProps) => {
-  const handleAdditionalItemChange = (
-    index: number,
-    key: keyof AdditionalItem,
-    value: any
-  ) => {
-    const updatedAdditionalItems = newProduct.additionalItems
-      ? [...newProduct.additionalItems]
-      : [];
-    updatedAdditionalItems[index] = {
-      ...updatedAdditionalItems[index],
-      [key]: value,
-    };
-    setNewProduct({ ...newProduct, additionalItems: updatedAdditionalItems });
-  };
-
-  // Add a new additional item (default type is "string")
-  const addAdditionalItem = () => {
-    const newItem: AdditionalItem = {
-      fieldName: "",
-      fieldLabel: "",
-      type: "string",
-      required: false,
-      fieldValue: "",
-      defaultValue: "",
-    };
-    const updatedItems = newProduct.additionalItems
-      ? [...newProduct.additionalItems, newItem]
-      : [newItem];
-    setNewProduct({ ...newProduct, additionalItems: updatedItems });
-  };
-
-  // Remove an additional item at index
-  const removeAdditionalItem = (index: number) => {
-    const updatedAdditionalItems = newProduct.additionalItems
-      ? [...newProduct.additionalItems]
-      : [];
-    updatedAdditionalItems.splice(index, 1);
-    setNewProduct({ ...newProduct, additionalItems: updatedAdditionalItems });
-  };
-
   return (
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>
@@ -117,302 +74,49 @@ const AddProductModal = ({
           Add Product
         </Button>
       </DialogTrigger>
-      <DialogContent className="glass-card w-[90vw] max-w-[1500px] sm:w-[80vw] md:w-[70vw] lg:w-[60vw] p-6 max-h-[80vh] overflow-y-auto">
+      <DialogContent className="glass-card w-[90vw] max-w-[1500px] sm:w-[80vw] md:w-[70vw] lg:w-[60vw] p-6 max-h-[90vh] overflow-y-auto">
         <DialogHeader>
           <DialogTitle>Add New Product</DialogTitle>
           <DialogDescription>
             Fill in the details to add a new product to your inventory
           </DialogDescription>
         </DialogHeader>
-        {/* Two-column grid layout */}
-        <div className="grid grid-cols-2 gap-4 py-4">
-          {/* Column 1 */}
-          <div className="flex flex-col gap-2">
-            <Label htmlFor="name">Product Name*</Label>
-            <Input
-              id="name"
-              value={newProduct.name}
-              onChange={(e) =>
-                setNewProduct({ ...newProduct, name: e.target.value })
-              }
-            />
-          </div>
-          <div className="flex flex-col gap-2">
-            <Label htmlFor="category">Category*</Label>
-            <Select
-              value={newProduct.category}
-              onValueChange={(value) =>
-                setNewProduct({ ...newProduct, category: value })
-              }
-            >
-              <SelectTrigger id="category" className="w-full">
-                <SelectValue placeholder="Select Category" />
-              </SelectTrigger>
-              <SelectContent>
-                {categories.map((category: any) => (
-                  <SelectItem key={category.id} value={category.id}>
-                    {category.name}
-                  </SelectItem>
-                ))}
-              </SelectContent>
-            </Select>
-          </div>
 
-          <div className="flex flex-col gap-2">
-            <Label htmlFor="brand">Brand*</Label>
-            <Select
-              value={newProduct.brand}
-              onValueChange={(value) =>
-                setNewProduct({ ...newProduct, brand: value })
-              }
-            >
-              <SelectTrigger id="brand" className="w-full">
-                <SelectValue placeholder="Select Brand" />
-              </SelectTrigger>
-              <SelectContent>
-                {brands.map((brand: any) => (
-                  <SelectItem key={brand._id} value={brand._id}>
-                    {brand.name}
-                  </SelectItem>
-                ))}
-              </SelectContent>
-            </Select>
-          </div>
-          <div className="flex flex-col gap-2">
-            <Label htmlFor="price">Price ($)*</Label>
-            <Input
-              id="price"
-              type="number"
-              value={newProduct.price || ""}
-              onChange={(e) =>
-                setNewProduct({
-                  ...newProduct,
-                  price: Number(e.target.value),
-                })
-              }
-            />
-          </div>
-          <div className="flex flex-col gap-2">
-            <Label htmlFor="stock">Stock*</Label>
-            <Input
-              id="stock"
-              type="number"
-              value={newProduct.stock || ""}
-              onChange={(e) =>
-                setNewProduct({
-                  ...newProduct,
-                  stock: Number(e.target.value),
-                })
-              }
-            />
-          </div>
-          <div className="flex flex-col gap-2">
-            <Label htmlFor="discountPrice">Discount Price</Label>
-            <Input
-              id="discountPrice"
-              type="number"
-              value={newProduct.discount.price || ""}
-              onChange={(e) =>
-                setNewProduct({
-                  ...newProduct,
-                  discount: {
-                    ...newProduct.discount,
-                    price: Number(e.target.value),
-                  },
-                })
-              }
-            />
-          </div>
-          <div className="flex flex-col gap-2">
-            <Label htmlFor="discountStartAt">Discount Start At</Label>
-            <Input
-              id="discountStartAt"
-              type="date"
-              value={newProduct.discount.startAt}
-              onChange={(e) =>
-                setNewProduct({
-                  ...newProduct,
-                  discount: {
-                    ...newProduct.discount,
-                    startAt: e.target.value,
-                  },
-                })
-              }
-            />
-          </div>
-          <div className="flex flex-col gap-2">
-            <Label htmlFor="discountEndAt">Discount End At</Label>
-            <Input
-              id="discountEndAt"
-              type="date"
-              value={newProduct.discount.endAt}
-              onChange={(e) =>
-                setNewProduct({
-                  ...newProduct,
-                  discount: {
-                    ...newProduct.discount,
-                    endAt: e.target.value,
-                  },
-                })
-              }
-            />
-          </div>
+        {/* Tabs with 3 sections */}
+        <Tabs defaultValue="general">
+          <TabsList className="grid grid-cols-3 gap-4 mb-6">
+            <TabsTrigger value="general">General</TabsTrigger>
+            <TabsTrigger value="dynamics">Dynamics</TabsTrigger>
+            <TabsTrigger value="variants">Variants</TabsTrigger>
+          </TabsList>
 
-          {/* <div className="flex flex-col gap-2">
-            <Label htmlFor="varientsLabel">Varients Label</Label>
-            <Input
-              id="varientsLabel"
-              value={newProduct.varients.label}
-              onChange={(e) =>
-                setNewProduct({
-                  ...newProduct,
-                  varients: {
-                    ...newProduct.varients,
-                    label: e.target.value,
-                  },
-                })
-              }
+          {/* Tab 1: General */}
+          <TabsContent value="general">
+            <GeneralTab
+              newProduct={newProduct}
+              setNewProduct={setNewProduct}
+              brands={brands}
+              categories={categories}
             />
-          </div>
-          <div className="flex flex-col gap-2">
-            <Label htmlFor="varients">Varients (comma separated)</Label>
-            <Input
-              id="varients"
-              value={newProduct.varients.varient.join(", ")}
-              onChange={(e) =>
-                setNewProduct({
-                  ...newProduct,
-                  varients: {
-                    ...newProduct.varients,
-                    varient: e.target.value.split(",").map((v) => v.trim()),
-                  },
-                })
-              }
+          </TabsContent>
+
+          {/* Tab 2: Dynamics */}
+          <TabsContent value="dynamics">
+            <DynamicsTab
+              newProduct={newProduct}
+              setNewProduct={setNewProduct}
             />
-          </div> */}
-          <div className="flex flex-col gap-2">
-            <Label htmlFor="active" className="flex-1">
-              Feature
-            </Label>
-            <Switch
-              id="active"
-              checked={newProduct.featured}
-              onCheckedChange={(checked) =>
-                setNewProduct({ ...newProduct, featured: checked })
-              }
+          </TabsContent>
+
+          {/* Tab 3: Variants */}
+          <TabsContent value="variants">
+            <VariantsTab
+              newProduct={newProduct}
+              setNewProduct={setNewProduct}
             />
-          </div>
-          <div className="flex flex-col gap-2 col-span-2">
-            <Label htmlFor="images">Images</Label>
-            <Input
-              id="images"
-              type="file"
-              multiple
-              onChange={(e) => {
-                const files = e.target.files;
-                if (!files) return;
-                const fileArray = Array.from(files);
-                const imagePreviews = fileArray.map((file) =>
-                  URL.createObjectURL(file)
-                );
-                // Save both the file objects and their preview URLs
-                setNewProduct({
-                  ...newProduct,
-                  imageFiles: fileArray,
-                  images: imagePreviews,
-                });
-              }}
-            />
-            {newProduct.images && newProduct.images.length > 0 && (
-              <div className="flex flex-wrap gap-2 mt-2">
-                {newProduct.images.map((img: any, index: any) => (
-                  <img
-                    key={index}
-                    src={img}
-                    alt={`Preview ${index}`}
-                    className="w-20 h-20 object-cover rounded"
-                  />
-                ))}
-              </div>
-            )}
-          </div>
-          <div className="flex flex-col gap-2 col-span-2">
-            <Label htmlFor="description">Description*</Label>
-            <Textarea
-              id="description"
-              value={newProduct.description}
-              onChange={(e) =>
-                setNewProduct({ ...newProduct, description: e.target.value })
-              }
-            />
-          </div>
-        </div>
-        <div className="py-4">
-          <h3 className="text-lg font-semibold mb-2">Additional Items</h3>
-          {newProduct.additionalItems &&
-            newProduct.additionalItems.map((item: any, index: any) => (
-              <div
-                key={index}
-                className="grid grid-cols-3 gap-4 py-2 border-b items-center"
-              >
-                <div className="col-span-1 flex flex-col gap-2">
-                  <Label htmlFor={`fieldName-${index}`}>Field Name*</Label>
-                  <Input
-                    id={`fieldName-${index}`}
-                    value={item.fieldName}
-                    onChange={(e) =>
-                      handleAdditionalItemChange(
-                        index,
-                        "fieldName",
-                        e.target.value
-                      )
-                    }
-                  />
-                </div>
-                <div className="col-span-1 flex flex-col gap-2">
-                  <Label htmlFor={`fieldLabel-${index}`}>Field Label*</Label>
-                  <Input
-                    id={`fieldLabel-${index}`}
-                    value={item.fieldLabel}
-                    onChange={(e) =>
-                      handleAdditionalItemChange(
-                        index,
-                        "fieldLabel",
-                        e.target.value
-                      )
-                    }
-                  />
-                </div>
-                <div className="col-span-1 flex w-full justify-between items-center ">
-                  <div className="flex flex-col w-full gap-2">
-                    <Label htmlFor={`fieldValue-${index}`}>Field Value</Label>
-                    <Input
-                      id={`fieldValue-${index}`}
-                      value={item.fieldValue as string}
-                      onChange={(e) =>
-                        handleAdditionalItemChange(
-                          index,
-                          "fieldValue",
-                          e.target.value
-                        )
-                      }
-                      className="w-full"
-                    />
-                  </div>
-                  <Button
-                    variant="destructive"
-                    onClick={() => removeAdditionalItem(index)}
-                    className="ml-4 mt-4"
-                  >
-                    <Trash2 className="h-4 w-4 " />
-                  </Button>
-                </div>
-              </div>
-            ))}
-          <Button onClick={addAdditionalItem} className="mt-2">
-            Add Additional Item
-          </Button>
-        </div>
+          </TabsContent>
+        </Tabs>
+
         <DialogFooter>
           <Button variant="outline" onClick={() => setOpen(false)}>
             Cancel

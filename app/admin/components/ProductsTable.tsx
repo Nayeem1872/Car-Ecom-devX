@@ -64,14 +64,22 @@ const ProductsTable = ({
   const confirmDelete = async () => {
     if (selectedProductForDelete) {
       try {
-        // Call your deletion API
-        await axios.delete(
+        const response = await axios.delete(
           `/api/ecom/product/delete?id=${selectedProductForDelete._id}`
         );
-        if (onDelete) onDelete(selectedProductForDelete);
-        if (refreshProducts) refreshProducts();
-        setDeleteModalOpen(false);
-        setSelectedProductForDelete(null);
+        if (response.status === 200) {
+          if (onDelete) onDelete(selectedProductForDelete);
+          if (refreshProducts) {
+            refreshProducts();
+          }
+          setDeleteModalOpen(false);
+          setSelectedProductForDelete(null);
+        } else {
+          console.error(
+            "Deletion did not return a 200 status:",
+            response.status
+          );
+        }
       } catch (error) {
         console.error("Error deleting product:", error);
       }
