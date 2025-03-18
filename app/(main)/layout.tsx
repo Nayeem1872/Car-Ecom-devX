@@ -1,40 +1,24 @@
 "use client";
-
-import { Inter } from "next/font/google";
-import "./globals.css";
+import React, { useEffect, useState } from "react";
+import axios from "axios";
+import Navbar from "@/components/navbar";
+import Footer from "@/components/footer";
 import { CartProvider } from "@/context/cart-context";
 import { Toaster } from "@/components/ui/toaster";
+import { Inter } from "next/font/google";
+import "./globals.css";
+import { metadata } from "@/context/metadata";
 
 const inter = Inter({ subsets: ["latin"] });
 
-interface Vendor {
-  _id: string;
-  vendorName: string;
-  vendorDetails: string;
-  logo: string;
-  vendorAddress: {
-    street: string;
-    city: string;
-    state: string;
-    country: string;
-    postalCode: string;
-    _id: string;
-  }[];
-  vendorType: string;
-  createdBy: string;
-  updatedBy: string;
-  createdAt: string;
-  updatedAt: string;
-  phoneNo: string[];
-  serviceEmail: string;
-}
+const Loader = () => (
+  <div className="flex justify-center items-center min-h-screen">
+    <div className="animate-spin rounded-full h-16 w-16 border-t-4 border-red-500"></div>
+  </div>
+);
 
-export default function RootLayout({
-  children,
-}: Readonly<{
-  children: React.ReactNode;
-}>) {
-  const [userInfo, setUserInfo] = useState<{ vendors: Vendor[] } | null>(null);
+const MainContent = ({ children }: { children: React.ReactNode }) => {
+  const [userInfo, setUserInfo] = useState<{ vendors: any[] } | null>(null);
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
@@ -52,15 +36,27 @@ export default function RootLayout({
     fetchUser();
   }, []);
 
-  const Loader = () => (
-    <div className="flex justify-center items-center min-h-screen">
-      <div className="animate-spin rounded-full h-16 w-16 border-t-4 border-red-500"></div>
-    </div>
-  );
-
   if (isLoading) {
     return <Loader />;
   }
+
+  return (
+    <CartProvider>
+      <Navbar vendor={userInfo ? userInfo.vendors[0] : null} />
+      <div className="flex min-h-screen flex-col">
+        <div className="flex-1">{children}</div>
+      </div>
+      <Toaster />
+      <Footer />
+    </CartProvider>
+  );
+};
+
+export default function RootLayout({
+  children,
+}: {
+  children: React.ReactNode;
+}) {
   return (
     <html lang="en">
       <head>
@@ -72,22 +68,8 @@ export default function RootLayout({
         />
       </head>
       <body className={inter.className}>
-        <CartProvider>
-          <Navbar vendor={userInfo ? userInfo.vendors[0] : null} />
-          <div className="flex min-h-screen flex-col">
-            <div className="flex-1">{children}</div>
-          </div>
-          <Footer />
-          <Toaster />
-        </CartProvider>
+        <MainContent>{children}</MainContent>
       </body>
     </html>
   );
 }
-
-import "./globals.css";
-import Footer from "@/components/footer";
-import Navbar from "@/components/navbar";
-import { useEffect, useState } from "react";
-import axios from "axios";
-import { metadata } from "@/context/metadata";
