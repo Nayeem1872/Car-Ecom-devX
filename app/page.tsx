@@ -60,7 +60,15 @@ export default function Home() {
     fetchUser();
   }, []);
 
-  console.log("userInfo", userInfo);
+  const Loader = () => (
+    <div className="flex justify-center items-center min-h-screen">
+      <div className="animate-spin rounded-full h-16 w-16 border-t-4 border-red-500"></div>
+    </div>
+  );
+
+  if (isLoading) {
+    return <Loader />;
+  }
 
   return (
     <main className="min-h-screen">

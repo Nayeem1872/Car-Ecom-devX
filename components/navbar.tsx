@@ -90,8 +90,8 @@ export default function Navbar({ vendor }: NavbarProps) {
 
           <div className="flex items-center space-x-4">
             <div className="hidden md:flex items-center mr-4">
-              <Phone className="h-4 w-4 text-primary mr-2" />
-              <span className="text-sm font-medium">+{vendor.phoneNo[0]}</span>
+              <Phone className="h-4 w-4 text-primary mr-2" />+
+              {vendor?.phoneNo?.[0] ? vendor.phoneNo[0] : ""}
             </div>
 
             <Button
