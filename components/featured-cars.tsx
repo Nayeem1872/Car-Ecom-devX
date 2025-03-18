@@ -2,16 +2,13 @@
 import { useEffect, useState } from "react";
 import { motion } from "framer-motion";
 import {
-  Search,
   ChevronRight,
-  ArrowRight,
   ChevronLeft,
   Heart,
   Loader,
-  ShoppingCart,
   BookOpen,
 } from "lucide-react";
-import { Input } from "@/components/ui/input";
+
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
@@ -71,7 +68,6 @@ export default function FeaturedCars() {
     );
   };
 
-  // Slider navigation functions use the filtered array (featuredCars)
   const nextSlide = () => {
     if (featuredCars.length === 0) return;
     const visibleCount = screenWidth >= 1024 ? 4 : screenWidth >= 768 ? 2 : 1;
@@ -202,17 +198,16 @@ export default function FeaturedCars() {
                             ${car.price.toLocaleString()}
                           </p>
                           <div className="flex flex-wrap gap-2 mt-2">
-                            {car.features?.map(
-                              (feature: string, index: number) => (
-                                <Badge
-                                  key={index}
-                                  variant="secondary"
-                                  className="font-normal"
-                                >
-                                  {feature}
-                                </Badge>
-                              )
-                            )}
+                            {car.features?.map((feature: any, index: any) => (
+                              <Badge
+                                key={index}
+                                variant="secondary"
+                                className="font-normal"
+                              >
+                                {feature.fieldLabel}: {feature.fieldValue}{" "}
+                                {/* Render the label and value */}
+                              </Badge>
+                            ))}
                           </div>
                         </div>
                         <div className="p-5 pt-0 flex gap-2">
