@@ -1,6 +1,13 @@
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
-import { ChevronRight, Car, Shield, Clock, Award } from "lucide-react";
+import {
+  ChevronRight,
+  Car,
+  Shield,
+  Clock,
+  Award,
+  DollarSign,
+} from "lucide-react";
 import FeaturedCars from "@/components/featured-cars";
 import HeroSection from "@/components/hero-section";
 import Testimonials from "@/components/testimonials";
@@ -61,11 +68,16 @@ export default function Home() {
 
           <div className="bg-white rounded-lg p-6 shadow-md transition-all duration-300 hover:shadow-xl group">
             <div className="w-16 h-16 bg-primary/10 rounded-full flex items-center justify-center mb-4 group-hover:bg-primary/20 transition-colors">
-              <Award className="text-primary h-8 w-8" />
+              <DollarSign className="text-primary h-8 w-8" />
             </div>
-            <h3 className="text-xl font-semibold mb-2">Award Winning</h3>
+            <h3 className="text-xl font-semibold mb-2">
+              Specialized Financing
+            </h3>
             <p className="text-muted-foreground">
-              Recognized as the #1 luxury car dealer for five consecutive years.
+              No matter your credit situation, we offer financing solutions to
+              meet your unique needs. From rebuilding credit to flexible terms,
+              our options are designed to help you secure the vehicle you need
+              with ease and confidence.
             </p>
           </div>
         </div>

@@ -41,7 +41,7 @@ export default function CarDetailsPage() {
         setProducts(productsData);
         console.log("productsData", productsData);
 
-        const carId = id; // use the id from useParams()
+        const carId = id;
         const foundCar = productsData.find((c: any) => c._id === carId);
         console.log("foundCar", foundCar);
 
@@ -49,18 +49,13 @@ export default function CarDetailsPage() {
           const { category, brand, ...rest } = foundCar;
 
           const defaults = {
-            specs: {
-              engine: "3.0L Inline-6 Turbo",
-              power: "429 hp",
-              torque: "384 lb-ft",
-              acceleration: "4.9 seconds (0-60 mph)",
-              topSpeed: "155 mph (limited)",
-              transmission: "9-speed automatic",
-              drivetrain: "Rear-wheel drive",
-              fuelEconomy: "22 mpg city / 29 mpg highway",
-              weight: "4,740 lbs",
-              dimensions: '208.2" L x 76.9" W x 59.2" H',
-            },
+            specs:
+              foundCar.features && foundCar.features.length > 0
+                ? foundCar.features.map((feature: any) => ({
+                    fieldLabel: feature.fieldLabel,
+                    fieldValue: feature.fieldValue,
+                  }))
+                : [],
             features: [
               "Leather Interior",
               "Panoramic Roof",
@@ -75,7 +70,7 @@ export default function CarDetailsPage() {
             interiorColor: "Black Nappa Leather",
             vin: "WDDUG8DB1LA456789",
             stockNumber: "MB12345",
-            relatedCars: [2, 3, 6],
+            relatedCars: getRandomRelatedCars(productsData),
           };
           const mergedCar = {
             id: foundCar._id,
@@ -111,6 +106,18 @@ export default function CarDetailsPage() {
 
     loadData();
   }, [id, router]);
+
+  const getRandomRelatedCars = (productsData: any[]): string[] => {
+    const randomCars: string[] = []; // Explicitly type as string array
+    while (randomCars.length < 3) {
+      const randomIndex = Math.floor(Math.random() * productsData.length);
+      const randomCarId = productsData[randomIndex]._id;
+      if (!randomCars.includes(randomCarId)) {
+        randomCars.push(randomCarId);
+      }
+    }
+    return randomCars;
+  };
 
   const handlePrevImage = () => {
     if (!car) return;

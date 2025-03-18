@@ -1,49 +1,54 @@
-"use client"
+"use client";
 
-import Link from "next/link"
-import { Button } from "@/components/ui/button"
-import { ShoppingCart, Menu, X, Phone } from "lucide-react"
-import { useCart } from "@/context/cart-context"
-import { useState, useEffect } from "react"
-import { usePathname } from "next/navigation"
-import { Badge } from "@/components/ui/badge"
-import ShoppingCartSidebar from "./shopping-cart-sidebar"
-import { motion, AnimatePresence } from "framer-motion"
+import Link from "next/link";
+import { Button } from "@/components/ui/button";
+import { ShoppingCart, Menu, X, Phone } from "lucide-react";
+import { useCart } from "@/context/cart-context";
+import { useState, useEffect } from "react";
+import { usePathname } from "next/navigation";
+import { Badge } from "@/components/ui/badge";
+import ShoppingCartSidebar from "./shopping-cart-sidebar";
+import { motion, AnimatePresence } from "framer-motion";
 
 export default function Navbar() {
-  const { cartItems } = useCart()
-  const [isCartOpen, setIsCartOpen] = useState(false)
-  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false)
-  const [isScrolled, setIsScrolled] = useState(false)
-  const pathname = usePathname()
+  const { cartItems } = useCart();
+  const [isCartOpen, setIsCartOpen] = useState(false);
+  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  const [isScrolled, setIsScrolled] = useState(false);
+  const pathname = usePathname();
 
-  const totalItems = cartItems.reduce((total, item) => total + item.quantity, 0)
+  const totalItems = cartItems.reduce(
+    (total, item) => total + item.quantity,
+    0
+  );
 
   useEffect(() => {
     const handleScroll = () => {
       if (window.scrollY > 10) {
-        setIsScrolled(true)
+        setIsScrolled(true);
       } else {
-        setIsScrolled(false)
+        setIsScrolled(false);
       }
-    }
+    };
 
-    window.addEventListener("scroll", handleScroll)
-    return () => window.removeEventListener("scroll", handleScroll)
-  }, [])
+    window.addEventListener("scroll", handleScroll);
+    return () => window.removeEventListener("scroll", handleScroll);
+  }, []);
 
   const toggleCart = () => {
-    setIsCartOpen(!isCartOpen)
-  }
+    setIsCartOpen(!isCartOpen);
+  };
 
   const toggleMobileMenu = () => {
-    setIsMobileMenuOpen(!isMobileMenuOpen)
-  }
+    setIsMobileMenuOpen(!isMobileMenuOpen);
+  };
 
   return (
     <header
       className={`sticky top-0 z-50 w-full transition-all duration-300 ${
-        isScrolled ? "bg-background/95 backdrop-blur-md shadow-sm" : "bg-transparent"
+        isScrolled
+          ? "bg-background/95 backdrop-blur-md shadow-sm"
+          : "bg-transparent"
       }`}
     >
       <div className="container mx-auto px-4">
@@ -81,12 +86,14 @@ export default function Navbar() {
               About
             </Link>
             <Link
-              href="/contact"
+              href="/financing"
               className={`text-sm font-medium transition-colors hover:text-primary ${
-                pathname === "/contact" ? "text-primary" : "text-foreground/80"
+                pathname === "/financing"
+                  ? "text-primary"
+                  : "text-foreground/80"
               }`}
             >
-              Contact
+              Financing
             </Link>
           </nav>
 
@@ -96,7 +103,13 @@ export default function Navbar() {
               <span className="text-sm font-medium">+1 (555) 123-4567</span>
             </div>
 
-            <Button variant="ghost" size="icon" className="relative" onClick={toggleCart} aria-label="Shopping cart">
+            <Button
+              variant="ghost"
+              size="icon"
+              className="relative"
+              onClick={toggleCart}
+              aria-label="Shopping cart"
+            >
               <ShoppingCart className="h-5 w-5" />
               {totalItems > 0 && (
                 <Badge
@@ -108,7 +121,10 @@ export default function Navbar() {
               )}
             </Button>
 
-            <Button variant="default" className="hidden md:inline-flex bg-primary hover:bg-primary/90">
+            <Button
+              variant="default"
+              className="hidden md:inline-flex bg-primary hover:bg-primary/90"
+            >
               Sign In
             </Button>
 
@@ -119,7 +135,11 @@ export default function Navbar() {
               onClick={toggleMobileMenu}
               aria-label="Toggle menu"
             >
-              {isMobileMenuOpen ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
+              {isMobileMenuOpen ? (
+                <X className="h-5 w-5" />
+              ) : (
+                <Menu className="h-5 w-5" />
+              )}
             </Button>
           </div>
         </div>
@@ -170,18 +190,21 @@ export default function Navbar() {
                 About
               </Link>
               <Link
-                href="/contact"
+                href="/financing"
                 className={`block rounded-md px-3 py-2 text-base font-medium ${
-                  pathname === "/contact"
+                  pathname === "/financing"
                     ? "bg-primary/10 text-primary"
                     : "text-foreground/80 hover:bg-accent hover:text-accent-foreground"
                 }`}
                 onClick={() => setIsMobileMenuOpen(false)}
               >
-                Contact
+                Financing
               </Link>
               <div className="pt-2">
-                <Button className="w-full bg-primary hover:bg-primary/90" size="sm">
+                <Button
+                  className="w-full bg-primary hover:bg-primary/90"
+                  size="sm"
+                >
                   Sign In
                 </Button>
               </div>
@@ -190,8 +213,10 @@ export default function Navbar() {
         )}
       </AnimatePresence>
 
-      <ShoppingCartSidebar isOpen={isCartOpen} onClose={() => setIsCartOpen(false)} />
+      <ShoppingCartSidebar
+        isOpen={isCartOpen}
+        onClose={() => setIsCartOpen(false)}
+      />
     </header>
-  )
+  );
 }
-

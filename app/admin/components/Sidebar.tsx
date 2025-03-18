@@ -47,8 +47,8 @@ const navItems: NavItem[] = [
   { icon: Image, label: "Banners", href: "/admin/dashboard/banners" },
   { icon: Tag, label: "Brands", href: "/admin/dashboard/brands" },
   { icon: BarChartBig, label: "Features", href: "/admin/dashboard/features" },
-  { icon: UserIcon, label: "Profile", href: "/profile" },
-  { icon: Settings, label: "Settings", href: "/settings" },
+  { icon: UserIcon, label: "Profile", href: "/admin/dashboard/profile" },
+  // { icon: Settings, label: "Settings", href: "/settings" },
 ];
 
 const Sidebar = () => {

@@ -4,27 +4,17 @@ import { motion } from "framer-motion";
 import Link from "next/link";
 import { Card, CardHeader, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-import { Calendar, Gauge } from "lucide-react";
-
-interface RelatedCar {
-  _id: string;
-  id?: string;
-  name: string;
-  category: string;
-  images: string[];
-  price: number;
-  year: number;
-  mileage: number;
-}
+import { Calendar, Gauge, ShoppingCart } from "lucide-react";
 
 interface RelatedCarsSectionProps {
-  relatedCars: RelatedCar[];
+  relatedCars: any[];
 }
 
 const RelatedCarsSection: React.FC<RelatedCarsSectionProps> = ({
   relatedCars,
 }) => {
   if (relatedCars.length === 0) return null;
+  console.log("relatedCars", relatedCars);
 
   return (
     <section className="container mx-auto px-4 mt-16">
@@ -52,7 +42,7 @@ const RelatedCarsSection: React.FC<RelatedCarsSectionProps> = ({
                         className="w-full h-full object-cover"
                       />
                       <Badge className="absolute top-2 left-2 bg-primary hover:bg-primary/90 z-10">
-                        {relatedCar.category}
+                        {relatedCar.category.name}
                       </Badge>
                     </div>
                   </CardHeader>
@@ -64,11 +54,8 @@ const RelatedCarsSection: React.FC<RelatedCarsSectionProps> = ({
                       ${relatedCar.price.toLocaleString()}
                     </p>
                     <div className="flex items-center text-sm text-muted-foreground">
-                      <Calendar className="h-4 w-4 mr-1" />
-                      <span>{relatedCar.year}</span>
-                      <span className="mx-2">•</span>
-                      <Gauge className="h-4 w-4 mr-1" />
-                      <span>{relatedCar.mileage.toLocaleString()} miles</span>
+                      <ShoppingCart className="h-4 w-4 mr-1" />
+                      <span>{relatedCar.stock} in stock</span>
                     </div>
                   </CardContent>
                 </Card>

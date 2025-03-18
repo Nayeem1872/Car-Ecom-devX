@@ -23,14 +23,7 @@ import {
   Heart,
 } from "lucide-react";
 import BookTestDriveButton from "@/components/book-test-drive-button";
-
-interface CarDetailsContentProps {
-  car: any;
-  currentImageIndex: number;
-  setCurrentImageIndex: (index: number) => void;
-  handlePrevImage: () => void;
-  handleNextImage: () => void;
-}
+import { CarDetailsContentProps } from "../carTypes/types";
 
 const CarDetailsContent: React.FC<CarDetailsContentProps> = ({
   car,
@@ -122,6 +115,7 @@ const CarDetailsContent: React.FC<CarDetailsContentProps> = ({
                 <TabsTrigger value="specifications">Specifications</TabsTrigger>
                 <TabsTrigger value="features">Features</TabsTrigger>
               </TabsList>
+
               <TabsContent
                 value="overview"
                 className="bg-white rounded-xl p-6 shadow-md"
@@ -158,11 +152,7 @@ const CarDetailsContent: React.FC<CarDetailsContentProps> = ({
                       <Fuel className="h-5 w-5 text-primary mr-2" />
                       <h4 className="font-medium">Fuel Type</h4>
                     </div>
-                    <p>
-                      {car.specs.engine.includes("Electric")
-                        ? "Electric"
-                        : "Gasoline"}
-                    </p>
+                    <p>Gasoline</p>
                   </div>
                 </div>
 
@@ -207,78 +197,19 @@ const CarDetailsContent: React.FC<CarDetailsContentProps> = ({
                 </h3>
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                   <div className="space-y-4">
-                    <div>
-                      <h4 className="font-semibold mb-1">Engine</h4>
-                      <p className="text-muted-foreground">
-                        {car.specs.engine}
-                      </p>
-                    </div>
-                    <div>
-                      <h4 className="font-semibold mb-1">Power</h4>
-                      <p className="text-muted-foreground">{car.specs.power}</p>
-                    </div>
-                    <div>
-                      <h4 className="font-semibold mb-1">Torque</h4>
-                      <p className="text-muted-foreground">
-                        {car.specs.torque}
-                      </p>
-                    </div>
-                    <div>
-                      <h4 className="font-semibold mb-1">
-                        Acceleration (0-60 mph)
-                      </h4>
-                      <p className="text-muted-foreground">
-                        {car.specs.acceleration}
-                      </p>
-                    </div>
-                    <div>
-                      <h4 className="font-semibold mb-1">Top Speed</h4>
-                      <p className="text-muted-foreground">
-                        {car.specs.topSpeed}
-                      </p>
-                    </div>
-                  </div>
-                  <div className="space-y-4">
-                    <div>
-                      <h4 className="font-semibold mb-1">Transmission</h4>
-                      <p className="text-muted-foreground">
-                        {car.specs.transmission}
-                      </p>
-                    </div>
-                    <div>
-                      <h4 className="font-semibold mb-1">Drivetrain</h4>
-                      <p className="text-muted-foreground">
-                        {car.specs.drivetrain}
-                      </p>
-                    </div>
-                    {car.specs.fuelEconomy && (
-                      <div>
-                        <h4 className="font-semibold mb-1">Fuel Economy</h4>
-                        <p className="text-muted-foreground">
-                          {car.specs.fuelEconomy}
-                        </p>
-                      </div>
-                    )}
-                    {car.specs.range && (
-                      <div>
-                        <h4 className="font-semibold mb-1">Electric Range</h4>
-                        <p className="text-muted-foreground">
-                          {car.specs.range}
-                        </p>
-                      </div>
-                    )}
-                    <div>
-                      <h4 className="font-semibold mb-1">Weight</h4>
-                      <p className="text-muted-foreground">
-                        {car.specs.weight}
-                      </p>
-                    </div>
-                    <div>
-                      <h4 className="font-semibold mb-1">Dimensions</h4>
-                      <p className="text-muted-foreground">
-                        {car.specs.dimensions}
-                      </p>
-                    </div>
+                    {/* Loop through car.specs and display each feature */}
+                    {car.specs &&
+                      Object.entries(car.specs).map(([key, value], index) => (
+                        <div key={index}>
+                          <h4 className="font-semibold mb-2 flex items-center">
+                            <Info className="h-4 w-4 text-primary mr-2" />
+                            {value.fieldLabel}
+                          </h4>
+                          <p className="text-muted-foreground">
+                            {value.fieldValue}
+                          </p>
+                        </div>
+                      ))}
                   </div>
                 </div>
               </TabsContent>
@@ -289,12 +220,15 @@ const CarDetailsContent: React.FC<CarDetailsContentProps> = ({
               >
                 <h3 className="text-2xl font-bold mb-4">Features & Options</h3>
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                  {car.features.map((feature: string, index: number) => (
-                    <div key={index} className="flex items-start">
-                      <Check className="h-5 w-5 text-primary mr-2 mt-0.5" />
-                      <span>{feature}</span>
-                    </div>
-                  ))}
+                  {car.features &&
+                    car.features.map((feature, index) => (
+                      <div key={index} className="flex items-start">
+                        <Check className="h-5 w-5 text-primary mr-2 mt-0.5" />
+                        <span>
+                          {feature.fieldLabel}: {feature.fieldValue}
+                        </span>
+                      </div>
+                    ))}
                 </div>
               </TabsContent>
             </Tabs>
@@ -315,7 +249,7 @@ const CarDetailsContent: React.FC<CarDetailsContentProps> = ({
             <p className="text-muted-foreground mb-6">Plus taxes & licensing</p>
 
             <div className="space-y-4 mb-6">
-              <BookTestDriveButton carId={car.id} className="w-full" />
+              {/* <BookTestDriveButton carId={car.id} className="w-full" /> */}
 
               <Button className="w-full bg-green-600 hover:bg-green-700 group">
                 <CreditCard className="mr-2 h-4 w-4 transition-transform group-hover:scale-110" />

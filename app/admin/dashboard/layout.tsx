@@ -12,7 +12,7 @@ interface DashboardLayoutProps {
 const DashboardLayout = ({ children }: DashboardLayoutProps) => {
   const router = useRouter();
   useEffect(() => {
-    const fetchCategories = async () => {
+    const fetchUser = async () => {
       try {
         const response = await axios.get("/api/ecom/user");
         if (
@@ -23,11 +23,11 @@ const DashboardLayout = ({ children }: DashboardLayoutProps) => {
           router.push("/admin");
         }
       } catch (error) {
-        console.error("Error fetching categories:", error);
+        console.error("Error fetching User:", error);
       }
     };
 
-    fetchCategories();
+    fetchUser();
   }, []);
   //   if (isLoading) {
   //     return (
