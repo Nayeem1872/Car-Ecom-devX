@@ -1,3 +1,4 @@
+"use client";
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
 import {
@@ -15,11 +16,55 @@ import BrandsSection from "@/components/brands-section";
 import CounterSection from "@/components/counter-section";
 import Footer from "@/components/footer";
 import Navbar from "@/components/navbar";
+import FinancingSection from "@/components/financing-section";
+import { useEffect, useState } from "react";
+import axios from "axios";
 
+interface Vendor {
+  _id: string;
+  vendorName: string;
+  vendorDetails: string;
+  logo: string;
+  vendorAddress: {
+    street: string;
+    city: string;
+    state: string;
+    country: string;
+    postalCode: string;
+    _id: string;
+  }[];
+  vendorType: string;
+  createdBy: string;
+  updatedBy: string;
+  createdAt: string;
+  updatedAt: string;
+  phoneNo: string[];
+  serviceEmail: string;
+}
 export default function Home() {
+  const [userInfo, setUserInfo] = useState<{ vendors: Vendor[] } | null>(null);
+  const [isLoading, setIsLoading] = useState(true);
+
+  useEffect(() => {
+    const fetchUser = async () => {
+      try {
+        const response = await axios.get("/api/ecom/vendor/get");
+        setUserInfo(response.data.data);
+        setIsLoading(false);
+      } catch (error) {
+        console.error("Error fetching User:", error);
+        setIsLoading(false);
+      }
+    };
+
+    fetchUser();
+  }, []);
+
+  console.log("userInfo", userInfo);
+
   return (
     <main className="min-h-screen">
-      <Navbar />
+      <Navbar vendor={userInfo ? userInfo.vendors[0] : null} />
       <HeroSection />
 
       <section className="container mx-auto py-16 px-4">
@@ -97,6 +142,8 @@ export default function Home() {
       <CounterSection />
 
       <BrandsSection />
+
+      <FinancingSection />
 
       <Testimonials />
 

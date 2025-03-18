@@ -2,25 +2,22 @@
 
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
-import { ShoppingCart, Menu, X, Phone } from "lucide-react";
+import { Menu, X, Phone } from "lucide-react";
 import { useCart } from "@/context/cart-context";
 import { useState, useEffect } from "react";
 import { usePathname } from "next/navigation";
-import { Badge } from "@/components/ui/badge";
-import ShoppingCartSidebar from "./shopping-cart-sidebar";
 import { motion, AnimatePresence } from "framer-motion";
 
-export default function Navbar() {
-  const { cartItems } = useCart();
-  const [isCartOpen, setIsCartOpen] = useState(false);
+interface NavbarProps {
+  vendor: any;
+}
+
+export default function Navbar({ vendor }: NavbarProps) {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [isScrolled, setIsScrolled] = useState(false);
   const pathname = usePathname();
 
-  const totalItems = cartItems.reduce(
-    (total, item) => total + item.quantity,
-    0
-  );
+  console.log("vendor", vendor);
 
   useEffect(() => {
     const handleScroll = () => {
@@ -34,10 +31,6 @@ export default function Navbar() {
     window.addEventListener("scroll", handleScroll);
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
-
-  const toggleCart = () => {
-    setIsCartOpen(!isCartOpen);
-  };
 
   const toggleMobileMenu = () => {
     setIsMobileMenuOpen(!isMobileMenuOpen);
@@ -100,33 +93,8 @@ export default function Navbar() {
           <div className="flex items-center space-x-4">
             <div className="hidden md:flex items-center mr-4">
               <Phone className="h-4 w-4 text-primary mr-2" />
-              <span className="text-sm font-medium">+1 (555) 123-4567</span>
+              <span className="text-sm font-medium">+{vendor.phoneNo[0]}</span>
             </div>
-
-            <Button
-              variant="ghost"
-              size="icon"
-              className="relative"
-              onClick={toggleCart}
-              aria-label="Shopping cart"
-            >
-              <ShoppingCart className="h-5 w-5" />
-              {totalItems > 0 && (
-                <Badge
-                  className="absolute -top-2 -right-2 flex h-5 w-5 items-center justify-center rounded-full p-0 text-xs animate-fade-in bg-primary"
-                  variant="default"
-                >
-                  {totalItems}
-                </Badge>
-              )}
-            </Button>
-
-            <Button
-              variant="default"
-              className="hidden md:inline-flex bg-primary hover:bg-primary/90"
-            >
-              Sign In
-            </Button>
 
             <Button
               variant="outline"
@@ -200,23 +168,10 @@ export default function Navbar() {
               >
                 Financing
               </Link>
-              <div className="pt-2">
-                <Button
-                  className="w-full bg-primary hover:bg-primary/90"
-                  size="sm"
-                >
-                  Sign In
-                </Button>
-              </div>
             </div>
           </motion.div>
         )}
       </AnimatePresence>
-
-      <ShoppingCartSidebar
-        isOpen={isCartOpen}
-        onClose={() => setIsCartOpen(false)}
-      />
     </header>
   );
 }
