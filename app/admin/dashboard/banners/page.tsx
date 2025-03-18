@@ -108,7 +108,6 @@ const BannerManagement = () => {
   const filteredBanners = banners.filter((banner) =>
     banner.name.toLowerCase().includes(searchTerm.toLowerCase())
   );
-  console.log("banners", banners);
 
   return (
     <>

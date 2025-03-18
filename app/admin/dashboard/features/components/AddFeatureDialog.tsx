@@ -145,8 +145,6 @@ const AddFeatureDialog: React.FC<AddFeatureDialogProps> = ({
     }
   };
 
-  console.log("availableCategories", availableCategories);
-
   const handleAddCustomField = () => {
     if (!editingCustomField.fieldName || !editingCustomField.fieldLabel) {
       toast({

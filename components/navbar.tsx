@@ -9,15 +9,13 @@ import { usePathname } from "next/navigation";
 import { motion, AnimatePresence } from "framer-motion";
 
 interface NavbarProps {
-  vendor: any;
+  vendor?: any;
 }
 
 export default function Navbar({ vendor }: NavbarProps) {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [isScrolled, setIsScrolled] = useState(false);
   const pathname = usePathname();
-
-  console.log("vendor", vendor);
 
   useEffect(() => {
     const handleScroll = () => {

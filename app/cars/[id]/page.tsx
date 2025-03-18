@@ -39,11 +39,9 @@ export default function CarDetailsPage() {
         const response = await axios.get("/api/ecom/product/get?all=true");
         const productsData = response.data.data;
         setProducts(productsData);
-        console.log("productsData", productsData);
 
         const carId = id;
         const foundCar = productsData.find((c: any) => c._id === carId);
-        console.log("foundCar", foundCar);
 
         if (foundCar) {
           const { category, brand, ...rest } = foundCar;

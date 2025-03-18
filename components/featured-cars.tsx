@@ -58,7 +58,6 @@ export default function FeaturedCars() {
   }, [featuredCars]);
 
   const handleAddToCart = (car: any) => {
-    // Replace with your addToCart logic.
     console.log("Add to Cart", car);
   };
 

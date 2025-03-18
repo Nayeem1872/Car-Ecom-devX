@@ -48,11 +48,11 @@ const EditBrandModal = ({
     if (e.target.files && e.target.files.length > 0) {
       const file = e.target.files[0];
       setNewLogoFile(file);
-      // Update parent's brand state with the newLogoFile
+    
       setBrand({ ...brand, newLogoFile: file });
     }
   };
-  console.log("brand", brand);
+  
 
   return (
     <Dialog open={open} onOpenChange={setOpen}>

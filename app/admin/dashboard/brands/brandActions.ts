@@ -101,7 +101,7 @@ export const handleEditBrandAction = async ({
 
       logoUrl = uploadResponse.data.data[0].serverPath;
     }
-    console.log("editBrand", editBrand);
+  
 
     const payload = {
       name: editBrand.name,

@@ -112,8 +112,6 @@ const Products = () => {
           )
         : [];
 
-      console.log("newProduct", newProduct);
-
       const payload = {
         name: newProduct.name,
         description: newProduct.description,
