@@ -17,8 +17,12 @@ import {
 } from "lucide-react";
 import Navbar from "@/components/navbar";
 import Footer from "@/components/footer";
+import useFetchData from "@/hooks/useFetchData";
 
 export default function AboutPage() {
+  const { data: userInfo, isLoading } = useFetchData<{ vendors: any[] }>(
+    "/api/ecom/vendor/get"
+  );
   const containerRef = useRef(null);
   const { scrollYProgress } = useScroll({
     target: containerRef,
@@ -38,7 +42,6 @@ export default function AboutPage() {
 
   return (
     <main className="min-h-screen relative overflow-hidden" ref={containerRef}>
-      <Navbar />
       <div className="absolute inset-0 -z-10 overflow-hidden">
         <motion.div
           className="absolute top-20 left-10 opacity-5"
@@ -617,7 +620,6 @@ export default function AboutPage() {
           </motion.div>
         </div>
       </section>
-      <Footer />
     </main>
   );
 }

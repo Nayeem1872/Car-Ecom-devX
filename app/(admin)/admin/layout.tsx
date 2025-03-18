@@ -1,18 +1,8 @@
-import type React from "react";
-import type { Metadata } from "next";
-import { Inter } from "next/font/google";
-import "./globals.css";
+// You can create your custom Footer component
+
 import { CartProvider } from "@/context/cart-context";
 import { Toaster } from "@/components/ui/toaster";
-
-const inter = Inter({ subsets: ["latin"] });
-
-export const metadata: Metadata = {
-  title: "DevXCars - Find Your Dream Car",
-  description:
-    "Premium car dealership with a wide selection of luxury vehicles",
-  generator: "DevX",
-};
+import "./globals.css";
 
 export default function RootLayout({
   children,
@@ -21,7 +11,7 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body className={inter.className}>
+      <body>
         <CartProvider>
           <div className="flex min-h-screen flex-col">
             <div className="flex-1">{children}</div>
@@ -32,5 +22,3 @@ export default function RootLayout({
     </html>
   );
 }
-
-import "./globals.css";

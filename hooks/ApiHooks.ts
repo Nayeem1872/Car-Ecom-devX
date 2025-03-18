@@ -29,3 +29,8 @@ export const fetchBanners = async () => {
   const response = await axios.get("/api/ecom/banner/get");
   return response.data.data;
 };
+
+export const fetchVendorUser = async () => {
+  const response = await axios.get("/api/ecom/vendor/get");
+  return response.data.vendors[0];
+};

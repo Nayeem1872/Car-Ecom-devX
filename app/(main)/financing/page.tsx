@@ -2,7 +2,7 @@
 
 import type React from "react";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { motion } from "framer-motion";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -30,11 +30,33 @@ import {
 } from "lucide-react";
 import Navbar from "@/components/navbar";
 import Footer from "@/components/footer";
+import useFetchData from "@/hooks/useFetchData";
+import axios from "axios";
 
-export default function ContactPage() {
+interface Vendor {
+  _id: string;
+  vendorName: string;
+  vendorDetails: string;
+  logo: string;
+  vendorAddress: {
+    street: string;
+    city: string;
+    state: string;
+    country: string;
+    postalCode: string;
+    _id: string;
+  }[];
+  vendorType: string;
+  createdBy: string;
+  updatedBy: string;
+  createdAt: string;
+  updatedAt: string;
+  phoneNo: string[];
+  serviceEmail: string;
+}
+export default function FinancePage() {
   const { toast } = useToast();
   const [formStep, setFormStep] = useState(0);
-
   const nextFormStep = () => {
     setFormStep((prev) => prev + 1);
   };
@@ -54,7 +76,6 @@ export default function ContactPage() {
 
   return (
     <>
-      <Navbar />
       <div className="min-h-screen py-12 bg-gradient-to-b from-white to-gray-100">
         <div className="container mx-auto px-4">
           <div className="max-w-4xl mx-auto">
@@ -639,7 +660,6 @@ export default function ContactPage() {
           </div>
         </div>
       </div>
-      <Footer />
     </>
   );
 }

@@ -32,8 +32,7 @@ import {
   SheetTrigger,
 } from "@/components/ui/sheet";
 import Link from "next/link";
-import Navbar from "@/components/navbar";
-import Footer from "@/components/footer";
+
 import { fetchBrands, fetchCategories } from "@/hooks/ApiHooks";
 import axios from "axios";
 
@@ -41,6 +40,7 @@ const years = ["All", "2023", "2022", "2021", "2020"];
 
 export default function CarsPage() {
   const { addToCart } = useCart();
+
   const { toast } = useToast();
   const [favorites, setFavorites] = useState<string[]>([]);
   const [brands, setBrands] = useState<string[]>([]);
@@ -56,7 +56,7 @@ export default function CarsPage() {
   useEffect(() => {
     const loadData = async () => {
       setIsLoading(true);
-      // Fetch brands and categories then transform the data to a simple string array
+
       try {
         const brandsData = await fetchBrands();
         const brandNames = [
@@ -142,11 +142,10 @@ export default function CarsPage() {
       matchesPrice
     );
   });
+  console.log("filteredCars", filteredCars);
 
   return (
     <>
-      <Navbar />
-
       <main className="min-h-screen py-12">
         <div className="container mx-auto px-4">
           <div className="mb-8">
@@ -418,17 +417,19 @@ export default function CarsPage() {
                               ${product.price.toLocaleString()}
                             </p>
                             <div className="flex flex-wrap gap-2 mt-2">
-                              {product.features.map(
-                                (feature: any, index: number) => (
-                                  <Badge
-                                    key={index}
-                                    variant="secondary"
-                                    className="font-normal"
-                                  >
-                                    {feature}
-                                  </Badge>
-                                )
-                              )}
+                              {/* Render each feature */}
+                              {product.features &&
+                                product.features.map(
+                                  (feature: any, index: number) => (
+                                    <Badge
+                                      key={index}
+                                      variant="secondary"
+                                      className="font-normal"
+                                    >
+                                      {feature.fieldLabel}: {feature.fieldValue}
+                                    </Badge>
+                                  )
+                                )}
                             </div>
                           </CardContent>
                           <CardFooter className="p-4 pt-0 flex gap-2">
@@ -451,8 +452,6 @@ export default function CarsPage() {
           </div>
         </div>
       </main>
-
-      <Footer />
     </>
   );
 }

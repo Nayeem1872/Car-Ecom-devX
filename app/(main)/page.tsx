@@ -20,59 +20,9 @@ import FinancingSection from "@/components/financing-section";
 import { useEffect, useState } from "react";
 import axios from "axios";
 
-interface Vendor {
-  _id: string;
-  vendorName: string;
-  vendorDetails: string;
-  logo: string;
-  vendorAddress: {
-    street: string;
-    city: string;
-    state: string;
-    country: string;
-    postalCode: string;
-    _id: string;
-  }[];
-  vendorType: string;
-  createdBy: string;
-  updatedBy: string;
-  createdAt: string;
-  updatedAt: string;
-  phoneNo: string[];
-  serviceEmail: string;
-}
 export default function Home() {
-  const [userInfo, setUserInfo] = useState<{ vendors: Vendor[] } | null>(null);
-  const [isLoading, setIsLoading] = useState(true);
-
-  useEffect(() => {
-    const fetchUser = async () => {
-      try {
-        const response = await axios.get("/api/ecom/vendor/get");
-        setUserInfo(response.data.data);
-        setIsLoading(false);
-      } catch (error) {
-        console.error("Error fetching User:", error);
-        setIsLoading(false);
-      }
-    };
-
-    fetchUser();
-  }, []);
-
-  const Loader = () => (
-    <div className="flex justify-center items-center min-h-screen">
-      <div className="animate-spin rounded-full h-16 w-16 border-t-4 border-red-500"></div>
-    </div>
-  );
-
-  if (isLoading) {
-    return <Loader />;
-  }
-
   return (
     <main className="min-h-screen">
-      <Navbar vendor={userInfo ? userInfo.vendors[0] : null} />
       <HeroSection />
 
       <section className="container mx-auto py-16 px-4">
@@ -174,7 +124,7 @@ export default function Home() {
           </Link>
         </div>
       </section>
-      <Footer />
+      {/* <Footer /> */}
     </main>
   );
 }
