@@ -12,8 +12,10 @@ export interface ProfileData {
   lastName: string;
   email: string;
   vendor: {
+    _id: string;
     vendorName: string;
     phoneNo: string[];
+    serviceEmail: string;
     vendorAddress: VendorAddress[];
   };
   mfaEnabled: boolean;

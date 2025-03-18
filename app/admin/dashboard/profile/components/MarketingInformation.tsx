@@ -31,6 +31,8 @@ const MarketingInformation: React.FC<MarketingInformationProps> = ({
   handleRemovePhoneNumber,
   handleAddressChange,
 }) => {
+  console.log("profileData", profileData);
+
   return (
     <div className="grid gap-6">
       <Card>
@@ -41,7 +43,42 @@ const MarketingInformation: React.FC<MarketingInformationProps> = ({
           </CardDescription>
         </CardHeader>
         <CardContent className="space-y-6">
-          {/* Phone Numbers */}
+          <div className="space-y-2">
+            <Label className="flex items-center gap-2">Vendor Name:</Label>
+            <Input
+              value={profileData.vendor?.vendorName || ""}
+              onChange={(e) =>
+                setProfileData({
+                  ...profileData,
+                  vendor: {
+                    ...profileData.vendor,
+                    vendorName: e.target.value,
+                  },
+                })
+              }
+              disabled={!isEditing}
+              placeholder="Enter Vendor Name"
+            />
+          </div>
+
+          {/* Service Email */}
+          <div className="space-y-2">
+            <Label className="flex items-center gap-2">Service Email:</Label>
+            <Input
+              value={profileData.vendor?.serviceEmail || ""}
+              onChange={(e) =>
+                setProfileData({
+                  ...profileData,
+                  vendor: {
+                    ...profileData.vendor,
+                    serviceEmail: e.target.value,
+                  },
+                })
+              }
+              disabled={!isEditing}
+              placeholder="Enter Service Email"
+            />
+          </div>
           <div className="space-y-2">
             <Label htmlFor="phoneNo" className="flex items-center gap-2">
               <Phone size={16} />
