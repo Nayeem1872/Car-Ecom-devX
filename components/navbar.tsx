@@ -90,9 +90,7 @@ export default function Navbar({ vendor }: NavbarProps) {
             <Link
               href="/contact"
               className={`text-sm font-medium transition-colors hover:text-primary ${
-                pathname === "/financing"
-                  ? "text-primary"
-                  : "text-foreground/80"
+                pathname === "/contact" ? "text-primary" : "text-foreground/80"
               }`}
             >
               Contact Us

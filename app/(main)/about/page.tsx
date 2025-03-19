@@ -333,7 +333,7 @@ export default function AboutPage() {
                 </li>
               </ul>
               <div className="mt-8">
-                <Link href="/contact">
+                <Link href="/financing">
                   <Button className="bg-primary hover:bg-primary/90">
                     Apply for Financing
                   </Button>

@@ -56,7 +56,31 @@ export default function FinancePage() {
     loadData();
   }, []);
 
-  console.log("products", products);
+  const [userInfo, setUserInfo] = useState<{ vendors: any[] } | null>(null);
+
+  useEffect(() => {
+    const fetchUser = async () => {
+      try {
+        const response = await axios.get("/api/ecom/vendor/get");
+        setUserInfo(response.data.data);
+        setIsLoading(false);
+      } catch (error) {
+        console.error("Error fetching User:", error);
+        setIsLoading(false);
+      }
+    };
+
+    fetchUser();
+  }, []);
+  const Loader = () => (
+    <div className="flex justify-center items-center min-h-screen">
+      <div className="animate-spin rounded-full h-16 w-16 border-t-4 border-red-500"></div>
+    </div>
+  );
+
+  if (isLoading) {
+    return <Loader />;
+  }
 
   return (
     <>
@@ -70,7 +94,7 @@ export default function FinancePage() {
               className="text-center mb-12"
             >
               <h1 className="text-4xl md:text-5xl font-bold mb-4">
-                Contact <span className="text-primary">Us</span>
+                Finance <span className="text-primary">Information</span>
               </h1>
               <p className="text-muted-foreground max-w-2xl mx-auto">
                 Fill out the form below to get in touch with our team. We'll
@@ -173,8 +197,18 @@ export default function FinancePage() {
                   <Phone className="h-6 w-6 text-primary" />
                 </div>
                 <h3 className="text-lg font-semibold mb-2">Call Us</h3>
-                <p className="text-muted-foreground">+1 (555) 123-4567</p>
-                <p className="text-muted-foreground">Monday-Friday: 9am-6pm</p>
+
+                {userInfo && userInfo.vendors[0]?.phoneNo?.length > 0
+                  ? userInfo.vendors[0].phoneNo.map(
+                      (phone: any, index: any) => (
+                        <span key={index}>
+                          + {phone}
+                          {index < userInfo.vendors[0].phoneNo.length - 1 &&
+                            ", "}
+                        </span>
+                      )
+                    )
+                  : ""}
               </motion.div>
 
               <motion.div
@@ -187,8 +221,11 @@ export default function FinancePage() {
                   <Mail className="h-6 w-6 text-primary" />
                 </div>
                 <h3 className="text-lg font-semibold mb-2">Email Us</h3>
-                <p className="text-muted-foreground">info@luxurycars.com</p>
-                <p className="text-muted-foreground">sales@luxurycars.com</p>
+                <p className="text-muted-foreground">
+                  {userInfo?.vendors[0].serviceEmail
+                    ? userInfo.vendors[0].serviceEmail
+                    : ""}
+                </p>
               </motion.div>
 
               <motion.div
@@ -201,8 +238,22 @@ export default function FinancePage() {
                   <MapPin className="h-6 w-6 text-primary" />
                 </div>
                 <h3 className="text-lg font-semibold mb-2">Visit Us</h3>
-                <p className="text-muted-foreground">123 Luxury Lane</p>
-                <p className="text-muted-foreground">Beverly Hills, CA 90210</p>
+
+                {userInfo?.vendors[0]?.vendorAddress?.[0] ? (
+                  <>
+                    {userInfo?.vendors[0].vendorAddress[0].street &&
+                      `${userInfo?.vendors[0].vendorAddress[0].street}, `}
+                    {userInfo?.vendors[0].vendorAddress[0].city &&
+                      `${userInfo?.vendors[0].vendorAddress[0].city}, `}
+                    {userInfo?.vendors[0].vendorAddress[0].state &&
+                      `${userInfo?.vendors[0].vendorAddress[0].state}, `}
+                    {userInfo?.vendors[0].vendorAddress[0].country &&
+                      `${userInfo?.vendors[0].vendorAddress[0].country}, `}
+                    {userInfo?.vendors[0].vendorAddress[0].postalCode}
+                  </>
+                ) : (
+                  "Address not available"
+                )}
               </motion.div>
             </div>
           </div>

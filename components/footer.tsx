@@ -187,19 +187,19 @@ export default function Footer({ vendor }: FooterProps) {
             </p>
             <div className="flex space-x-6">
               <Link
-                href="/terms"
+                href="/"
                 className="text-sm text-muted-foreground hover:text-primary transition-colors"
               >
                 Terms of Service
               </Link>
               <Link
-                href="/privacy"
+                href="/"
                 className="text-sm text-muted-foreground hover:text-primary transition-colors"
               >
                 Privacy Policy
               </Link>
               <Link
-                href="/faq"
+                href="/"
                 className="text-sm text-muted-foreground hover:text-primary transition-colors"
               >
                 FAQ

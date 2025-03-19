@@ -11,12 +11,6 @@ import { metadata } from "@/context/metadata";
 
 const inter = Inter({ subsets: ["latin"] });
 
-const Loader = () => (
-  <div className="flex justify-center items-center min-h-screen">
-    <div className="animate-spin rounded-full h-16 w-16 border-t-4 border-red-500"></div>
-  </div>
-);
-
 const MainContent = ({ children }: { children: React.ReactNode }) => {
   const [userInfo, setUserInfo] = useState<{ vendors: any[] } | null>(null);
   const [isLoading, setIsLoading] = useState(true);
@@ -35,6 +29,11 @@ const MainContent = ({ children }: { children: React.ReactNode }) => {
 
     fetchUser();
   }, []);
+  const Loader = () => (
+    <div className="flex justify-center items-center min-h-screen">
+      <div className="animate-spin rounded-full h-16 w-16 border-t-4 border-red-500"></div>
+    </div>
+  );
 
   if (isLoading) {
     return <Loader />;
