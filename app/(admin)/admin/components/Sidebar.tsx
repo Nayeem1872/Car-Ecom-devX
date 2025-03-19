@@ -5,8 +5,6 @@ import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
 import {
   LayoutDashboard,
-  BarChartBig,
-  Settings,
   User as UserIcon,
   LogOut,
   ChevronLeft,
@@ -15,6 +13,8 @@ import {
   TagsIcon,
   Tag,
   Image,
+  CreditCard,
+  Puzzle,
 } from "lucide-react";
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
@@ -46,7 +46,12 @@ const navItems: NavItem[] = [
   { icon: TagsIcon, label: "Categories", href: "/admin/dashboard/categories" },
   { icon: Image, label: "Banners", href: "/admin/dashboard/banners" },
   { icon: Tag, label: "Brands", href: "/admin/dashboard/brands" },
-  { icon: BarChartBig, label: "Features", href: "/admin/dashboard/features" },
+  { icon: Puzzle, label: "Features", href: "/admin/dashboard/features" },
+  {
+    icon: CreditCard,
+    label: "Finance Request",
+    href: "/admin/dashboard/finance-request",
+  },
   { icon: UserIcon, label: "Profile", href: "/admin/dashboard/profile" },
   // { icon: Settings, label: "Settings", href: "/settings" },
 ];

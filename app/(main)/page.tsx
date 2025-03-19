@@ -14,11 +14,7 @@ import HeroSection from "@/components/hero-section";
 import Testimonials from "@/components/testimonials";
 import BrandsSection from "@/components/brands-section";
 import CounterSection from "@/components/counter-section";
-import Footer from "@/components/footer";
-import Navbar from "@/components/navbar";
 import FinancingSection from "@/components/financing-section";
-import { useEffect, useState } from "react";
-import axios from "axios";
 
 export default function Home() {
   return (

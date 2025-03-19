@@ -8,8 +8,34 @@ import {
   Phone,
   MapPin,
 } from "lucide-react";
+import { fetchCategories } from "@/hooks/ApiHooks";
+import { useEffect, useState } from "react";
+interface FooterProps {
+  vendor?: any;
+}
 
-export default function Footer() {
+export default function Footer({ vendor }: FooterProps) {
+  const [isLoading, setIsLoading] = useState(true);
+  const [categories, setCategories] = useState<any[]>([]);
+  console.log("Vendor", vendor);
+  useEffect(() => {
+    const loadData = async () => {
+      setIsLoading(true);
+
+      try {
+        const categoriesData = await fetchCategories();
+        setCategories(categoriesData);
+      } catch (error) {
+        console.error("Error fetching categories:", error);
+      } finally {
+        setIsLoading(false);
+      }
+    };
+
+    loadData();
+  }, []);
+  console.log("Categories", categories);
+
   return (
     <footer className="bg-card text-card-foreground border-t">
       <div className="container mx-auto px-4 py-12">
@@ -101,46 +127,16 @@ export default function Footer() {
           <div>
             <h3 className="text-lg font-bold mb-4">Car Categories</h3>
             <ul className="space-y-2">
-              <li>
-                <Link
-                  href="/cars?category=sedan"
-                  className="text-muted-foreground hover:text-primary transition-colors"
-                >
-                  Luxury Sedans
-                </Link>
-              </li>
-              <li>
-                <Link
-                  href="/cars?category=suv"
-                  className="text-muted-foreground hover:text-primary transition-colors"
-                >
-                  Premium SUVs
-                </Link>
-              </li>
-              <li>
-                <Link
-                  href="/cars?category=sports"
-                  className="text-muted-foreground hover:text-primary transition-colors"
-                >
-                  Sports Cars
-                </Link>
-              </li>
-              <li>
-                <Link
-                  href="/cars?category=electric"
-                  className="text-muted-foreground hover:text-primary transition-colors"
-                >
-                  Electric Vehicles
-                </Link>
-              </li>
-              <li>
-                <Link
-                  href="/cars?category=hybrid"
-                  className="text-muted-foreground hover:text-primary transition-colors"
-                >
-                  Hybrid Cars
-                </Link>
-              </li>
+              {categories.slice(0, 5).map((category) => (
+                <li key={category.id}>
+                  <Link
+                    href={`/cars`}
+                    className="text-muted-foreground hover:text-primary transition-colors"
+                  >
+                    {category.name}
+                  </Link>
+                </li>
+              ))}
             </ul>
           </div>
 
@@ -150,16 +146,35 @@ export default function Footer() {
               <li className="flex items-start">
                 <MapPin className="mr-2 h-5 w-5 text-primary shrink-0" />
                 <span className="text-muted-foreground">
-                  123 Luxury Lane, Beverly Hills, CA 90210
+                  {vendor?.vendorAddress?.[0] ? (
+                    <>
+                      {vendor.vendorAddress[0].street &&
+                        `${vendor.vendorAddress[0].street}, `}
+                      {vendor.vendorAddress[0].city &&
+                        `${vendor.vendorAddress[0].city}, `}
+                      {vendor.vendorAddress[0].state &&
+                        `${vendor.vendorAddress[0].state}, `}
+                      {vendor.vendorAddress[0].country &&
+                        `${vendor.vendorAddress[0].country}, `}
+                      {vendor.vendorAddress[0].postalCode}
+                    </>
+                  ) : (
+                    "Address not available"
+                  )}
                 </span>
               </li>
               <li className="flex items-center">
                 <Phone className="mr-2 h-5 w-5 text-primary" />
-                <span className="text-muted-foreground">+1 (555) 123-4567</span>
+                <span className="text-muted-foreground">
+                  + {vendor?.phoneNo?.[0] ? vendor.phoneNo[0] : ""}
+                </span>
               </li>
               <li className="flex items-center">
                 <Mail className="mr-2 h-5 w-5 text-primary" />
-                <span className="text-muted-foreground">info@DevXCars.com</span>
+                <span className="text-muted-foreground">
+                  {" "}
+                  {vendor?.serviceEmail ? vendor.serviceEmail : ""}
+                </span>
               </li>
             </ul>
           </div>

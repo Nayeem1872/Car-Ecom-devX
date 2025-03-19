@@ -47,7 +47,7 @@ const MainContent = ({ children }: { children: React.ReactNode }) => {
         <div className="flex-1">{children}</div>
       </div>
       <Toaster />
-      <Footer />
+      <Footer vendor={userInfo ? userInfo.vendors[0] : null} />
     </CartProvider>
   );
 };
