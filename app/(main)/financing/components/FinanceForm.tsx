@@ -20,6 +20,7 @@ import axios from "axios";
 
 interface FinanceFormProps {
   formStep: number;
+  products: any[];
   nextFormStep: () => void;
   prevFormStep: () => void;
   handleSubmit: (e: React.FormEvent) => void;
@@ -75,6 +76,7 @@ export default function FinanceForm({
   formStep,
   nextFormStep,
   prevFormStep,
+  products,
 }: FinanceFormProps) {
   const { toast } = useToast();
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -291,7 +293,7 @@ export default function FinanceForm({
         },
         product: {
           ...formData.product,
-          productId: formData.product.type || "unknown", // Use type as productId if not specified
+          productId: formData.product.productId || "unknown",
         },
       };
 
@@ -755,22 +757,20 @@ export default function FinanceForm({
                 </Label>
                 <Select
                   required
-                  value={formData.product.type}
+                  value={formData.product.productId}
                   onValueChange={(value) =>
-                    handleSelectChange("product.type", value)
+                    handleSelectChange("product.productId", value)
                   }
                 >
                   <SelectTrigger>
-                    <SelectValue placeholder="Select vehicle type" />
+                    <SelectValue placeholder="Select vehicle" />
                   </SelectTrigger>
                   <SelectContent>
-                    <SelectItem value="sedan">Sedan</SelectItem>
-                    <SelectItem value="suv">SUV</SelectItem>
-                    <SelectItem value="truck">Truck</SelectItem>
-                    <SelectItem value="sports">Sports Car</SelectItem>
-                    <SelectItem value="luxury">Luxury Vehicle</SelectItem>
-                    <SelectItem value="electric">Electric Vehicle</SelectItem>
-                    <SelectItem value="hybrid">Hybrid</SelectItem>
+                    {products.map((product) => (
+                      <SelectItem key={product._id} value={product._id}>
+                        {product.name}
+                      </SelectItem>
+                    ))}
                   </SelectContent>
                 </Select>
               </div>

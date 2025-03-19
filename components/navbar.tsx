@@ -69,14 +69,6 @@ export default function Navbar({ vendor }: NavbarProps) {
               Cars
             </Link>
             <Link
-              href="/about"
-              className={`text-sm font-medium transition-colors hover:text-primary ${
-                pathname === "/about" ? "text-primary" : "text-foreground/80"
-              }`}
-            >
-              About
-            </Link>
-            <Link
               href="/financing"
               className={`text-sm font-medium transition-colors hover:text-primary ${
                 pathname === "/financing"
@@ -85,6 +77,25 @@ export default function Navbar({ vendor }: NavbarProps) {
               }`}
             >
               Financing
+            </Link>
+            <Link
+              href="/about"
+              className={`text-sm font-medium transition-colors hover:text-primary ${
+                pathname === "/about" ? "text-primary" : "text-foreground/80"
+              }`}
+            >
+              About
+            </Link>
+
+            <Link
+              href="/contact"
+              className={`text-sm font-medium transition-colors hover:text-primary ${
+                pathname === "/financing"
+                  ? "text-primary"
+                  : "text-foreground/80"
+              }`}
+            >
+              Contact Us
             </Link>
           </nav>
 

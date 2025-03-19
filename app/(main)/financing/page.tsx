@@ -4,19 +4,6 @@ import type React from "react";
 
 import { useEffect, useState } from "react";
 import { motion } from "framer-motion";
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
-import { Textarea } from "@/components/ui/textarea";
-import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
-import { Checkbox } from "@/components/ui/checkbox";
 import { useToast } from "@/components/ui/use-toast";
 import {
   Car,
@@ -28,36 +15,14 @@ import {
   Mail,
   MapPin,
 } from "lucide-react";
-import Navbar from "@/components/navbar";
-import Footer from "@/components/footer";
-import useFetchData from "@/hooks/useFetchData";
-import axios from "axios";
 import FinanceForm from "./components/FinanceForm";
+import axios from "axios";
 
-interface Vendor {
-  _id: string;
-  vendorName: string;
-  vendorDetails: string;
-  logo: string;
-  vendorAddress: {
-    street: string;
-    city: string;
-    state: string;
-    country: string;
-    postalCode: string;
-    _id: string;
-  }[];
-  vendorType: string;
-  createdBy: string;
-  updatedBy: string;
-  createdAt: string;
-  updatedAt: string;
-  phoneNo: string[];
-  serviceEmail: string;
-}
 export default function FinancePage() {
   const { toast } = useToast();
   const [formStep, setFormStep] = useState(0);
+  const [products, setProducts] = useState<any[]>([]);
+  const [isLoading, setIsLoading] = useState(true);
   const nextFormStep = () => {
     setFormStep((prev) => prev + 1);
   };
@@ -74,6 +39,24 @@ export default function FinancePage() {
       duration: 5000,
     });
   };
+
+  useEffect(() => {
+    const loadData = async () => {
+      setIsLoading(true);
+      try {
+        const response = await axios.get("/api/ecom/product/get?all=true");
+        setProducts(response.data.data);
+      } catch (error) {
+        console.error("Error fetching products:", error);
+      } finally {
+        setIsLoading(false);
+      }
+    };
+
+    loadData();
+  }, []);
+
+  console.log("products", products);
 
   return (
     <>
@@ -141,6 +124,7 @@ export default function FinancePage() {
             </div>
             <FinanceForm
               formStep={formStep}
+              products={products}
               nextFormStep={nextFormStep}
               prevFormStep={prevFormStep}
               handleSubmit={handleSubmit}

@@ -1,10 +1,8 @@
 "use client";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { motion } from "framer-motion";
-import { Edit, Eye, Search, Plus, Trash2 } from "lucide-react";
+import { Search, Plus } from "lucide-react";
 import { toast } from "sonner";
-
-import { Button } from "@/components/ui/button";
 import {
   Card,
   CardContent,
@@ -13,247 +11,57 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
-import {
-  Table,
-  TableBody,
-  TableCell,
-  TableHead,
-  TableHeader,
-  TableRow,
-} from "@/components/ui/table";
-import {
-  Dialog,
-  DialogContent,
-  DialogDescription,
-  DialogHeader,
-  DialogTitle,
-} from "@/components/ui/dialog";
+
 import FinanceRequestTable from "./components/FinanceRequestTable";
 import FinanceRequestDialog from "./components/FinanceRequestDialog";
+import axios from "axios";
 
-// Sample data for finance requests
-const financeRequests = [
-  {
-    id: "FR-001",
-    firstName: "John",
-    lastName: "Doe",
-    phoneNumber: "123-456-7890",
-    sin: "123-456-789",
-    gender: "male",
-    maritalStatus: "married",
-    treatyCard: true,
-    birthday: "1985-06-15",
-    email: "john.doe@example.com",
-    heardAboutUs: "friend-referral",
-    address: {
-      country: "Canada",
-      streetAddress: "123 Maple St",
-      city: "Toronto",
-      postalCode: "M5V 2L7",
-      housingStatus: "own",
-      durationAtResidence: "3-5-years",
-      rentOrMortgage: 1500,
-    },
-    employment: {
-      employer: "Tech Industries",
-      position: "Senior Developer",
-      grossIncome: 85000,
-      timeEmployed: "3-5-years",
-      additionalIncome: [
-        {
-          source: "Freelancing",
-          amount: 12000,
-        },
-      ],
-    },
-    product: {
-      productId: "CAR-SUV-001",
-      type: "auto",
-      specificRequirements: "Family-friendly SUV",
-      tradeInVehicle: {
-        year: 2018,
-        make: "Toyota",
-        model: "RAV4",
-        trim: "XLE",
-        amountOwed: 8000,
-      },
-    },
-    status: "approved",
-    submittedAt: "2023-10-15T14:30:00Z",
-  },
-  {
-    id: "FR-002",
-    firstName: "Jane",
-    lastName: "Smith",
-    phoneNumber: "987-654-3210",
-    sin: "987-654-321",
-    gender: "female",
-    maritalStatus: "single",
-    treatyCard: false,
-    birthday: "1990-03-22",
-    email: "jane.smith@example.com",
-    heardAboutUs: "social-media",
-    address: {
-      country: "Canada",
-      streetAddress: "456 Oak Ave",
-      city: "Vancouver",
-      postalCode: "V6B 5T1",
-      housingStatus: "rent",
-      durationAtResidence: "1-2-years",
-      rentOrMortgage: 2200,
-    },
-    employment: {
-      employer: "Marketing Agency",
-      position: "Marketing Manager",
-      grossIncome: 75000,
-      timeEmployed: "1-2-years",
-      additionalIncome: [],
-    },
-    product: {
-      productId: "CAR-SEDAN-002",
-      type: "auto",
-      specificRequirements: "Compact sedan with good fuel economy",
-      tradeInVehicle: null,
-    },
-    status: "pending",
-    submittedAt: "2023-11-05T09:15:00Z",
-  },
-  {
-    id: "FR-003",
-    firstName: "Michael",
-    lastName: "Johnson",
-    phoneNumber: "555-123-4567",
-    sin: "555-123-456",
-    gender: "male",
-    maritalStatus: "divorced",
-    treatyCard: false,
-    birthday: "1978-12-03",
-    email: "michael.j@example.com",
-    heardAboutUs: "advertisement",
-    address: {
-      country: "Canada",
-      streetAddress: "789 Pine Blvd",
-      city: "Calgary",
-      postalCode: "T2P 1J9",
-      housingStatus: "own",
-      durationAtResidence: "more-than-5-years",
-      rentOrMortgage: 1800,
-    },
-    employment: {
-      employer: "Construction Co.",
-      position: "Project Manager",
-      grossIncome: 92000,
-      timeEmployed: "more-than-5-years",
-      additionalIncome: [
-        {
-          source: "Rental Property",
-          amount: 24000,
-        },
-        {
-          source: "Investments",
-          amount: 8000,
-        },
-      ],
-    },
-    product: {
-      productId: "TRUCK-001",
-      type: "auto",
-      specificRequirements: "Heavy duty truck for work",
-      tradeInVehicle: {
-        year: 2015,
-        make: "Ford",
-        model: "F-150",
-        trim: "XLT",
-        amountOwed: 5000,
-      },
-    },
-    status: "rejected",
-    submittedAt: "2023-09-28T16:45:00Z",
-  },
-];
-
+interface DeleteRequestProps {
+  id: string;
+}
 const FinanceRequest = () => {
   const [searchTerm, setSearchTerm] = useState("");
-  interface Address {
-    country: string;
-    streetAddress: string;
-    city: string;
-    postalCode: string;
-    housingStatus: string;
-    durationAtResidence: string;
-    rentOrMortgage: number;
-  }
 
-  interface Employment {
-    employer: string;
-    position: string;
-    grossIncome: number;
-    timeEmployed: string;
-    additionalIncome: { source: string; amount: number }[];
-  }
-
-  interface Product {
-    productId: string;
-    type: string;
-    specificRequirements: string;
-    tradeInVehicle: {
-      year: number;
-      make: string;
-      model: string;
-      trim: string;
-      amountOwed: number;
-    } | null;
-  }
-
-  interface FinanceRequest {
-    id: string;
-    firstName: string;
-    lastName: string;
-    phoneNumber: string;
-    sin: string;
-    gender: string;
-    maritalStatus: string;
-    treatyCard: boolean;
-    birthday: string;
-    email: string;
-    heardAboutUs: string;
-    address: Address;
-    employment: Employment;
-    product: Product;
-    status: string;
-    submittedAt: string;
-  }
-
-  const [selectedRequest, setSelectedRequest] = useState<FinanceRequest | null>(
-    null
-  );
+  const [selectedRequest, setSelectedRequest] = useState<any | null>(null);
   const [detailsOpen, setDetailsOpen] = useState(false);
+  const [finance, setFinance] = useState<any[]>([]);
+  const [isLoading, setIsLoading] = useState(true);
 
-  const filteredRequests = financeRequests.filter(
+  useEffect(() => {
+    const loadData = async () => {
+      setIsLoading(true);
+      try {
+        const response = await axios.get("/api/ecom/finance/get");
+        setFinance(response.data.data);
+      } catch (error) {
+        console.error("Error fetching products:", error);
+      } finally {
+        setIsLoading(false);
+      }
+    };
+
+    loadData();
+  }, []);
+  console.log("finance", finance);
+
+  const filteredRequests = finance.filter(
     (request) =>
       request.firstName.toLowerCase().includes(searchTerm.toLowerCase()) ||
       request.lastName.toLowerCase().includes(searchTerm.toLowerCase()) ||
       request.email.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      request.id.toLowerCase().includes(searchTerm.toLowerCase())
+      request._id.toLowerCase().includes(searchTerm.toLowerCase())
   );
 
-  const viewRequestDetails = (request: FinanceRequest) => {
+  const viewRequestDetails = (request: any) => {
+    console.log("request", request);
+
     setSelectedRequest(request);
     setDetailsOpen(true);
   };
 
-  interface DeleteRequestProps {
-    id: string;
-  }
-
   const deleteRequest = ({ id }: DeleteRequestProps) => {
     toast.success(`Request ${id} has been deleted`);
-    // In a real application, you would delete from the backend here
   };
-
-  interface StatusBadgeProps {
-    status: string;
-  }
 
   return (
     <>
@@ -292,10 +100,6 @@ const FinanceRequest = () => {
                       onChange={(e) => setSearchTerm(e.target.value)}
                     />
                   </div>
-                  <Button size="sm">
-                    <Plus className="mr-1 h-4 w-4" />
-                    Add New
-                  </Button>
                 </div>
               </div>
             </CardHeader>

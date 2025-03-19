@@ -25,6 +25,8 @@ const FinanceRequestDialog = ({
   onOpenChange,
   selectedRequest,
 }: FinanceRequestDialogProps) => {
+  console.log("selectedRequest", selectedRequest);
+
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent className="max-w-3xl max-h-[90vh] overflow-y-auto">
@@ -214,7 +216,7 @@ const FinanceRequestDialog = ({
               </div>
 
               {/* Product Information */}
-              <div className="space-y-4">
+              {/* <div className="space-y-4">
                 <h3 className="font-semibold text-lg">Product Information</h3>
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                   <div>
@@ -279,7 +281,7 @@ const FinanceRequestDialog = ({
                     </div>
                   </div>
                 )}
-              </div>
+              </div> */}
             </div>
           </>
         )}

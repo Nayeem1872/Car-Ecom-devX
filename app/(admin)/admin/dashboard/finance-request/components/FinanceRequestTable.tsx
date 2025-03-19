@@ -8,20 +8,6 @@ import {
 } from "@/components/ui/table";
 import { Button } from "@/components/ui/button";
 import { Eye, Edit, Trash2 } from "lucide-react";
-import { toast } from "sonner";
-
-interface FinanceRequest {
-  id: string;
-  firstName: string;
-  lastName: string;
-  email: string;
-  product: {
-    type: string;
-  };
-  status: string;
-  submittedAt: string;
-}
-
 interface FinanceRequestTableProps {
   requests: any[];
   onViewRequest: (request: any) => void;
@@ -33,29 +19,17 @@ const FinanceRequestTable = ({
   onViewRequest,
   onDeleteRequest,
 }: FinanceRequestTableProps) => {
-  const getStatusBadgeClass = (status: string): string => {
-    switch (status) {
-      case "approved":
-        return "bg-green-100 text-green-800";
-      case "pending":
-        return "bg-yellow-100 text-yellow-800";
-      case "rejected":
-        return "bg-red-100 text-red-800";
-      default:
-        return "bg-gray-100 text-gray-800";
-    }
-  };
-
   return (
     <div className="rounded-md border overflow-hidden">
       <Table>
         <TableHeader>
           <TableRow>
-            <TableHead className="w-[80px]">ID</TableHead>
             <TableHead>Name</TableHead>
             <TableHead>Email</TableHead>
             <TableHead>Product</TableHead>
-            <TableHead>Status</TableHead>
+            <TableHead>Gross Income</TableHead>
+            <TableHead>Trade-in Vehicle</TableHead>
+
             <TableHead>Submitted</TableHead>
             <TableHead className="text-right">Actions</TableHead>
           </TableRow>
@@ -63,22 +37,22 @@ const FinanceRequestTable = ({
         <TableBody>
           {requests.length > 0 ? (
             requests.map((request) => (
-              <TableRow key={request.id}>
-                <TableCell className="font-medium">{request.id}</TableCell>
+              <TableRow key={request._id}>
                 <TableCell>{`${request.firstName} ${request.lastName}`}</TableCell>
                 <TableCell>{request.email}</TableCell>
-                <TableCell>{request.product.type}</TableCell>
                 <TableCell>
-                  <span
-                    className={`inline-flex items-center rounded-full px-2.5 py-0.5 text-xs font-medium ${getStatusBadgeClass(
-                      request.status
-                    )}`}
-                  >
-                    {request.status}
-                  </span>
+                  {request.product?.productId?.name || "N/A"}
+                </TableCell>{" "}
+                <TableCell>
+                  {request.employment?.grossIncome || "N/A"}
+                </TableCell>{" "}
+                <TableCell>
+                  {request.product?.tradeInVehicle
+                    ? `${request.product.tradeInVehicle.year} ${request.product.tradeInVehicle.make} ${request.product.tradeInVehicle.model}`
+                    : "No trade-in"}
                 </TableCell>
                 <TableCell>
-                  {new Date(request.submittedAt).toLocaleDateString()}
+                  {new Date(request.createdAt).toLocaleDateString()}
                 </TableCell>
                 <TableCell className="text-right">
                   <div className="flex justify-end gap-2">
@@ -95,7 +69,7 @@ const FinanceRequestTable = ({
                     <Button
                       variant="ghost"
                       size="icon"
-                      onClick={() => onDeleteRequest(request.id)}
+                      onClick={() => onDeleteRequest(request._id)}
                     >
                       <Trash2 className="h-4 w-4" />
                     </Button>
@@ -105,7 +79,7 @@ const FinanceRequestTable = ({
             ))
           ) : (
             <TableRow>
-              <TableCell colSpan={7} className="h-24 text-center">
+              <TableCell colSpan={9} className="h-24 text-center">
                 No finance requests found.
               </TableCell>
             </TableRow>
