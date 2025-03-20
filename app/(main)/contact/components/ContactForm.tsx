@@ -81,11 +81,11 @@ const type = [
   },
 ];
 
-const ContactForm = ({ setSubmitted, setIsSubmitting }: any) => {
+const ContactForm = ({ setSubmitted, setIsSubmitting, products }: any) => {
   const form = useForm<ContactFormValues>({
     resolver: zodResolver(contactFormSchema),
     defaultValues: {
-      type: "TEST_DRIVE",
+      type: "",
       product: "",
       firstName: "",
       lastName: "",
@@ -106,7 +106,7 @@ const ContactForm = ({ setSubmitted, setIsSubmitting }: any) => {
     try {
       console.log("Submitting data:", data);
 
-      const response = await axios.post("/api/ecom/contact-us/create", data);
+      const response = await axios.post("/api/ecom/contact-us/craete", data);
 
       if (response.status === 200) {
         toast({
@@ -203,13 +203,35 @@ const ContactForm = ({ setSubmitted, setIsSubmitting }: any) => {
           render={({ field }) => (
             <FormItem>
               <FormLabel>Vehicle Model</FormLabel>
-              <FormControl>
-                <Input placeholder="e.g., Tesla Model 3" {...field} />
-              </FormControl>
+              <Select
+                onValueChange={(value) => field.onChange(value)} // Make sure value is updated correctly
+                value={field.value || ""} // Ensure it reflects the selected value
+              >
+                <FormControl>
+                  <SelectTrigger>
+                    <SelectValue placeholder="Select a product" />
+                  </SelectTrigger>
+                </FormControl>
+                <SelectContent>
+                  {products.map((product: any) => (
+                    <SelectItem key={product._id} value={product._id}>
+                      <div className="flex items-center">
+                        <img
+                          src={product.images[0]}
+                          alt={product.name}
+                          className="h-6 w-6 rounded-md mr-2"
+                        />
+                        <span>{product.name}</span>
+                      </div>
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
               <FormMessage />
             </FormItem>
           )}
         />
+
         <FormField
           control={form.control}
           name="type"

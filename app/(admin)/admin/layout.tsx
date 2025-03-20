@@ -1,5 +1,3 @@
-// You can create your custom Footer component
-
 import { CartProvider } from "@/context/cart-context";
 import { Toaster } from "@/components/ui/toaster";
 import "./globals.css";

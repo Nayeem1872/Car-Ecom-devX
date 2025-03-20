@@ -21,6 +21,7 @@ import axios from "axios";
 export default function FinancePage() {
   const { toast } = useToast();
   const [formStep, setFormStep] = useState(0);
+  const [userInfo, setUserInfo] = useState<{ vendors: any[] } | null>(null);
   const [products, setProducts] = useState<any[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const nextFormStep = () => {
@@ -43,34 +44,23 @@ export default function FinancePage() {
   useEffect(() => {
     const loadData = async () => {
       setIsLoading(true);
+
       try {
-        const response = await axios.get("/api/ecom/product/get?all=true");
-        setProducts(response.data.data);
+        const productsResponse = await axios.get(
+          "/api/ecom/product/get?all=true"
+        );
+        setProducts(productsResponse.data.data);
+
+        const userResponse = await axios.get("/api/ecom/vendor/get");
+        setUserInfo(userResponse.data.data);
       } catch (error) {
-        console.error("Error fetching products:", error);
+        console.error("Error fetching data:", error);
       } finally {
         setIsLoading(false);
       }
     };
 
     loadData();
-  }, []);
-
-  const [userInfo, setUserInfo] = useState<{ vendors: any[] } | null>(null);
-
-  useEffect(() => {
-    const fetchUser = async () => {
-      try {
-        const response = await axios.get("/api/ecom/vendor/get");
-        setUserInfo(response.data.data);
-        setIsLoading(false);
-      } catch (error) {
-        console.error("Error fetching User:", error);
-        setIsLoading(false);
-      }
-    };
-
-    fetchUser();
   }, []);
   const Loader = () => (
     <div className="flex justify-center items-center min-h-screen">

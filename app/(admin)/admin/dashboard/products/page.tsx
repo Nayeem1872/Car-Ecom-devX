@@ -112,6 +112,8 @@ const Products = () => {
           )
         : [];
 
+      console.log("newProduct", newProduct);
+
       const payload = {
         name: newProduct.name,
         description: newProduct.description,
@@ -127,6 +129,7 @@ const Products = () => {
         category: newProduct.category,
         images: imageUrls,
         features: featuresArray,
+        varients: newProduct.varients,
       };
 
       await axios.post("/api/ecom/product/craete", payload, {

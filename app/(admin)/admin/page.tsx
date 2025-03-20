@@ -1,16 +1,30 @@
 "use client";
 import { motion } from "framer-motion";
 import AuthForm from "./components/AuthForm";
+import axios from "axios";
+import { useEffect } from "react";
+import { useRouter } from "next/navigation";
 
 const Login = () => {
-  //   const { isAuthenticated } = useAuth();
-  //   const router = useRouter();
+  const router = useRouter();
+  // useEffect(() => {
+  //   const fetchUser = async () => {
+  //     try {
+  //       const response = await axios.get("/api/ecom/user");
 
-  //   useEffect(() => {
-  //     if (isAuthenticated) {
-  //       router.push("/dashboard");
+  //       if (
+  //         response.status === 200 ||
+  //         (response.data && response.data.success)
+  //       ) {
+  //         router.push("/admin/dashboard");
+  //       }
+  //     } catch (error) {
+  //       console.error("Error fetching User:", error);
   //     }
-  //   }, [isAuthenticated, router]);
+  //   };
+
+  //   fetchUser();
+  // }, []);
 
   return (
     <div className="min-h-screen bg-background flex flex-col">

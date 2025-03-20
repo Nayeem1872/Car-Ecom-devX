@@ -1,5 +1,5 @@
 "use client";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { motion } from "framer-motion";
 
 import { Clock, MapPin, Phone, Mail } from "lucide-react";
@@ -9,11 +9,32 @@ import { Alert, AlertTitle, AlertDescription } from "@/components/ui/alert";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 
 import ContactForm from "./components/ContactForm";
+import axios from "axios";
 
 const Contact = () => {
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [userInfo, setUserInfo] = useState<{ vendors: any[] } | null>(null);
+  const [isLoading, setIsLoading] = useState(true);
   const [submitted, setSubmitted] = useState(false);
+  const [products, setProducts] = useState<any[]>([]);
+  useEffect(() => {
+    const fetchUser = async () => {
+      try {
+        const response = await axios.get("/api/ecom/vendor/get");
+        const productsResponse = await axios.get(
+          "/api/ecom/product/get?all=true"
+        );
+        setProducts(productsResponse.data.data);
+        setUserInfo(response.data.data);
+        setIsLoading(false);
+      } catch (error) {
+        console.error("Error fetching User:", error);
+        setIsLoading(false);
+      }
+    };
 
+    fetchUser();
+  }, []);
   return (
     <div className="container mx-auto px-4 py-24">
       <motion.div
@@ -34,7 +55,7 @@ const Contact = () => {
           <div className="md:col-span-2">
             <Card className="glass-card">
               <CardHeader>
-                <CardTitle>Request a Test Drive</CardTitle>
+                <CardTitle>Request Submitted</CardTitle>
               </CardHeader>
               <CardContent>
                 {submitted ? (
@@ -49,6 +70,7 @@ const Contact = () => {
                   <ContactForm
                     setSubmitted={setSubmitted}
                     setIsSubmitting={setIsSubmitting}
+                    products={products}
                   />
                 )}
               </CardContent>
@@ -66,11 +88,21 @@ const Contact = () => {
                   <div>
                     <h3 className="font-medium">Our Location</h3>
                     <p className="text-sm text-muted-foreground">
-                      123 Dealership Avenue
-                      <br />
-                      Vancouver, BC V6B 4X8
-                      <br />
-                      Canada
+                      {userInfo?.vendors[0]?.vendorAddress?.[0] ? (
+                        <>
+                          {userInfo?.vendors[0].vendorAddress[0].street &&
+                            `${userInfo?.vendors[0].vendorAddress[0].street}, `}
+                          {userInfo?.vendors[0].vendorAddress[0].city &&
+                            `${userInfo?.vendors[0].vendorAddress[0].city}, `}
+                          {userInfo?.vendors[0].vendorAddress[0].state &&
+                            `${userInfo?.vendors[0].vendorAddress[0].state}, `}
+                          {userInfo?.vendors[0].vendorAddress[0].country &&
+                            `${userInfo?.vendors[0].vendorAddress[0].country}, `}
+                          {userInfo?.vendors[0].vendorAddress[0].postalCode}
+                        </>
+                      ) : (
+                        "Address not available"
+                      )}
                     </p>
                   </div>
                 </div>
@@ -80,9 +112,18 @@ const Contact = () => {
                   <div>
                     <h3 className="font-medium">Phone</h3>
                     <p className="text-sm text-muted-foreground">
-                      Sales: (604) 123-4567
-                      <br />
-                      Service: (604) 987-6543
+                      {userInfo && userInfo.vendors[0]?.phoneNo?.length > 0
+                        ? userInfo.vendors[0].phoneNo.map(
+                            (phone: any, index: any) => (
+                              <span key={index}>
+                                + {phone}
+                                {index <
+                                  userInfo.vendors[0].phoneNo.length - 1 &&
+                                  ", "}
+                              </span>
+                            )
+                          )
+                        : ""}
                     </p>
                   </div>
                 </div>
@@ -92,9 +133,9 @@ const Contact = () => {
                   <div>
                     <h3 className="font-medium">Email</h3>
                     <p className="text-sm text-muted-foreground">
-                      info@dealership.com
-                      <br />
-                      service@dealership.com
+                      {userInfo?.vendors[0].serviceEmail
+                        ? userInfo.vendors[0].serviceEmail
+                        : ""}
                     </p>
                   </div>
                 </div>
