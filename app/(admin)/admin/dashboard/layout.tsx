@@ -4,6 +4,7 @@ import { motion } from "framer-motion";
 import Sidebar from "../components/Sidebar";
 import axios from "axios";
 import { useRouter } from "next/navigation";
+import { Toaster } from "@/components/ui/toaster";
 
 interface DashboardLayoutProps {
   children: ReactNode;
@@ -47,6 +48,7 @@ const DashboardLayout = ({ children }: DashboardLayoutProps) => {
         transition={{ duration: 0.3 }}
       >
         <div className="container mx-auto max-w-7xl">{children}</div>
+        <Toaster />
       </motion.main>
     </div>
   );

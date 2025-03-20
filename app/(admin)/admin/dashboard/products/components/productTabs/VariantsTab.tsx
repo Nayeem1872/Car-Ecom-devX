@@ -20,6 +20,7 @@ const VariantsTab: React.FC<VariantsTabProps> = ({
   newProduct,
   setNewProduct,
 }) => {
+  console.log("newProduct", newProduct);
   const logProductData = () => {
     console.log({
       label: newProduct.varients?.label,

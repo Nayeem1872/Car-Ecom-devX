@@ -307,11 +307,6 @@ export default function FinanceForm({
         description: "We'll review your application and get back to you soon.",
         duration: 5000,
       });
-
-      console.log("Submission successful:", response.data);
-
-      // Optional: Reset form or redirect
-      // Reset form here if needed
     } catch (error) {
       console.error("Submission error:", error);
       toast({

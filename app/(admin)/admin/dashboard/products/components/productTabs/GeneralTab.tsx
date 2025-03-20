@@ -24,8 +24,6 @@ const GeneralTab: React.FC<GeneralTabProps> = ({
   brands,
   categories,
 }) => {
-  console.log("newProduct", newProduct);
-
   return (
     <div className="grid grid-cols-2 gap-4 py-4">
       {/* Product Name */}

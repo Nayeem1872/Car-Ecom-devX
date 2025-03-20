@@ -20,7 +20,8 @@ import {
 } from "@/components/ui/dialog";
 import axios from "axios";
 import ProductViewModal from "./ProductViewModal";
-import AddProductModal, { NewProduct } from "./AddProductModal";
+import AddProductModal from "./AddProductModal";
+import { useToast } from "@/hooks/use-toast";
 
 export interface Product {
   id: string;
@@ -56,6 +57,7 @@ const ProductsTable = ({
   isLoading = false,
   refreshProducts,
 }: ProductsTableProps) => {
+  const { toast } = useToast();
   const [deleteModalOpen, setDeleteModalOpen] = useState(false);
   const [selectedProductForDelete, setSelectedProductForDelete] = useState<
     any | null
@@ -67,6 +69,10 @@ const ProductsTable = ({
   const [editModalOpen, setEditModalOpen] = useState(false);
   const [productToEdit, setProductToEdit] = useState<any | null>(null);
 
+  // New loader states
+  const [deleting, setDeleting] = useState(false);
+  const [updating, setUpdating] = useState(false);
+
   const handleDeleteClick = (product: Product) => {
     setSelectedProductForDelete(product);
     setDeleteModalOpen(true);
@@ -75,14 +81,19 @@ const ProductsTable = ({
   const confirmDelete = async () => {
     if (selectedProductForDelete) {
       try {
+        setDeleting(true);
         const response = await axios.delete(
           `/api/ecom/product/delete?id=${selectedProductForDelete._id}`
         );
         if (response.status === 200) {
+          toast({
+            title: "Success",
+            description: "Product deleted successfully",
+            variant: "default",
+            duration: 5000,
+          });
           if (onDelete) onDelete(selectedProductForDelete);
-          if (refreshProducts) {
-            refreshProducts();
-          }
+          if (refreshProducts) refreshProducts();
           setDeleteModalOpen(false);
           setSelectedProductForDelete(null);
         } else {
@@ -93,18 +104,25 @@ const ProductsTable = ({
         }
       } catch (error) {
         console.error("Error deleting product:", error);
+        toast({
+          title: "Error",
+          description: "Failed to delete product",
+          variant: "destructive",
+        });
+      } finally {
+        setDeleting(false);
       }
     }
   };
+
   const handleViewClick = (product: any) => {
     setSelectedProductForView(product);
     setViewModalOpen(true);
   };
 
   const handleEditClick = (product: any) => {
-    console.log("Editing product:", product);
-
     const newProductData: any = {
+      _id: product._id,
       name: product.name,
       description: product.description,
       brand: product.brand,
@@ -120,17 +138,109 @@ const ProductsTable = ({
           ? product.category
           : product.category,
       imageFiles: [],
+      features: product.features,
       images: product.images,
-      varients: {
-        label: "",
-        varient: [],
-      },
       featured: product.featured,
-      additionalItems: [],
-      dynamicField: "",
+      varients: product.varients,
     };
     setProductToEdit(newProductData);
     setEditModalOpen(true);
+  };
+
+  const handleUpdateProduct = async () => {
+    try {
+      setUpdating(true);
+      let imageUrls: string[] = [];
+      if (productToEdit.imageFiles && productToEdit.imageFiles.length > 0) {
+        const formData = new FormData();
+        productToEdit.imageFiles.forEach((file: File) => {
+          formData.append("assets", file);
+        });
+        const uploadResponse = await axios.post("/api/ecom/upload", formData, {
+          headers: { "Content-Type": "multipart/form-data" },
+        });
+        imageUrls = uploadResponse.data.data.map(
+          (item: any) => item.serverPath
+        );
+      } else {
+        imageUrls = productToEdit.images;
+      }
+
+      const featuresArray = productToEdit.customFields
+        ? Object.entries(productToEdit.customFields).map(
+            ([fieldName, fieldObj]: [string, any]) => ({
+              fieldName,
+              fieldLabel: fieldObj.fieldLabel,
+              fieldType: fieldObj.fieldType,
+              fieldValue: fieldObj.value,
+            })
+          )
+        : [];
+
+      const payload = {
+        name: productToEdit.name,
+        description: productToEdit.description,
+        featured: productToEdit.featured,
+        brand: productToEdit.brand._id,
+        price: productToEdit.price,
+        stock: productToEdit.stock,
+        discount: {
+          price: productToEdit.discount.price,
+          startAt: productToEdit.discount.startAt,
+          endAt: productToEdit.discount.endAt,
+        },
+        category:
+          typeof productToEdit.category === "object"
+            ? productToEdit.category._id
+            : productToEdit.category,
+        images: imageUrls,
+        features: featuresArray,
+        varients: productToEdit.varients,
+      };
+
+      await axios.patch(
+        `/api/ecom/product/edit?id=${productToEdit._id}`,
+        payload,
+        {
+          headers: { "Content-Type": "application/json" },
+        }
+      );
+
+      setProductToEdit({
+        name: "",
+        description: "",
+        brand: "",
+        price: 0,
+        stock: 0,
+        discount: { price: 0, startAt: "", endAt: "" },
+        category: "",
+        imageFiles: [],
+        images: [],
+        varients: { label: "", varient: [] },
+        features: [],
+        additionalItems: [],
+        dynamicField: "",
+      });
+      setEditModalOpen(false);
+      if (refreshProducts) {
+        refreshProducts();
+      }
+      toast({
+        title: "Success",
+        description: "Product updated successfully",
+        variant: "default",
+        duration: 5000,
+      });
+    } catch (error) {
+      console.error("Error updating product:", error);
+      toast({
+        title: "Error",
+        description: "Failed to update product",
+        variant: "destructive",
+      });
+    } finally {
+      setUpdating(false);
+    }
   };
 
   if (isLoading) {
@@ -159,7 +269,6 @@ const ProductsTable = ({
           <TableBody>
             {products.length > 0 ? (
               products.map((product) => {
-                // Compute fallback status if product.status is undefined.
                 const status =
                   product.status !== undefined
                     ? product.status
@@ -169,7 +278,6 @@ const ProductsTable = ({
                     ? "low-stock"
                     : "in-stock";
 
-                // If category is an object, extract its name; otherwise, use it directly.
                 const categoryName =
                   typeof product.category === "object"
                     ? product.category.name
@@ -214,7 +322,6 @@ const ProductsTable = ({
                         >
                           <Eye className="h-4 w-4" />
                         </Button>
-
                         <Button
                           variant="ghost"
                           size="sm"
@@ -222,7 +329,6 @@ const ProductsTable = ({
                         >
                           <Edit className="h-4 w-4" />
                         </Button>
-
                         <Button
                           variant="ghost"
                           size="sm"
@@ -264,18 +370,26 @@ const ProductsTable = ({
               >
                 Cancel
               </Button>
-              <Button variant="destructive" onClick={confirmDelete}>
-                Delete
+              <Button
+                variant="destructive"
+                onClick={confirmDelete}
+                disabled={deleting}
+              >
+                {deleting ? "Deleting..." : "Delete"}
               </Button>
             </DialogFooter>
           </DialogContent>
         )}
       </Dialog>
+
+      {/* View Product Modal */}
       <ProductViewModal
         open={viewModalOpen}
         onOpenChange={setViewModalOpen}
         product={selectedProductForView}
       />
+
+      {/* Edit Product Modal */}
       {productToEdit && (
         <AddProductModal
           open={editModalOpen}
@@ -283,12 +397,9 @@ const ProductsTable = ({
           newProduct={productToEdit}
           brands={brands}
           categories={categories}
+          isSubmitting={updating}
           setNewProduct={setProductToEdit}
-          handleAddProduct={() => {
-            console.log("Updated product:", productToEdit);
-            setEditModalOpen(false);
-            if (refreshProducts) refreshProducts();
-          }}
+          handleAddProduct={handleUpdateProduct}
         />
       )}
     </>
