@@ -11,9 +11,9 @@ import {
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Button } from "@/components/ui/button";
 import { Plus } from "lucide-react";
-import GeneralTab from "../dashboard/products/productTabs/GeneralTab";
-import DynamicsTab from "../dashboard/products/productTabs/DynamicsTab";
-import VariantsTab from "../dashboard/products/productTabs/VariantsTab";
+import GeneralTab from "./productTabs/GeneralTab";
+import DynamicsTab from "./productTabs/DynamicsTab";
+import VariantsTab from "./productTabs/VariantsTab";
 
 export interface AdditionalItem {
   fieldName: string;

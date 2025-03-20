@@ -11,8 +11,8 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { useToast } from "@/hooks/use-toast";
-import AddProductModal from "../../components/AddProductModal";
-import ProductsTable, { Product } from "../../components/ProductsTable";
+import AddProductModal from "./components/AddProductModal";
+import ProductsTable, { Product } from "./components/ProductsTable";
 import { fetchBrands, fetchCategories, fetchProducts } from "@/hooks/ApiHooks";
 import axios from "axios";
 import { Button } from "@/components/ui/button";
