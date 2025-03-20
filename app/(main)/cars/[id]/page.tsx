@@ -160,7 +160,6 @@ export default function CarDetailsPage() {
 
   return (
     <>
-      <Navbar />
       <main className="min-h-screen pb-20" ref={containerRef}>
         {/* Hero Section with Main Image */}
         <HeroSection car={car} currentImageIndex={currentImageIndex} />
@@ -179,7 +178,6 @@ export default function CarDetailsPage() {
           <RelatedCarsSection relatedCars={relatedCars} />
         )}
       </main>
-      <Footer />
     </>
   );
 }
