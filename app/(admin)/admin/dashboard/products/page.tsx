@@ -112,8 +112,6 @@ const Products = () => {
           )
         : [];
 
-      console.log("newProduct", newProduct);
-
       const payload = {
         name: newProduct.name,
         description: newProduct.description,
@@ -288,6 +286,8 @@ const Products = () => {
                   products={filteredProducts}
                   getStatusBadgeStyles={getStatusBadgeStyles}
                   isLoading={false}
+                  brands={brands}
+                  categories={categories}
                   refreshProducts={refreshProducts}
                 />
                 {/* API Pagination Controls */}

@@ -24,6 +24,8 @@ const GeneralTab: React.FC<GeneralTabProps> = ({
   brands,
   categories,
 }) => {
+  console.log("newProduct", newProduct);
+
   return (
     <div className="grid grid-cols-2 gap-4 py-4">
       {/* Product Name */}
@@ -42,7 +44,11 @@ const GeneralTab: React.FC<GeneralTabProps> = ({
       <div className="flex flex-col gap-2">
         <Label htmlFor="category">Category*</Label>
         <Select
-          value={newProduct.category}
+          value={
+            typeof newProduct.category === "object"
+              ? newProduct.category._id
+              : newProduct.category
+          }
           onValueChange={(value) =>
             setNewProduct({ ...newProduct, category: value })
           }
@@ -64,7 +70,11 @@ const GeneralTab: React.FC<GeneralTabProps> = ({
       <div className="flex flex-col gap-2">
         <Label htmlFor="brand">Brand*</Label>
         <Select
-          value={newProduct.brand}
+          value={
+            typeof newProduct.brand === "object"
+              ? newProduct.brand._id
+              : newProduct.brand
+          }
           onValueChange={(value) =>
             setNewProduct({ ...newProduct, brand: value })
           }
@@ -133,7 +143,11 @@ const GeneralTab: React.FC<GeneralTabProps> = ({
         <Input
           id="discountStartAt"
           type="date"
-          value={newProduct.discount.startAt}
+          value={
+            newProduct.discount.startAt
+              ? newProduct.discount.startAt.split("T")[0]
+              : ""
+          }
           onChange={(e) =>
             setNewProduct({
               ...newProduct,
@@ -149,7 +163,11 @@ const GeneralTab: React.FC<GeneralTabProps> = ({
         <Input
           id="discountEndAt"
           type="date"
-          value={newProduct.discount.endAt}
+          value={
+            newProduct.discount.endAt
+              ? newProduct.discount.endAt.split("T")[0]
+              : ""
+          }
           onChange={(e) =>
             setNewProduct({
               ...newProduct,

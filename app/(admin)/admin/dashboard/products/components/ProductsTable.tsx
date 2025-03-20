@@ -19,11 +19,14 @@ import {
   DialogTitle,
 } from "@/components/ui/dialog";
 import axios from "axios";
+import ProductViewModal from "./ProductViewModal";
+import AddProductModal, { NewProduct } from "./AddProductModal";
 
 export interface Product {
   id: string;
   name: string;
   category: string | { _id: string; name: string };
+  description: string;
   price: number;
   stock: number;
   images: string[];
@@ -40,13 +43,15 @@ interface ProductsTableProps {
   onDelete?: (product: Product) => void;
   isLoading?: boolean;
   refreshProducts?: () => void;
+  brands: any[];
+  categories: any[];
 }
 
 const ProductsTable = ({
   products,
   getStatusBadgeStyles,
-  onView,
-  onEdit,
+  brands,
+  categories,
   onDelete,
   isLoading = false,
   refreshProducts,
@@ -55,6 +60,12 @@ const ProductsTable = ({
   const [selectedProductForDelete, setSelectedProductForDelete] = useState<
     any | null
   >(null);
+  const [viewModalOpen, setViewModalOpen] = useState(false);
+  const [selectedProductForView, setSelectedProductForView] = useState<
+    any | null
+  >(null);
+  const [editModalOpen, setEditModalOpen] = useState(false);
+  const [productToEdit, setProductToEdit] = useState<any | null>(null);
 
   const handleDeleteClick = (product: Product) => {
     setSelectedProductForDelete(product);
@@ -84,6 +95,42 @@ const ProductsTable = ({
         console.error("Error deleting product:", error);
       }
     }
+  };
+  const handleViewClick = (product: any) => {
+    setSelectedProductForView(product);
+    setViewModalOpen(true);
+  };
+
+  const handleEditClick = (product: any) => {
+    console.log("Editing product:", product);
+
+    const newProductData: any = {
+      name: product.name,
+      description: product.description,
+      brand: product.brand,
+      price: product.price,
+      stock: product.stock,
+      discount: {
+        price: product.discount.price,
+        startAt: product.discount.startAt,
+        endAt: product.discount.endAt,
+      },
+      category:
+        typeof product.category === "object"
+          ? product.category
+          : product.category,
+      imageFiles: [],
+      images: product.images,
+      varients: {
+        label: "",
+        varient: [],
+      },
+      featured: product.featured,
+      additionalItems: [],
+      dynamicField: "",
+    };
+    setProductToEdit(newProductData);
+    setEditModalOpen(true);
   };
 
   if (isLoading) {
@@ -163,7 +210,7 @@ const ProductsTable = ({
                         <Button
                           variant="ghost"
                           size="sm"
-                          // onClick={() => onView(product)}
+                          onClick={() => handleViewClick(product)}
                         >
                           <Eye className="h-4 w-4" />
                         </Button>
@@ -171,7 +218,7 @@ const ProductsTable = ({
                         <Button
                           variant="ghost"
                           size="sm"
-                          // onClick={() => onEdit(product)}
+                          onClick={() => handleEditClick(product)}
                         >
                           <Edit className="h-4 w-4" />
                         </Button>
@@ -224,6 +271,26 @@ const ProductsTable = ({
           </DialogContent>
         )}
       </Dialog>
+      <ProductViewModal
+        open={viewModalOpen}
+        onOpenChange={setViewModalOpen}
+        product={selectedProductForView}
+      />
+      {productToEdit && (
+        <AddProductModal
+          open={editModalOpen}
+          setOpen={setEditModalOpen}
+          newProduct={productToEdit}
+          brands={brands}
+          categories={categories}
+          setNewProduct={setProductToEdit}
+          handleAddProduct={() => {
+            console.log("Updated product:", productToEdit);
+            setEditModalOpen(false);
+            if (refreshProducts) refreshProducts();
+          }}
+        />
+      )}
     </>
   );
 };

@@ -50,8 +50,8 @@ export interface NewProduct {
 interface AddProductModalProps {
   open: boolean;
   setOpen: (open: boolean) => void;
-  newProduct: NewProduct;
-  setNewProduct: (product: NewProduct) => void;
+  newProduct: any;
+  setNewProduct: (product: any) => void;
   handleAddProduct: () => void;
   brands: any[];
   categories: any[];
@@ -69,10 +69,14 @@ const AddProductModal = ({
   return (
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>
-        <Button size="sm" className="red-gradient text-white">
-          <Plus className="mr-1 h-4 w-4" />
-          Add Product
-        </Button>
+        {!newProduct.name && (
+          <DialogTrigger asChild>
+            <Button size="sm" className="red-gradient text-white">
+              <Plus className="mr-1 h-4 w-4" />
+              Add Product
+            </Button>
+          </DialogTrigger>
+        )}
       </DialogTrigger>
       <DialogContent className="glass-card w-[90vw] max-w-[1500px] sm:w-[80vw] md:w-[70vw] lg:w-[60vw] p-6 max-h-[90vh] overflow-y-auto">
         <DialogHeader>
