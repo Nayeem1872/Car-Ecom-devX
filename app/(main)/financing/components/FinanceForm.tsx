@@ -320,6 +320,7 @@ export default function FinanceForm({
       setIsSubmitting(false);
     }
   };
+  console.log("products", products);
 
   return (
     <motion.div
@@ -748,7 +749,7 @@ export default function FinanceForm({
             <div className="grid grid-cols-1 gap-6 mb-6">
               <div>
                 <Label htmlFor="product.type">
-                  What kind of vehicle are you looking for?*
+                  What kind of vehicle category are you looking for?
                 </Label>
                 <Select
                   required
@@ -762,7 +763,7 @@ export default function FinanceForm({
                   </SelectTrigger>
                   <SelectContent>
                     {products.map((product) => (
-                      <SelectItem key={product._id} value={product._id}>
+                      <SelectItem key={product.id} value={product.id}>
                         {product.name}
                       </SelectItem>
                     ))}

@@ -17,6 +17,7 @@ import {
 } from "lucide-react";
 import FinanceForm from "./components/FinanceForm";
 import axios from "axios";
+import { fetchCategories } from "@/hooks/ApiHooks";
 
 export default function FinancePage() {
   const { toast } = useToast();
@@ -46,10 +47,8 @@ export default function FinancePage() {
       setIsLoading(true);
 
       try {
-        const productsResponse = await axios.get(
-          "/api/ecom/product/get?all=true"
-        );
-        setProducts(productsResponse.data.data);
+        const categoriesData = await fetchCategories();
+        setProducts(categoriesData);
 
         const userResponse = await axios.get("/api/ecom/vendor/get");
         setUserInfo(userResponse.data.data);

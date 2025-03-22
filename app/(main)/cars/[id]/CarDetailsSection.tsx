@@ -16,14 +16,16 @@ import {
   ArrowRight,
   Share2,
   CreditCard,
-  ShoppingCart,
   Phone,
   Mail,
   Shield,
   Heart,
+  BookIcon,
 } from "lucide-react";
-import BookTestDriveButton from "@/components/book-test-drive-button";
+
 import { CarDetailsContentProps } from "../carTypes/types";
+import { useRouter } from "next/navigation";
+import { useToast } from "@/hooks/use-toast";
 
 const CarDetailsContent: React.FC<CarDetailsContentProps> = ({
   car,
@@ -32,6 +34,35 @@ const CarDetailsContent: React.FC<CarDetailsContentProps> = ({
   handlePrevImage,
   handleNextImage,
 }) => {
+  const router = useRouter();
+  const { toast } = useToast();
+  const handleRedirect = () => {
+    router.push("/financing");
+  };
+
+  const handleBookNowRedirect = () => {
+    router.push("/contact");
+  };
+
+  const handleShare = () => {
+    // Get the current page URL
+    const currentUrl = window.location.href;
+
+    // Copy the URL to the clipboard
+    navigator.clipboard
+      .writeText(currentUrl)
+      .then(() => {
+        toast({
+          title: "URL copied to clipboard!",
+          description: "",
+          duration: 5000,
+        });
+      })
+      .catch((error) => {
+        // Handle error if copying fails
+        console.error("Failed to copy URL: ", error);
+      });
+  };
   return (
     <section className="container mx-auto px-4 -mt-10 relative z-20">
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
@@ -251,13 +282,27 @@ const CarDetailsContent: React.FC<CarDetailsContentProps> = ({
             <div className="space-y-4 mb-6">
               {/* <BookTestDriveButton carId={car.id} className="w-full" /> */}
 
-              <Button className="w-full bg-green-600 hover:bg-green-700 group">
+              <Button
+                className="w-full bg-green-600 hover:bg-green-700 group"
+                onClick={handleRedirect}
+              >
                 <CreditCard className="mr-2 h-4 w-4 transition-transform group-hover:scale-110" />
                 Finance Options
                 <ArrowRight className="ml-2 h-4 w-4 transition-transform group-hover:translate-x-1" />
               </Button>
-
-              <Button variant="outline" className="w-full">
+              <Button
+                className="w-full bg-blue-600 hover:bg-blue-700 group mt-4"
+                onClick={handleBookNowRedirect}
+              >
+                <BookIcon className="mr-2 h-4 w-4 transition-transform group-hover:scale-110" />
+                Book Now
+                <ArrowRight className="ml-2 h-4 w-4 transition-transform group-hover:translate-x-1" />
+              </Button>
+              <Button
+                variant="outline"
+                className="w-full"
+                onClick={handleShare}
+              >
                 <Share2 className="mr-2 h-4 w-4" />
                 Share
               </Button>

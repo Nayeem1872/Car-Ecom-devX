@@ -34,3 +34,17 @@ export const fetchVendorUser = async () => {
   const response = await axios.get("/api/ecom/vendor/get");
   return response.data.vendors[0];
 };
+
+export const fetchContact = async (
+  page: number = 1,
+  pageSize: number = 10,
+  all: boolean = false
+) => {
+  const response = await axios.get(
+    `/api/ecom/contact-us/get?page=${page}&pageSize=${pageSize}&all=${all}`
+  );
+  return {
+    products: response.data.data,
+    pagination: response.data.pagination,
+  };
+};

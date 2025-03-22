@@ -19,6 +19,8 @@ import {
   DialogTitle,
 } from "@/components/ui/dialog";
 import axios from "axios";
+import EditBannerDialog from "./EditBannerDialog";
+import { useToast } from "@/hooks/use-toast";
 
 export interface Banner {
   id: number;
@@ -41,10 +43,15 @@ const BannerTable = ({
   onDelete,
   refreshBanners,
 }: BannerTableProps) => {
+  const { toast } = useToast();
   const [deleteModalOpen, setDeleteModalOpen] = useState(false);
-  const [selectedBannerForDelete, setSelectedBannerForDelete] = useState<
-    any | null
-  >(null);
+  const [selectedBannerForDelete, setSelectedBannerForDelete] =
+    useState<Banner | null>(null);
+  const [editDialogOpen, setEditDialogOpen] = useState(false);
+  const [currentBanner, setCurrentBanner] = useState<any>({
+    name: "",
+    image: "",
+  });
 
   const handleDeleteClick = (banner: Banner) => {
     setSelectedBannerForDelete(banner);
@@ -55,7 +62,7 @@ const BannerTable = ({
     if (selectedBannerForDelete) {
       try {
         await axios.delete(
-          `/api/ecom/banner/delete?id=${selectedBannerForDelete._id}`
+          `/api/ecom/banner/delete?id=${selectedBannerForDelete.id}`
         );
         if (onDelete) onDelete(selectedBannerForDelete);
         if (refreshBanners) refreshBanners();
@@ -64,6 +71,74 @@ const BannerTable = ({
       } catch (error) {
         console.error("Error deleting banner:", error);
       }
+    }
+  };
+
+  const handleEditClick = (banner: any) => {
+    console.log("banner", banner);
+
+    setCurrentBanner({
+      _id: banner._id,
+      name: banner.name,
+      image: banner.image,
+    });
+    setEditDialogOpen(true);
+  };
+
+  const handleEditBanner = async () => {
+    if (!currentBanner.name || !currentBanner.image) {
+      toast({
+        title: "Error",
+        description: "Please provide both name and image",
+        variant: "destructive",
+      });
+      return;
+    }
+
+    try {
+      let imageUrl = "";
+      if (currentBanner.image instanceof File) {
+        const formData = new FormData();
+        formData.append("assets", currentBanner.image);
+        const uploadResponse = await axios.post("/api/ecom/upload", formData, {
+          headers: { "Content-Type": "multipart/form-data" },
+        });
+        imageUrl = uploadResponse.data.data[0].serverPath;
+      } else {
+        imageUrl = currentBanner.image;
+      }
+      console.log("currentBanner", currentBanner);
+
+      const payload = {
+        name: currentBanner.name,
+        image: imageUrl,
+      };
+
+      // Use PATCH request to update the banner
+      await axios.patch(
+        `/api/ecom/feature/update?id=${currentBanner._id}`,
+        payload,
+        {
+          headers: { "Content-Type": "application/json" },
+        }
+      );
+
+      if (refreshBanners) {
+        refreshBanners();
+      }
+      setEditDialogOpen(false);
+
+      toast({
+        title: "Success",
+        description: "Banner updated successfully",
+      });
+    } catch (error) {
+      console.error("Error updating banner:", error);
+      toast({
+        title: "Error",
+        description: "Failed to update banner",
+        variant: "destructive",
+      });
     }
   };
 
@@ -99,22 +174,20 @@ const BannerTable = ({
                 </TableCell>
                 <TableCell className="text-right">
                   <div className="flex justify-end gap-2">
-                    <Button
+                    {/* <Button
                       variant="ghost"
                       size="sm"
-                      // onClick={() => onView(banner)}
+                      onClick={() => onView && onView(banner)}
                     >
                       <Eye className="h-4 w-4" />
-                    </Button>
-
+                    </Button> */}
                     <Button
                       variant="ghost"
                       size="sm"
-                      // onClick={() => onEdit(banner)}
+                      onClick={() => handleEditClick(banner)}
                     >
                       <Edit className="h-4 w-4" />
                     </Button>
-
                     <Button
                       variant="ghost"
                       size="sm"
@@ -136,7 +209,6 @@ const BannerTable = ({
         </TableBody>
       </Table>
 
-      {/* Always render the dialog, control visibility via the open prop */}
       <Dialog open={deleteModalOpen} onOpenChange={setDeleteModalOpen}>
         {selectedBannerForDelete && (
           <DialogContent className="glass-card">
@@ -161,6 +233,13 @@ const BannerTable = ({
           </DialogContent>
         )}
       </Dialog>
+      <EditBannerDialog
+        open={editDialogOpen}
+        setOpen={setEditDialogOpen}
+        currentBanner={currentBanner}
+        setCurrentBanner={setCurrentBanner}
+        handleEditBanner={handleEditBanner}
+      />
     </>
   );
 };

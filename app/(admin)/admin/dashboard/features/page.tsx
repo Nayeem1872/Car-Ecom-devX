@@ -26,19 +26,20 @@ const Features = () => {
       setIsLoading(false);
     }, 1500);
   });
-  useEffect(() => {
-    const fetchFeatures = async () => {
-      try {
-        setIsLoading(true);
-        const response = await axios.get("/api/ecom/feature/get");
-        setFeatures(response.data.data);
-      } catch (error) {
-        console.error("Error fetching features:", error);
-      } finally {
-        setIsLoading(false);
-      }
-    };
+  const fetchFeatures = async () => {
+    try {
+      setIsLoading(true);
+      const response = await axios.get("/api/ecom/feature/get");
+      setFeatures(response.data.data);
+    } catch (error) {
+      console.error("Error fetching features:", error);
+    } finally {
+      setIsLoading(false);
+    }
+  };
 
+  // Call fetchFeatures on component mount
+  useEffect(() => {
     fetchFeatures();
   }, []);
 
@@ -97,6 +98,7 @@ const Features = () => {
               features={features}
               isLoading={isLoading}
               searchTerm={searchTerm}
+              onAddFeature={fetchFeatures}
             />
           </CardContent>
         </Card>

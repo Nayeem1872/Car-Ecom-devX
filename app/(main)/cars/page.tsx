@@ -14,7 +14,13 @@ import { Slider } from "@/components/ui/slider";
 import { Checkbox } from "@/components/ui/checkbox";
 import { useCart } from "@/context/cart-context";
 import { useToast } from "@/components/ui/use-toast";
-import { ShoppingCart, Heart, Search, SlidersHorizontal } from "lucide-react";
+import {
+  ShoppingCart,
+  Heart,
+  Search,
+  SlidersHorizontal,
+  BookIcon,
+} from "lucide-react";
 import { motion } from "framer-motion";
 import {
   Select,
@@ -35,13 +41,12 @@ import Link from "next/link";
 
 import { fetchBrands, fetchCategories } from "@/hooks/ApiHooks";
 import axios from "axios";
+import { useRouter } from "next/navigation";
 
 const years = ["All", "2023", "2022", "2021", "2020"];
 
 export default function CarsPage() {
-  const { addToCart } = useCart();
-
-  const { toast } = useToast();
+  const router = useRouter();
   const [favorites, setFavorites] = useState<string[]>([]);
   const [brands, setBrands] = useState<string[]>([]);
   const [categories, setCategories] = useState<string[]>([]);
@@ -94,23 +99,7 @@ export default function CarsPage() {
   }, []);
 
   const handleAddToCart = (product: any) => {
-    addToCart({
-      id: product._id,
-      name: product.name,
-      price: product.price,
-      // Use the first image if available
-      image:
-        product.images && product.images.length
-          ? product.images[0]
-          : "/placeholder.svg",
-      quantity: 1,
-    });
-
-    toast({
-      title: "Added to cart",
-      description: `${product.name} has been added to your cart.`,
-      duration: 3000,
-    });
+    router.push("/contact");
   };
 
   const toggleFavorite = (id: string) => {
@@ -119,7 +108,6 @@ export default function CarsPage() {
     );
   };
 
-  // Filter products using API data.
   const filteredCars = products.filter((product) => {
     const matchesSearch = product.name
       .toLowerCase()
@@ -438,8 +426,8 @@ export default function CarsPage() {
                               className="w-full"
                               onClick={() => handleAddToCart(product)}
                             >
-                              <ShoppingCart className="mr-2 h-4 w-4" />
-                              Add to Cart
+                              <BookIcon className="mr-2 h-4 w-4" />
+                              Book now
                             </Button>
                           </CardFooter>
                         </Card>

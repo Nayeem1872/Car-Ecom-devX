@@ -8,7 +8,11 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import { Eye, Edit, Trash2 } from "lucide-react";
+import { Edit, Trash2 } from "lucide-react";
+import { useState } from "react";
+import EditFeatureDialog from "./EditFeatureDialog";
+import { useToast } from "@/hooks/use-toast";
+import DeleteFeatureDialog from "./DeleteFeatureDialog";
 
 interface Feature {
   _id: string;
@@ -25,14 +29,19 @@ interface FeatureTableProps {
   features: Feature[];
   isLoading: boolean;
   searchTerm: string;
+  onAddFeature: () => void;
 }
 
 const FeatureTable: React.FC<FeatureTableProps> = ({
   features,
   isLoading,
   searchTerm,
+  onAddFeature,
 }) => {
-  // Filter features based on the search term
+  const [editModalOpen, setEditModalOpen] = useState(false);
+  const [selectedFeature, setSelectedFeature] = useState<Feature | null>(null);
+  const [deleteModalOpen, setDeleteModalOpen] = useState(false);
+  const [featureToDelete, setFeatureToDelete] = useState<Feature | null>(null);
   const filteredFeatures = features.filter(
     (feature) =>
       feature.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
@@ -47,6 +56,24 @@ const FeatureTable: React.FC<FeatureTableProps> = ({
       </div>
     );
   }
+  const handleEditClick = (feature: Feature) => {
+    setSelectedFeature(feature);
+    setEditModalOpen(true);
+  };
+
+  const handleDeleteClick = (feature: Feature) => {
+    setFeatureToDelete(feature);
+    setDeleteModalOpen(true);
+  };
+
+  // Optionally update parent state after deletion.
+  const handleDeleteFeature = (deletedFeatureId: string) => {
+    // if (onDeleteFeature) {
+    //   onDeleteFeature(deletedFeatureId);
+    // } else {
+    //   console.log("Feature deleted:", deletedFeatureId);
+    // }
+  };
 
   return (
     <div className="rounded-md border glass-effect overflow-hidden">
@@ -72,13 +99,21 @@ const FeatureTable: React.FC<FeatureTableProps> = ({
                 <TableCell>{feature.customFields.length}</TableCell>
                 <TableCell className="text-right">
                   <div className="flex justify-end gap-2">
-                    <Button variant="ghost" size="sm">
+                    {/* <Button variant="ghost" size="sm">
                       <Eye className="h-4 w-4" />
-                    </Button>
-                    <Button variant="ghost" size="sm">
+                    </Button> */}
+                    <Button
+                      variant="ghost"
+                      size="sm"
+                      onClick={() => handleEditClick(feature)}
+                    >
                       <Edit className="h-4 w-4" />
                     </Button>
-                    <Button variant="ghost" size="sm">
+                    <Button
+                      variant="ghost"
+                      size="sm"
+                      onClick={() => handleDeleteClick(feature)}
+                    >
                       <Trash2 className="h-4 w-4" />
                     </Button>
                   </div>
@@ -94,6 +129,24 @@ const FeatureTable: React.FC<FeatureTableProps> = ({
           )}
         </TableBody>
       </Table>
+      {selectedFeature && (
+        <EditFeatureDialog
+          feature={selectedFeature}
+          open={editModalOpen}
+          onClose={() => setEditModalOpen(false)}
+          updateFeature={onAddFeature}
+        />
+      )}
+
+      {featureToDelete && (
+        <DeleteFeatureDialog
+          feature={featureToDelete}
+          open={deleteModalOpen}
+          onClose={() => setDeleteModalOpen(false)}
+          onDelete={handleDeleteFeature}
+          updateFeature={onAddFeature}
+        />
+      )}
     </div>
   );
 };

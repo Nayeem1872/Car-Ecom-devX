@@ -15,6 +15,7 @@ import {
   Image,
   CreditCard,
   Puzzle,
+  Mail,
 } from "lucide-react";
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
@@ -47,6 +48,11 @@ const navItems: NavItem[] = [
   { icon: Image, label: "Banners", href: "/admin/dashboard/banners" },
   { icon: Tag, label: "Brands", href: "/admin/dashboard/brands" },
   { icon: Puzzle, label: "Features", href: "/admin/dashboard/features" },
+  {
+    icon: Mail,
+    label: "Contact Requests",
+    href: "/admin/dashboard/contact-requests",
+  },
   {
     icon: CreditCard,
     label: "Finance Request",
