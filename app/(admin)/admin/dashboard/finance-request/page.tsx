@@ -26,20 +26,18 @@ const FinanceRequest = () => {
   const [detailsOpen, setDetailsOpen] = useState(false);
   const [finance, setFinance] = useState<any[]>([]);
   const [isLoading, setIsLoading] = useState(true);
-
+  const loadData = async () => {
+    setIsLoading(true);
+    try {
+      const response = await axios.get("/api/ecom/finance/get");
+      setFinance(response.data.data);
+    } catch (error) {
+      console.error("Error fetching products:", error);
+    } finally {
+      setIsLoading(false);
+    }
+  };
   useEffect(() => {
-    const loadData = async () => {
-      setIsLoading(true);
-      try {
-        const response = await axios.get("/api/ecom/finance/get");
-        setFinance(response.data.data);
-      } catch (error) {
-        console.error("Error fetching products:", error);
-      } finally {
-        setIsLoading(false);
-      }
-    };
-
     loadData();
   }, []);
 
@@ -103,17 +101,12 @@ const FinanceRequest = () => {
             <CardContent>
               <FinanceRequestTable
                 requests={filteredRequests}
-                onViewRequest={viewRequestDetails}
+                refetchData={loadData}
                 onDeleteRequest={deleteRequest}
               />
             </CardContent>
           </Card>
         </div>
-        <FinanceRequestDialog
-          open={detailsOpen}
-          onOpenChange={setDetailsOpen}
-          selectedRequest={selectedRequest}
-        />
       </motion.div>
     </>
   );

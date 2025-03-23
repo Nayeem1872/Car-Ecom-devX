@@ -22,8 +22,11 @@ import {
   SelectItem,
 } from "@/components/ui/select";
 import { useState } from "react";
+import axios from "axios";
+import { Button } from "@/components/ui/button";
 interface FinanceRequestDialogProps {
   open: boolean;
+  refetchData: () => void;
   onOpenChange: (open: boolean) => void;
   selectedRequest: any | null;
 }
@@ -31,10 +34,81 @@ interface FinanceRequestDialogProps {
 const FinanceRequestDialog = ({
   open,
   onOpenChange,
+  refetchData,
   selectedRequest,
 }: FinanceRequestDialogProps) => {
-  console.log("selectedRequest", selectedRequest);
-  const [status, setStatus] = useState(selectedRequest.status || "pending");
+  const [status, setStatus] = useState(selectedRequest?.status || "pending");
+
+  console.log("Selected Request:", selectedRequest);
+  console.log("Status:", status);
+
+  const handleSubmit = async () => {
+    try {
+      const updatedRequest = {
+        firstName: selectedRequest.firstName || "string",
+        lastName: selectedRequest.lastName || "string",
+        phoneNumber: selectedRequest.phoneNumber || "string",
+        sin: selectedRequest.sin || "string",
+        gender: selectedRequest.gender || "string",
+        maritalStatus: selectedRequest.maritalStatus || "string",
+        treatyCard: selectedRequest.treatyCard ?? true, // Set a default value for boolean
+        birthday: selectedRequest.birthday || "string", // Default to string if unavailable
+        email: selectedRequest.email || "user@example.com",
+        heardAboutUs: selectedRequest.heardAboutUs || "string",
+        address: {
+          country: selectedRequest.address?.country || "string",
+          streetAddress: selectedRequest.address?.streetAddress || "string",
+          city: selectedRequest.address?.city || "string",
+          postalCode: selectedRequest.address?.postalCode || "string",
+          housingStatus: selectedRequest.address?.housingStatus || "string",
+          durationAtResidence:
+            selectedRequest.address?.durationAtResidence || "string",
+          rentOrMortgage: selectedRequest.address?.rentOrMortgage || 0,
+        },
+        employment: {
+          employer: selectedRequest.employment?.employer || "string",
+          position: selectedRequest.employment?.position || "string",
+          grossIncome: selectedRequest.employment?.grossIncome || 1,
+          timeEmployed: selectedRequest.employment?.timeEmployed || "string",
+          additionalIncome: selectedRequest.employment?.additionalIncome.map(
+            (income: any) => ({
+              source: income.source || "string",
+              amount: income.amount || 1,
+            })
+          ) || [{ source: "string", amount: 1 }],
+        },
+        // category: selectedRequest.product?.category || "string",
+        product: {
+          productId: selectedRequest.product?.productId._id || "string",
+          type: selectedRequest.product?.type || "string",
+          specificRequirements:
+            selectedRequest.product?.specificRequirements || "string",
+          tradeInVehicle: {
+            year: selectedRequest.product?.tradeInVehicle?.year || 0,
+            make: selectedRequest.product?.tradeInVehicle?.make || "string",
+            model: selectedRequest.product?.tradeInVehicle?.model || "string",
+            trim: selectedRequest.product?.tradeInVehicle?.trim || "string",
+            amountOwed:
+              selectedRequest.product?.tradeInVehicle?.amountOwed || 0,
+          },
+        },
+        status: status || selectedRequest.status || "pending",
+      };
+
+      console.log("Updated Request Payload:", updatedRequest);
+
+      const response = await axios.patch(
+        `/api/ecom/finance/edit?id=${selectedRequest._id}`,
+        updatedRequest
+      );
+      refetchData();
+      console.log("Request updated:", response.data);
+      onOpenChange(false); // Close the dialog after successful submission
+    } catch (error) {
+      console.error("Error updating request:", error);
+    }
+  };
+
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent className="max-w-3xl max-h-[90vh] overflow-y-auto">
@@ -223,8 +297,39 @@ const FinanceRequestDialog = ({
                 )}
               </div>
 
+              {/* Vehicle Information */}
+              <div className="space-y-4">
+                <h3 className="font-semibold text-lg">Product Information</h3>
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  <div>
+                    <p className="text-sm font-medium text-muted-foreground">
+                      Product Name
+                    </p>
+                    <p>{selectedRequest.product?.productId?.name || "N/A"}</p>
+                  </div>
+                  <div>
+                    <p className="text-sm font-medium text-muted-foreground">
+                      Product Description
+                    </p>
+                    <p>
+                      {selectedRequest.product?.productId?.description || "N/A"}
+                    </p>
+                  </div>
+                  <div>
+                    <p className="text-sm font-medium text-muted-foreground">
+                      Trade-in Vehicle
+                    </p>
+                    <p>
+                      {selectedRequest.product?.tradeInVehicle
+                        ? `${selectedRequest.product.tradeInVehicle.year} ${selectedRequest.product.tradeInVehicle.make} ${selectedRequest.product.tradeInVehicle.model}`
+                        : "No trade-in"}
+                    </p>
+                  </div>
+                </div>
+              </div>
+
               <div className="flex flex-col">
-                <Label htmlFor="status" className="text-right">
+                <Label htmlFor="status" className="text-left mb-4">
                   Status
                 </Label>
                 <Select value={status} onValueChange={setStatus}>
@@ -237,6 +342,12 @@ const FinanceRequestDialog = ({
                     <SelectItem value="rejected">Rejected</SelectItem>
                   </SelectContent>
                 </Select>
+              </div>
+              <div className="flex justify-end mt-4">
+                <Button variant="outline">Cancel</Button>
+                <Button className="ml-4" onClick={handleSubmit}>
+                  Submit
+                </Button>
               </div>
             </div>
           </>
