@@ -94,9 +94,9 @@ const BrandsTable = ({
                   </TableCell>
                   <TableCell className="font-medium">{brand.name}</TableCell>
                   <TableCell>
-                    {typeof brand.category === "object"
+                    {brand.category && typeof brand.category === "object"
                       ? brand.category.name
-                      : brand.category}
+                      : ""}
                   </TableCell>
 
                   <TableCell className="text-right">
