@@ -71,3 +71,33 @@ export const fetchBanners = async (
     pagination: response.data.pagination,
   };
 };
+export const fetchFeatureData = async (
+  page: number = 1,
+  pageSize: number = 10,
+  all: boolean = false
+) => {
+  const response = await axios.get(
+    `/api/ecom/feature/get?page=${page}&pageSize=${pageSize}&all=${all}`
+  );
+  return {
+    products: response.data.data,
+    pagination: response.data.pagination,
+  };
+};
+export const fetchBrandsData = async (
+  page: number = 1,
+  pageSize: number = 10,
+  all: boolean = false
+) => {
+  const response = await axios.get(
+    `/api/ecom/brand/get?page=${page}&pageSize=${pageSize}&all=${all}`
+  );
+  return {
+    products: response.data.data,
+    pagination: response.data.pagination,
+  };
+};
+export const fetchBannerAll = async () => {
+  const response = await axios.get("/api/ecom/brand/get&all=true");
+  return response.data.data;
+};

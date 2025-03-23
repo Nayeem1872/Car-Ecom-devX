@@ -15,11 +15,19 @@ import AddBrandModal from "../../components/AddBrandModal";
 import BrandsTable from "../../components/BrandsTable";
 import axios from "axios";
 import EditBrandModal from "./components/EditBrandModal";
-import { fetchBrands, fetchCategories } from "@/hooks/ApiHooks";
+import {
+  fetchBrands,
+  fetchBrandsData,
+  fetchCategories,
+} from "@/hooks/ApiHooks";
 import { handleAddBrandAction, handleEditBrandAction } from "./brandActions";
+import { Button } from "@/components/ui/button";
 
 const Brands = () => {
   const [brands, setBrands] = useState<any[]>([]);
+  const [currentPage, setCurrentPage] = useState(1);
+  const [pageSize, setPageSize] = useState(10);
+  const [totalPages, setTotalPages] = useState(1);
   const [isLoading, setIsLoading] = useState(true);
   const [newBrand, setNewBrand] = useState<any>({
     name: "",
@@ -36,8 +44,12 @@ const Brands = () => {
     const loadData = async () => {
       setIsLoading(true);
       try {
-        const brandsData = await fetchBrands();
-        setBrands(brandsData);
+        const { products: productsData, pagination } = await fetchBrandsData(
+          currentPage,
+          pageSize,
+          false
+        );
+        setBrands(productsData);
       } catch (error) {
         console.error("Error fetching Brands:", error);
         toast({
@@ -67,7 +79,7 @@ const Brands = () => {
     };
 
     loadData();
-  }, [toast]);
+  }, [toast, currentPage, pageSize]);
 
   const handleAddBrand = async () => {
     await handleAddBrandAction({
@@ -117,6 +129,14 @@ const Brands = () => {
       categoryName.toLowerCase().includes(searchTerm.toLowerCase())
     );
   });
+
+  const handlePrevPage = () => {
+    setCurrentPage((prev) => Math.max(prev - 1, 1));
+  };
+
+  const handleNextPage = () => {
+    setCurrentPage((prev) => Math.min(prev + 1, totalPages));
+  };
 
   return (
     <>
@@ -185,6 +205,27 @@ const Brands = () => {
               />
             )}
           </CardContent>
+          <div className="flex items-center justify-between p-4">
+            <Button
+              variant="outline"
+              size="sm"
+              disabled={currentPage === 1}
+              onClick={handlePrevPage}
+            >
+              Previous
+            </Button>
+            <span>
+              Page {currentPage} of {totalPages}
+            </span>
+            <Button
+              variant="outline"
+              size="sm"
+              disabled={currentPage === totalPages}
+              onClick={handleNextPage}
+            >
+              Next
+            </Button>
+          </div>
         </Card>
       </motion.div>
       {openEditModal && editBrand && (

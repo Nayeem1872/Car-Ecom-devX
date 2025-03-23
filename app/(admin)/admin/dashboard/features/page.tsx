@@ -13,11 +13,15 @@ import {
 import AddFeatureDialog from "./components/AddFeatureDialog";
 import FeatureTable from "./components/FeatureTable";
 import axios from "axios";
+import { Button } from "@/components/ui/button";
+import { fetchFeatureData } from "@/hooks/ApiHooks";
 
 const Features = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [features, setFeatures] = useState<any[]>([]);
-
+  const [currentPage, setCurrentPage] = useState(1);
+  const [pageSize, setPageSize] = useState(10);
+  const [totalPages, setTotalPages] = useState(1);
   const [searchTerm, setSearchTerm] = useState("");
 
   useState(() => {
@@ -29,8 +33,12 @@ const Features = () => {
   const fetchFeatures = async () => {
     try {
       setIsLoading(true);
-      const response = await axios.get("/api/ecom/feature/get");
-      setFeatures(response.data.data);
+      const { products: productsData, pagination } = await fetchFeatureData(
+        currentPage,
+        pageSize,
+        false
+      );
+      setFeatures(productsData);
     } catch (error) {
       console.error("Error fetching features:", error);
     } finally {
@@ -38,7 +46,6 @@ const Features = () => {
     }
   };
 
-  // Call fetchFeatures on component mount
   useEffect(() => {
     fetchFeatures();
   }, []);
@@ -50,7 +57,13 @@ const Features = () => {
     };
     setFeatures([...features, newFeature]);
   };
+  const handlePrevPage = () => {
+    setCurrentPage((prev) => Math.max(prev - 1, 1));
+  };
 
+  const handleNextPage = () => {
+    setCurrentPage((prev) => Math.min(prev + 1, totalPages));
+  };
   return (
     <>
       <motion.div
@@ -100,6 +113,27 @@ const Features = () => {
               searchTerm={searchTerm}
               onAddFeature={fetchFeatures}
             />
+            <div className="flex items-center justify-between p-4">
+              <Button
+                variant="outline"
+                size="sm"
+                disabled={currentPage === 1}
+                onClick={handlePrevPage}
+              >
+                Previous
+              </Button>
+              <span>
+                Page {currentPage} of {totalPages}
+              </span>
+              <Button
+                variant="outline"
+                size="sm"
+                disabled={currentPage === totalPages}
+                onClick={handleNextPage}
+              >
+                Next
+              </Button>
+            </div>
           </CardContent>
         </Card>
       </motion.div>

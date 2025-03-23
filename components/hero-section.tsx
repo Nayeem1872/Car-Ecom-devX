@@ -1,10 +1,10 @@
 "use client";
 import { useEffect, useState } from "react";
 import { motion } from "framer-motion";
-import { Search, ChevronRight, ArrowRight } from "lucide-react";
-import { Input } from "@/components/ui/input";
+import { ChevronRight, ArrowRight } from "lucide-react";
+
 import Link from "next/link";
-import { fetchBanners } from "@/hooks/ApiHooks";
+import { fetchBannerAll, fetchBanners } from "@/hooks/ApiHooks";
 import { Button } from "./ui/button";
 
 export default function HeroSection() {
@@ -14,7 +14,7 @@ export default function HeroSection() {
   useEffect(() => {
     const loadBanners = async () => {
       try {
-        const bannersData = await fetchBanners();
+        const bannersData = await fetchBannerAll();
         setBanners(bannersData);
       } catch (error) {
         console.error("Error fetching banners:", error);
