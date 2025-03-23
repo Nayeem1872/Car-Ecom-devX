@@ -86,9 +86,9 @@ const EditFeatureDialog: React.FC<EditFeatureDialogProps> = ({
     description: feature.description,
 
     category:
-      typeof feature.category === "object"
+      feature.category && typeof feature.category === "object"
         ? feature.category._id
-        : feature.category,
+        : "",
     customFields: feature.customFields,
   });
 
@@ -136,9 +136,9 @@ const EditFeatureDialog: React.FC<EditFeatureDialogProps> = ({
       name: feature.name,
       description: feature.description,
       category:
-        typeof feature.category === "object"
+        feature.category && typeof feature.category === "object"
           ? feature.category._id
-          : feature.category,
+          : "",
       customFields: feature.customFields,
     });
   }, [feature]);

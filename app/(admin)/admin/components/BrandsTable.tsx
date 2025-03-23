@@ -104,13 +104,6 @@ const BrandsTable = ({
                       <Button
                         variant="ghost"
                         size="sm"
-                        onClick={() => onView(brand)}
-                      >
-                        <Eye className="h-4 w-4" />
-                      </Button>
-                      <Button
-                        variant="ghost"
-                        size="sm"
                         onClick={() => onEdit(brand)}
                       >
                         <Edit className="h-4 w-4" />

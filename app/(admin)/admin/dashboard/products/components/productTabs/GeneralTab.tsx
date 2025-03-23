@@ -42,11 +42,7 @@ const GeneralTab: React.FC<GeneralTabProps> = ({
       <div className="flex flex-col gap-2">
         <Label htmlFor="category">Category*</Label>
         <Select
-          value={
-            typeof newProduct.category === "object"
-              ? newProduct.category._id
-              : newProduct.category
-          }
+          value={newProduct.category ? newProduct.category._id : undefined}
           onValueChange={(value) =>
             setNewProduct({ ...newProduct, category: value })
           }

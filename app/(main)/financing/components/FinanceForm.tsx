@@ -291,9 +291,11 @@ export default function FinanceForm({
           streetAddress:
             formData.address.streetAddress || formData.address.streetAddress,
         },
+        category: formData.product.productId || "unknown",
+
         product: {
           ...formData.product,
-          productId: formData.product.productId || "unknown",
+          // productId: formData.product.productId || "unknown",
         },
       };
 

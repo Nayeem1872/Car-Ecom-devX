@@ -41,7 +41,9 @@ const RelatedCarsSection: React.FC<RelatedCarsSectionProps> = ({
                         className="w-full h-full object-cover"
                       />
                       <Badge className="absolute top-2 left-2 bg-primary hover:bg-primary/90 z-10">
-                        {relatedCar.category.name}
+                        {relatedCar.category && relatedCar.category.name
+                          ? relatedCar.category.name
+                          : ""}
                       </Badge>
                     </div>
                   </CardHeader>

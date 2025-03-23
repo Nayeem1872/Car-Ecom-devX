@@ -77,9 +77,13 @@ const FinanceRequestDialog = ({
             })
           ) || [{ source: "string", amount: 1 }],
         },
-        // category: selectedRequest.product?.category || "string",
+        ...(selectedRequest.product?.category && {
+          category: selectedRequest.product.category,
+        }),
         product: {
-          productId: selectedRequest.product?.productId._id || "string",
+          ...(selectedRequest.product?.productId?._id && {
+            productId: selectedRequest.product.productId._id,
+          }),
           type: selectedRequest.product?.type || "string",
           specificRequirements:
             selectedRequest.product?.specificRequirements || "string",

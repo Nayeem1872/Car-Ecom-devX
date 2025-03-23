@@ -184,9 +184,9 @@ export default function FeaturedCars() {
                             />
                           </Button>
                           <Badge className="absolute top-2 left-2 bg-primary hover:bg-primary/90 z-10">
-                            {typeof car.category === "object"
+                            {car.category && typeof car.category === "object"
                               ? car.category.name
-                              : car.category}
+                              : ""}
                           </Badge>
                         </div>
                         <div className="p-5">

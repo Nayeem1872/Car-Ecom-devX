@@ -279,9 +279,9 @@ const ProductsTable = ({
                     : "in-stock";
 
                 const categoryName =
-                  typeof product.category === "object"
+                  product.category && typeof product.category === "object"
                     ? product.category.name
-                    : product.category;
+                    : "";
 
                 return (
                   <TableRow key={product.id}>

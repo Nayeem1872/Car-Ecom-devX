@@ -392,7 +392,9 @@ export default function CarsPage() {
                                 />
                               </Button>
                               <Badge className="absolute top-2 left-2">
-                                {product.category.name}
+                                {product.category && product.category.name
+                                  ? product.category.name
+                                  : ""}
                               </Badge>
                             </div>
                           </CardHeader>

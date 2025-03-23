@@ -95,7 +95,9 @@ const FeatureTable: React.FC<FeatureTableProps> = ({
                 <TableCell className="max-w-[300px] truncate">
                   {feature.description}
                 </TableCell>
-                <TableCell>{feature.category.name}</TableCell>
+                <TableCell>
+                  {feature.category ? feature.category.name : ""}
+                </TableCell>
                 <TableCell>{feature.customFields.length}</TableCell>
                 <TableCell className="text-right">
                   <div className="flex justify-end gap-2">

@@ -92,13 +92,6 @@ const CategoriesTable = ({
                       <Button
                         variant="ghost"
                         size="sm"
-                        onClick={() => onView(category)}
-                      >
-                        <Eye className="h-4 w-4" />
-                      </Button>
-                      <Button
-                        variant="ghost"
-                        size="sm"
                         onClick={() => onEdit(category)}
                       >
                         <Edit className="h-4 w-4" />
