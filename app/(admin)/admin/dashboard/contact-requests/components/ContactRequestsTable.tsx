@@ -95,7 +95,9 @@ const ContactRequestsTable: React.FC<ContactRequestsTableProps> = ({
         additionalComments: updatedContact.additionalComments || "string",
         status: [
           {
-            status: updatedContact.status || "string",
+            status: Array.isArray(updatedContact.status)
+              ? updatedContact.status[0]?.status || "Completed"
+              : updatedContact.status || "Completed",
             note: updatedContact.note || "string",
           },
         ],

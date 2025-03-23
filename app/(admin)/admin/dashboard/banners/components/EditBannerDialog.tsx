@@ -15,7 +15,7 @@ import { Label } from "@/components/ui/label";
 import { Edit } from "lucide-react";
 
 export interface BannerData {
-  id?: number; // optional id for existing banners
+  id?: number;
   name: string;
   image: File | string;
 }
