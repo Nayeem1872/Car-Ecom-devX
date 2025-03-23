@@ -48,33 +48,32 @@ const Categories = () => {
   );
   const [openEditModal, setOpenEditModal] = useState(false);
 
+  const fetchCategories = async () => {
+    try {
+      const response = await axios.get("/api/ecom/category/get");
+
+      const data = Array.isArray(response.data)
+        ? response.data
+        : response.data.category || [];
+
+      const transformed: Category[] = data.map((cat: any) => ({
+        id: cat._id,
+        name: cat.name,
+        description: cat.description,
+        parentCategory: cat.parentCategory,
+        productsCount: cat.subCategories ? cat.subCategories.length : 0,
+      }));
+      setCategories(transformed);
+    } catch (error) {
+      console.error("Error fetching categories:", error);
+      toast({
+        title: "Error",
+        description: "Failed to fetch categories",
+        variant: "destructive",
+      });
+    }
+  };
   useEffect(() => {
-    const fetchCategories = async () => {
-      try {
-        const response = await axios.get("/api/ecom/category/get");
-
-        const data = Array.isArray(response.data)
-          ? response.data
-          : response.data.category || [];
-
-        const transformed: Category[] = data.map((cat: any) => ({
-          id: cat._id,
-          name: cat.name,
-          description: cat.description,
-          parentCategory: cat.parentCategory,
-          productsCount: cat.subCategories ? cat.subCategories.length : 0,
-        }));
-        setCategories(transformed);
-      } catch (error) {
-        console.error("Error fetching categories:", error);
-        toast({
-          title: "Error",
-          description: "Failed to fetch categories",
-          variant: "destructive",
-        });
-      }
-    };
-
     fetchCategories();
   }, [toast]);
 
@@ -249,6 +248,7 @@ const Categories = () => {
             <CategoriesTable
               categories={filteredCategories}
               onView={handleViewCategory}
+              fetchCategories={fetchCategories}
               onEdit={handleEditCategoryClick}
               onDelete={handleDeleteCategory}
             />

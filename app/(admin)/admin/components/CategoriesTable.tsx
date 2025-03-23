@@ -30,6 +30,7 @@ export interface Category {
 
 interface CategoriesTableProps {
   categories: Category[];
+  fetchCategories: () => void;
   onView: (category: Category) => void;
   onEdit: (category: Category) => void;
   onDelete: (category: Category) => void;
@@ -39,6 +40,7 @@ const CategoriesTable = ({
   categories,
   onView,
   onEdit,
+  fetchCategories,
   onDelete,
 }: CategoriesTableProps) => {
   const [deleteModalOpen, setDeleteModalOpen] = useState(false);
@@ -57,6 +59,7 @@ const CategoriesTable = ({
           `/api/ecom/category/delete?id=${selectedCategoryForDelete.id}`
         );
         onDelete(selectedCategoryForDelete);
+        fetchCategories();
         setDeleteModalOpen(false);
         setSelectedCategoryForDelete(null);
       } catch (error) {
