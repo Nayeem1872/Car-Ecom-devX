@@ -216,7 +216,7 @@ export default function FeaturedCars() {
                             onClick={() => handleAddToCart(car)}
                           >
                             <BookOpen className="mr-2 h-4 w-4 transition-transform group-hover:scale-110" />
-                            Book Now
+                            Get Finance
                           </Button>
                         </div>
                       </div>

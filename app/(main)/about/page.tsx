@@ -133,9 +133,9 @@ export default function AboutPage() {
                   <ChevronRight className="ml-2 h-4 w-4" />
                 </Button>
               </Link>
-              <Link href="/contact">
+              <Link href="/financing">
                 <Button size="lg" variant="outline">
-                  Contact Us
+                  Get Finance
                 </Button>
               </Link>
             </motion.div>
@@ -607,13 +607,13 @@ export default function AboutPage() {
                   Browse Our Cars
                 </Button>
               </Link>
-              <Link href="/contact">
+              <Link href="/financing">
                 <Button
                   size="lg"
                   variant="outline"
                   className="w-full sm:w-auto"
                 >
-                  Contact Us
+                  Get Finance
                 </Button>
               </Link>
             </div>

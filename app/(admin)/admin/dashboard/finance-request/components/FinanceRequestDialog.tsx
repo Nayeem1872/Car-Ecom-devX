@@ -13,7 +13,15 @@ import {
   TableHeader,
   TableHead,
 } from "@/components/ui/table";
-
+import { Label } from "@/components/ui/label";
+import {
+  Select,
+  SelectTrigger,
+  SelectValue,
+  SelectContent,
+  SelectItem,
+} from "@/components/ui/select";
+import { useState } from "react";
 interface FinanceRequestDialogProps {
   open: boolean;
   onOpenChange: (open: boolean) => void;
@@ -25,8 +33,8 @@ const FinanceRequestDialog = ({
   onOpenChange,
   selectedRequest,
 }: FinanceRequestDialogProps) => {
-  
-
+  console.log("selectedRequest", selectedRequest);
+  const [status, setStatus] = useState(selectedRequest.status || "pending");
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent className="max-w-3xl max-h-[90vh] overflow-y-auto">
@@ -215,73 +223,21 @@ const FinanceRequestDialog = ({
                 )}
               </div>
 
-              {/* Product Information */}
-              {/* <div className="space-y-4">
-                <h3 className="font-semibold text-lg">Product Information</h3>
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                  <div>
-                    <p className="text-sm font-medium text-muted-foreground">
-                      Product ID
-                    </p>
-                    <p>{selectedRequest.product.productId}</p>
-                  </div>
-                  <div>
-                    <p className="text-sm font-medium text-muted-foreground">
-                      Type
-                    </p>
-                    <p>{selectedRequest.product.type}</p>
-                  </div>
-                  <div className="col-span-2">
-                    <p className="text-sm font-medium text-muted-foreground">
-                      Specific Requirements
-                    </p>
-                    <p>{selectedRequest.product.specificRequirements}</p>
-                  </div>
-                </div>
-
-                {selectedRequest.product.tradeInVehicle && (
-                  <div className="mt-4">
-                    <p className="text-sm font-medium text-muted-foreground mb-2">
-                      Trade-In Vehicle
-                    </p>
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                      <div>
-                        <p className="text-sm font-medium text-muted-foreground">
-                          Year
-                        </p>
-                        <p>{selectedRequest.product.tradeInVehicle.year}</p>
-                      </div>
-                      <div>
-                        <p className="text-sm font-medium text-muted-foreground">
-                          Make
-                        </p>
-                        <p>{selectedRequest.product.tradeInVehicle.make}</p>
-                      </div>
-                      <div>
-                        <p className="text-sm font-medium text-muted-foreground">
-                          Model
-                        </p>
-                        <p>{selectedRequest.product.tradeInVehicle.model}</p>
-                      </div>
-                      <div>
-                        <p className="text-sm font-medium text-muted-foreground">
-                          Trim
-                        </p>
-                        <p>{selectedRequest.product.tradeInVehicle.trim}</p>
-                      </div>
-                      <div>
-                        <p className="text-sm font-medium text-muted-foreground">
-                          Amount Owed
-                        </p>
-                        <p>
-                          $
-                          {selectedRequest.product.tradeInVehicle.amountOwed.toLocaleString()}
-                        </p>
-                      </div>
-                    </div>
-                  </div>
-                )}
-              </div> */}
+              <div className="flex flex-col">
+                <Label htmlFor="status" className="text-right">
+                  Status
+                </Label>
+                <Select value={status} onValueChange={setStatus}>
+                  <SelectTrigger className="w-full p-2 border rounded-md">
+                    <SelectValue placeholder="Select Status" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="pending">Pending</SelectItem>
+                    <SelectItem value="approved">Approved</SelectItem>
+                    <SelectItem value="rejected">Rejected</SelectItem>
+                  </SelectContent>
+                </Select>
+              </div>
             </div>
           </>
         )}

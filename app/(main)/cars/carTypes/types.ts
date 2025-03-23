@@ -44,10 +44,18 @@ export interface CarFeature {
   options: any[];
 }
 
-export interface CarVariant {
-  varient: any[];
+export interface CarVariantItem {
+  name: string;
+  price: number;
+  stock: number;
+  description: string;
+  images: string[];
+  _id: string;
 }
-
+export interface CarVariant {
+  label: string; // Add label for the variant
+  varient: CarVariantItem[]; // Make sure the varient array has the correct type
+}
 export interface Car {
   id: string;
   specs: Record<string, CarSpec>;

@@ -19,6 +19,8 @@ const FinanceRequestTable = ({
   onViewRequest,
   onDeleteRequest,
 }: FinanceRequestTableProps) => {
+  console.log("requests", requests);
+
   return (
     <div className="rounded-md border overflow-hidden">
       <Table>
@@ -63,15 +65,8 @@ const FinanceRequestTable = ({
                     >
                       <Eye className="h-4 w-4" />
                     </Button>
-                    <Button variant="ghost" size="icon">
+                    {/* <Button variant="ghost" size="icon">
                       <Edit className="h-4 w-4" />
-                    </Button>
-                    {/* <Button
-                      variant="ghost"
-                      size="icon"
-                      onClick={() => onDeleteRequest(request._id)}
-                    >
-                      <Trash2 className="h-4 w-4" />
                     </Button> */}
                   </div>
                 </TableCell>

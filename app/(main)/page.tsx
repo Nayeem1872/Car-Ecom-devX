@@ -110,7 +110,7 @@ export default function Home() {
             Join thousands of satisfied customers who found their dream cars
             with us. Start your journey today!
           </p>
-          <Link href="/cars">
+          <Link href="/financing">
             <Button
               size="lg"
               className="bg-primary hover:bg-primary/90 animate-pulse-slow"

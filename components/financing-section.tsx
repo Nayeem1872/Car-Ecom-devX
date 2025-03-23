@@ -102,7 +102,7 @@ export default function FinancingSection() {
               their credit with confidence.
             </p>
             <div className="flex justify-center">
-              <Link href="/financing#first-time">
+              <Link href="/financing">
                 <Button
                   variant="outline"
                   className="border-primary text-primary hover:bg-primary hover:text-white group"
@@ -140,7 +140,7 @@ export default function FinancingSection() {
               need and start their journey with confidence.
             </p>
             <div className="flex justify-center">
-              <Link href="/financing#newcomers">
+              <Link href="/financing">
                 <Button
                   variant="outline"
                   className="border-primary text-primary hover:bg-primary hover:text-white group"
@@ -178,7 +178,7 @@ export default function FinancingSection() {
               with ease and confidence.
             </p>
             <div className="flex justify-center">
-              <Link href="/financing#specialized">
+              <Link href="/financing">
                 <Button
                   variant="outline"
                   className="border-primary text-primary hover:bg-primary hover:text-white group"
@@ -302,12 +302,14 @@ export default function FinancingSection() {
               purchase a vehicle from LuxuryCars and mention your name, you'll
               receive $500 as our way of saying thank you.
             </p>
-            <Button
-              className="bg-primary hover:bg-primary/90 text-white"
-              size="lg"
-            >
-              Learn About Our Referral Program
-            </Button>
+            <Link href="/financing">
+              <Button
+                className="bg-primary hover:bg-primary/90 text-white"
+                size="lg"
+              >
+                Learn About Our Referral Program
+              </Button>
+            </Link>
           </motion.div>
         </motion.div>
       </div>

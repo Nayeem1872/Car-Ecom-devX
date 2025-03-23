@@ -114,10 +114,10 @@ export default function Footer({ vendor }: FooterProps) {
               </li>
               <li>
                 <Link
-                  href="/blog"
+                  href="/financing"
                   className="text-muted-foreground hover:text-primary transition-colors"
                 >
-                  Blog
+                  Financing
                 </Link>
               </li>
             </ul>

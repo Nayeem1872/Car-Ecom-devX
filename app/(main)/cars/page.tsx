@@ -426,7 +426,7 @@ export default function CarsPage() {
                               onClick={() => handleAddToCart(product)}
                             >
                               <BookIcon className="mr-2 h-4 w-4" />
-                              Book now
+                              Get Finance
                             </Button>
                           </CardFooter>
                         </Card>

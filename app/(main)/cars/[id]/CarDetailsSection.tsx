@@ -66,11 +66,11 @@ const CarDetailsContent: React.FC<CarDetailsContentProps> = ({
     loadData();
   }, []);
 
-  console.log("userInfo", userInfo);
-
   const handleBookNowRedirect = () => {
     router.push("/contact");
   };
+
+  console.log("car", car);
 
   const handleShare = () => {
     // Get the current page URL
@@ -169,10 +169,10 @@ const CarDetailsContent: React.FC<CarDetailsContentProps> = ({
             transition={{ duration: 0.5, delay: 0.2 }}
           >
             <Tabs defaultValue="overview" className="w-full">
-              <TabsList className="w-full grid grid-cols-3 mb-6">
+              <TabsList className="w-full grid grid-cols-2 mb-6">
                 <TabsTrigger value="overview">Overview</TabsTrigger>
-                <TabsTrigger value="specifications">Specifications</TabsTrigger>
-                <TabsTrigger value="features">Features</TabsTrigger>
+                <TabsTrigger value="specifications">Variants</TabsTrigger>
+                {/* <TabsTrigger value="features">Features</TabsTrigger> */}
               </TabsList>
 
               <TabsContent
@@ -184,7 +184,7 @@ const CarDetailsContent: React.FC<CarDetailsContentProps> = ({
                 </h3>
                 <p className="text-muted-foreground mb-6">{car.description}</p>
 
-                <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-6">
+                {/* <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-6">
                   <div className="bg-gray-50 p-4 rounded-lg">
                     <div className="flex items-center mb-2">
                       <Calendar className="h-5 w-5 text-primary mr-2" />
@@ -213,9 +213,9 @@ const CarDetailsContent: React.FC<CarDetailsContentProps> = ({
                     </div>
                     <p>Gasoline</p>
                   </div>
-                </div>
+                </div> */}
 
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                {/* <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                   <div>
                     <h4 className="font-semibold mb-2 flex items-center">
                       <Info className="h-4 w-4 text-primary mr-2" />
@@ -244,6 +244,20 @@ const CarDetailsContent: React.FC<CarDetailsContentProps> = ({
                     </h4>
                     <p className="text-muted-foreground">{car.stockNumber}</p>
                   </div>
+                </div> */}
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                  {car.specs &&
+                    Object.entries(car.specs).map(([key, value], index) => (
+                      <div key={index}>
+                        <h4 className="font-semibold mb-2 flex items-center">
+                          <Info className="h-4 w-4 text-primary mr-2" />
+                          {value.fieldLabel}
+                        </h4>
+                        <p className="text-muted-foreground">
+                          {value.fieldValue}
+                        </p>
+                      </div>
+                    ))}
                 </div>
               </TabsContent>
 
@@ -251,29 +265,45 @@ const CarDetailsContent: React.FC<CarDetailsContentProps> = ({
                 value="specifications"
                 className="bg-white rounded-xl p-6 shadow-md"
               >
-                <h3 className="text-2xl font-bold mb-4">
-                  Technical Specifications
-                </h3>
+                <h3 className="text-2xl font-bold mb-4">Technical Variants</h3>
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                   <div className="space-y-4">
-                    {/* Loop through car.specs and display each feature */}
-                    {car.specs &&
-                      Object.entries(car.specs).map(([key, value], index) => (
-                        <div key={index}>
-                          <h4 className="font-semibold mb-2 flex items-center">
-                            <Info className="h-4 w-4 text-primary mr-2" />
-                            {value.fieldLabel}
-                          </h4>
-                          <p className="text-muted-foreground">
-                            {value.fieldValue}
-                          </p>
+                    {car.varients &&
+                    car.varients.varient &&
+                    car.varients.varient.length > 0 ? (
+                      <div>
+                        <h4 className="font-semibold mb-2 flex items-center">
+                          <Info className="h-4 w-4 text-primary mr-2" />
+                          Variant: {car.varients.label}
+                        </h4>
+                        <div className="space-y-2">
+                          {car.varients.varient.map((variant, index) => (
+                            <div
+                              key={index}
+                              className="bg-gray-50 p-4 rounded-lg"
+                            >
+                              <h5 className="font-medium">{variant.name}</h5>
+                              <p className="text-muted-foreground">
+                                Price: ${variant.price}
+                              </p>
+                              <p className="text-muted-foreground">
+                                Stock: {variant.stock}
+                              </p>
+                              <p className="text-muted-foreground">
+                                {variant.description}
+                              </p>
+                            </div>
+                          ))}
                         </div>
-                      ))}
+                      </div>
+                    ) : (
+                      <p>No variants available</p>
+                    )}
                   </div>
                 </div>
               </TabsContent>
 
-              <TabsContent
+              {/* <TabsContent
                 value="features"
                 className="bg-white rounded-xl p-6 shadow-md"
               >
@@ -289,7 +319,7 @@ const CarDetailsContent: React.FC<CarDetailsContentProps> = ({
                       </div>
                     ))}
                 </div>
-              </TabsContent>
+              </TabsContent> */}
             </Tabs>
           </motion.div>
         </div>
@@ -323,7 +353,7 @@ const CarDetailsContent: React.FC<CarDetailsContentProps> = ({
                 onClick={handleBookNowRedirect}
               >
                 <BookIcon className="mr-2 h-4 w-4 transition-transform group-hover:scale-110" />
-                Book Now
+                Contact Us
                 <ArrowRight className="ml-2 h-4 w-4 transition-transform group-hover:translate-x-1" />
               </Button>
               <Button
