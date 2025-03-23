@@ -98,6 +98,6 @@ export const fetchBrandsData = async (
   };
 };
 export const fetchBannerAll = async () => {
-  const response = await axios.get("/api/ecom/brand/get&all=true");
+  const response = await axios.get("/api/ecom/banner/get?all=true");
   return response.data.data;
 };
