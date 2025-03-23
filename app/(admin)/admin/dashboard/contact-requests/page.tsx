@@ -2,29 +2,11 @@
 import React, { useEffect, useState } from "react";
 import { motion } from "framer-motion";
 import { format } from "date-fns";
-import {
-  AlertDialog,
-  AlertDialogAction,
-  AlertDialogCancel,
-  AlertDialogContent,
-  AlertDialogDescription,
-  AlertDialogFooter,
-  AlertDialogHeader,
-  AlertDialogTitle,
-} from "@/components/ui/alert-dialog";
 import { Button } from "@/components/ui/button";
-import {
-  Dialog,
-  DialogContent,
-  DialogDescription,
-  DialogFooter,
-  DialogHeader,
-  DialogTitle,
-} from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
 import { toast } from "@/hooks/use-toast";
 import { Badge } from "@/components/ui/badge";
-import { Edit, Trash2, Search, Eye } from "lucide-react";
+import { Search } from "lucide-react";
 import ContactRequestsTable from "./components/ContactRequestsTable";
 import { fetchContact } from "@/hooks/ApiHooks";
 
@@ -144,6 +126,14 @@ const ContactRequests = () => {
     }
   };
 
+  const handlePrevPage = () => {
+    setCurrentPage((prev) => Math.max(prev - 1, 1));
+  };
+
+  const handleNextPage = () => {
+    setCurrentPage((prev) => Math.min(prev + 1, totalPages));
+  };
+
   return (
     <motion.div
       initial={{ opacity: 0 }}
@@ -151,9 +141,10 @@ const ContactRequests = () => {
       exit={{ opacity: 0 }}
       className="container mx-auto px-4 py-6"
     >
+      <h1 className="text-3xl font-bold mb-2">Contact Request</h1>
+      <p className="text-muted-foreground">Manage your contact here</p>
       <div className="flex items-center justify-between mb-6">
-        <h1 className="text-2xl font-bold">Contact Requests</h1>
-        <div className="relative w-64">
+        <div className="relative w-64 justify-end mt-8">
           <Search className="absolute left-2 top-2.5 h-4 w-4 text-muted-foreground" />
           <Input
             placeholder="Search requests..."
@@ -181,6 +172,27 @@ const ContactRequests = () => {
           setDeleteDialogOpen(true);
         }}
       />
+      <div className="flex items-center justify-between p-4">
+        <Button
+          variant="outline"
+          size="sm"
+          disabled={currentPage === 1}
+          onClick={handlePrevPage}
+        >
+          Previous
+        </Button>
+        <span>
+          Page {currentPage} of {totalPages}
+        </span>
+        <Button
+          variant="outline"
+          size="sm"
+          disabled={currentPage === totalPages}
+          onClick={handleNextPage}
+        >
+          Next
+        </Button>
+      </div>
     </motion.div>
   );
 };

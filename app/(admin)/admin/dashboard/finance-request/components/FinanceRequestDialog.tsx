@@ -39,9 +39,6 @@ const FinanceRequestDialog = ({
 }: FinanceRequestDialogProps) => {
   const [status, setStatus] = useState(selectedRequest?.status || "pending");
 
-  console.log("Selected Request:", selectedRequest);
-  console.log("Status:", status);
-
   const handleSubmit = async () => {
     try {
       const updatedRequest = {
@@ -51,8 +48,8 @@ const FinanceRequestDialog = ({
         sin: selectedRequest.sin || "string",
         gender: selectedRequest.gender || "string",
         maritalStatus: selectedRequest.maritalStatus || "string",
-        treatyCard: selectedRequest.treatyCard ?? true, // Set a default value for boolean
-        birthday: selectedRequest.birthday || "string", // Default to string if unavailable
+        treatyCard: selectedRequest.treatyCard ?? true,
+        birthday: selectedRequest.birthday || "string",
         email: selectedRequest.email || "user@example.com",
         heardAboutUs: selectedRequest.heardAboutUs || "string",
         address: {
@@ -106,12 +103,14 @@ const FinanceRequestDialog = ({
         updatedRequest
       );
       refetchData();
-      console.log("Request updated:", response.data);
-      onOpenChange(false); // Close the dialog after successful submission
+
+      onOpenChange(false);
     } catch (error) {
       console.error("Error updating request:", error);
     }
   };
+
+  console.log("selectedRequest", selectedRequest);
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
@@ -303,13 +302,20 @@ const FinanceRequestDialog = ({
 
               {/* Vehicle Information */}
               <div className="space-y-4">
-                <h3 className="font-semibold text-lg">Product Information</h3>
+                <h3 className="font-semibold text-lg">Vehicle Information</h3>
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                   <div>
                     <p className="text-sm font-medium text-muted-foreground">
                       Product Name
                     </p>
                     <p>{selectedRequest.product?.productId?.name || "N/A"}</p>
+                  </div>
+                  <div>
+                    <p className="text-sm font-medium text-muted-foreground">
+                      Category Name
+                    </p>
+
+                    <p>{selectedRequest.category?.name || "N/A"}</p>
                   </div>
                   <div>
                     <p className="text-sm font-medium text-muted-foreground">

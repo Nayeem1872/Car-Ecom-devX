@@ -15,6 +15,7 @@ import AddBannerDialog from "./components/AddBannerDialog";
 import BannerTable from "./components/BannerTable";
 import axios from "axios";
 import { fetchBanners } from "@/hooks/ApiHooks";
+import { Button } from "@/components/ui/button";
 
 export interface Banner {
   id: number;
@@ -24,7 +25,9 @@ export interface Banner {
 
 const BannerManagement = () => {
   const [banners, setBanners] = useState<any[]>([]);
-
+  const [currentPage, setCurrentPage] = useState(1);
+  const [pageSize, setPageSize] = useState(10);
+  const [totalPages, setTotalPages] = useState(1);
   const [newBanner, setNewBanner] = useState<any>({
     name: "",
     image: "",
@@ -34,21 +37,25 @@ const BannerManagement = () => {
   const [open, setOpen] = useState(false);
   const { toast } = useToast();
 
-  useEffect(() => {
-    const loadData = async () => {
-      setIsLoading(true);
-      try {
-        const brandsData = await fetchBanners();
-        setBanners(brandsData);
-      } catch (error) {
-        console.error("Error fetching Brands:", error);
-      } finally {
-        setIsLoading(false);
-      }
-    };
+  const loadData = async () => {
+    setIsLoading(true);
+    try {
+      const brandsData = await fetchBanners(currentPage, pageSize, false);
 
+      // Assuming brandsData contains products and pagination information
+      setBanners(brandsData.products); // Set only the 'products' array to banners
+
+      // Also set the total pages for pagination
+      setTotalPages(brandsData.pagination.totalPages);
+    } catch (error) {
+      console.error("Error fetching Banners:", error);
+    } finally {
+      setIsLoading(false);
+    }
+  };
+  useEffect(() => {
     loadData();
-  }, [toast]);
+  }, [toast, currentPage, pageSize]);
   const handleAddBanner = async () => {
     if (!newBanner.name || !newBanner.image) {
       toast({
@@ -108,6 +115,13 @@ const BannerManagement = () => {
   const filteredBanners = banners.filter((banner) =>
     banner.name.toLowerCase().includes(searchTerm.toLowerCase())
   );
+  const handlePrevPage = () => {
+    setCurrentPage((prev) => Math.max(prev - 1, 1));
+  };
+
+  const handleNextPage = () => {
+    setCurrentPage((prev) => Math.min(prev + 1, totalPages));
+  };
 
   return (
     <>
@@ -167,8 +181,31 @@ const BannerManagement = () => {
                   </div>
                 </div>
               ) : (
-                <BannerTable banners={filteredBanners} />
+                <>
+                  <BannerTable banners={filteredBanners} />
+                </>
               )}
+            </div>
+            <div className="flex items-center justify-between p-4">
+              <Button
+                variant="outline"
+                size="sm"
+                disabled={currentPage === 1}
+                onClick={handlePrevPage}
+              >
+                Previous
+              </Button>
+              <span>
+                Page {currentPage} of {totalPages}
+              </span>
+              <Button
+                variant="outline"
+                size="sm"
+                disabled={currentPage === totalPages}
+                onClick={handleNextPage}
+              >
+                Next
+              </Button>
             </div>
           </CardContent>
         </Card>

@@ -206,6 +206,7 @@ const Products = () => {
   const handleNextPage = () => {
     setCurrentPage((prev) => Math.min(prev + 1, totalPages));
   };
+
   const refreshProducts = async () => {
     try {
       const { products: productsData, pagination } = await fetchProducts(

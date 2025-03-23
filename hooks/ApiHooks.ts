@@ -25,10 +25,6 @@ export const fetchProducts = async (
     pagination: response.data.pagination,
   };
 };
-export const fetchBanners = async () => {
-  const response = await axios.get("/api/ecom/banner/get");
-  return response.data.data;
-};
 
 export const fetchVendorUser = async () => {
   const response = await axios.get("/api/ecom/vendor/get");
@@ -42,6 +38,33 @@ export const fetchContact = async (
 ) => {
   const response = await axios.get(
     `/api/ecom/contact-us/get?page=${page}&pageSize=${pageSize}&all=${all}`
+  );
+  return {
+    products: response.data.data,
+    pagination: response.data.pagination,
+  };
+};
+export const fetchFinance = async (
+  page: number = 1,
+  pageSize: number = 10,
+  all: boolean = false
+) => {
+  const response = await axios.get(
+    `/api/ecom/finance/get?page=${page}&pageSize=${pageSize}&all=${all}`
+  );
+  return {
+    products: response.data.data,
+    pagination: response.data.pagination,
+  };
+};
+
+export const fetchBanners = async (
+  page: number = 1,
+  pageSize: number = 10,
+  all: boolean = false
+) => {
+  const response = await axios.get(
+    `/api/ecom/banner/get?page=${page}&pageSize=${pageSize}&all=${all}`
   );
   return {
     products: response.data.data,

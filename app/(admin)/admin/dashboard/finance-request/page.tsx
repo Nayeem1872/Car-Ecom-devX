@@ -15,13 +15,17 @@ import { Input } from "@/components/ui/input";
 import FinanceRequestTable from "./components/FinanceRequestTable";
 import FinanceRequestDialog from "./components/FinanceRequestDialog";
 import axios from "axios";
+import { fetchFinance } from "@/hooks/ApiHooks";
+import { Button } from "@/components/ui/button";
 
 interface DeleteRequestProps {
   id: string;
 }
 const FinanceRequest = () => {
   const [searchTerm, setSearchTerm] = useState("");
-
+  const [currentPage, setCurrentPage] = useState(1);
+  const [pageSize, setPageSize] = useState(10);
+  const [totalPages, setTotalPages] = useState(1);
   const [selectedRequest, setSelectedRequest] = useState<any | null>(null);
   const [detailsOpen, setDetailsOpen] = useState(false);
   const [finance, setFinance] = useState<any[]>([]);
@@ -29,8 +33,12 @@ const FinanceRequest = () => {
   const loadData = async () => {
     setIsLoading(true);
     try {
-      const response = await axios.get("/api/ecom/finance/get");
-      setFinance(response.data.data);
+      const { products: productsData, pagination } = await fetchFinance(
+        currentPage,
+        pageSize,
+        false
+      );
+      setFinance(productsData);
     } catch (error) {
       console.error("Error fetching products:", error);
     } finally {
@@ -56,6 +64,13 @@ const FinanceRequest = () => {
 
   const deleteRequest = ({ id }: DeleteRequestProps) => {
     toast.success(`Request ${id} has been deleted`);
+  };
+  const handlePrevPage = () => {
+    setCurrentPage((prev) => Math.max(prev - 1, 1));
+  };
+
+  const handleNextPage = () => {
+    setCurrentPage((prev) => Math.min(prev + 1, totalPages));
   };
 
   return (
@@ -105,6 +120,27 @@ const FinanceRequest = () => {
                 onDeleteRequest={deleteRequest}
               />
             </CardContent>
+            <div className="flex items-center justify-between p-4">
+              <Button
+                variant="outline"
+                size="sm"
+                disabled={currentPage === 1}
+                onClick={handlePrevPage}
+              >
+                Previous
+              </Button>
+              <span>
+                Page {currentPage} of {totalPages}
+              </span>
+              <Button
+                variant="outline"
+                size="sm"
+                disabled={currentPage === totalPages}
+                onClick={handleNextPage}
+              >
+                Next
+              </Button>
+            </div>
           </Card>
         </div>
       </motion.div>
