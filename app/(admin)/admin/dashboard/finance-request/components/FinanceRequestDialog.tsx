@@ -25,7 +25,7 @@ const FinanceRequestDialog = ({
   onOpenChange,
   selectedRequest,
 }: FinanceRequestDialogProps) => {
-  console.log("selectedRequest", selectedRequest);
+  
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>

@@ -156,14 +156,14 @@ const ContactRequestsTable: React.FC<ContactRequestsTableProps> = ({
                     >
                       <Edit className="h-4 w-4" />
                     </Button>
-                    <Button
+                    {/* <Button
                       variant="outline"
                       size="icon"
                       className="text-red-500"
                       onClick={() => onDelete(request)}
                     >
                       <Trash2 className="h-4 w-4" />
-                    </Button>
+                    </Button> */}
                   </div>
                 </TableCell>
               </TableRow>

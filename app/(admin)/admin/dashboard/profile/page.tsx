@@ -98,7 +98,7 @@ const Profile = () => {
         title: "Profile Updated",
         description: "Your profile has been updated successfully.",
       });
-      console.log("Response from PATCH request:", response);
+      
     } catch (error) {
       console.error("Error updating vendor:", error);
       toast({

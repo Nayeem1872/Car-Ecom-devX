@@ -42,7 +42,6 @@ const FinanceRequest = () => {
 
     loadData();
   }, []);
-  console.log("finance", finance);
 
   const filteredRequests = finance.filter(
     (request) =>
@@ -53,8 +52,6 @@ const FinanceRequest = () => {
   );
 
   const viewRequestDetails = (request: any) => {
-    console.log("request", request);
-
     setSelectedRequest(request);
     setDetailsOpen(true);
   };

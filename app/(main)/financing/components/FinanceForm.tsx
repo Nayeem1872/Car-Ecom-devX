@@ -320,7 +320,6 @@ export default function FinanceForm({
       setIsSubmitting(false);
     }
   };
-  console.log("products", products);
 
   return (
     <motion.div

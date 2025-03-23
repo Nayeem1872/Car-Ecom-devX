@@ -235,9 +235,6 @@ const EditFeatureDialog: React.FC<EditFeatureDialogProps> = ({
     });
   };
 
-  console.log("editedFeature", editedFeature);
-  console.log("availableCategories", availableCategories);
-
   return (
     <Dialog open={open} onOpenChange={onClose}>
       <DialogContent className="glass-card max-w-4xl">

@@ -26,6 +26,8 @@ import {
 import { CarDetailsContentProps } from "../carTypes/types";
 import { useRouter } from "next/navigation";
 import { useToast } from "@/hooks/use-toast";
+import axios from "axios";
+import { useEffect, useState } from "react";
 
 const CarDetailsContent: React.FC<CarDetailsContentProps> = ({
   car,
@@ -35,10 +37,36 @@ const CarDetailsContent: React.FC<CarDetailsContentProps> = ({
   handleNextImage,
 }) => {
   const router = useRouter();
+  const [userInfo, setUserInfo] = useState<any | null>(null);
+
+  const [isLoading, setIsLoading] = useState(true);
   const { toast } = useToast();
   const handleRedirect = () => {
     router.push("/financing");
   };
+
+  useEffect(() => {
+    const loadData = async () => {
+      setIsLoading(true);
+
+      try {
+        const userResponse = await axios.get("/api/ecom/vendor/get");
+        if (Array.isArray(userResponse.data.data.vendors)) {
+          setUserInfo(userResponse.data.data.vendors[0]);
+        } else {
+          setUserInfo(userResponse.data.data.vendors);
+        }
+      } catch (error) {
+        console.error("Error fetching data:", error);
+      } finally {
+        setIsLoading(false);
+      }
+    };
+
+    loadData();
+  }, []);
+
+  console.log("userInfo", userInfo);
 
   const handleBookNowRedirect = () => {
     router.push("/contact");
@@ -318,7 +346,11 @@ const CarDetailsContent: React.FC<CarDetailsContentProps> = ({
                 </div>
                 <div>
                   <p className="text-sm text-muted-foreground">Call us at</p>
-                  <p className="font-medium">+1 (555) 123-4567</p>
+                  <p className="font-medium">
+                    {userInfo?.phoneNo && userInfo.phoneNo.length > 0
+                      ? userInfo.phoneNo.join(", ")
+                      : "N/A"}
+                  </p>
                 </div>
               </div>
 
@@ -328,7 +360,10 @@ const CarDetailsContent: React.FC<CarDetailsContentProps> = ({
                 </div>
                 <div>
                   <p className="text-sm text-muted-foreground">Email us at</p>
-                  <p className="font-medium">sales@luxurycars.com</p>
+                  <p className="font-medium">
+                    {" "}
+                    {userInfo?.serviceEmail || "N/A"}
+                  </p>
                 </div>
               </div>
             </div>

@@ -31,7 +31,7 @@ const MarketingInformation: React.FC<MarketingInformationProps> = ({
   handleRemovePhoneNumber,
   handleAddressChange,
 }) => {
-  console.log("profileData", profileData);
+
 
   return (
     <div className="grid gap-6">

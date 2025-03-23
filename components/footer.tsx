@@ -17,7 +17,7 @@ interface FooterProps {
 export default function Footer({ vendor }: FooterProps) {
   const [isLoading, setIsLoading] = useState(true);
   const [categories, setCategories] = useState<any[]>([]);
-  console.log("Vendor", vendor);
+
   useEffect(() => {
     const loadData = async () => {
       setIsLoading(true);
@@ -34,7 +34,6 @@ export default function Footer({ vendor }: FooterProps) {
 
     loadData();
   }, []);
-  console.log("Categories", categories);
 
   return (
     <footer className="bg-card text-card-foreground border-t">

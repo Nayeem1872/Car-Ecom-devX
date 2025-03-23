@@ -75,8 +75,6 @@ const BannerTable = ({
   };
 
   const handleEditClick = (banner: any) => {
-    console.log("banner", banner);
-
     setCurrentBanner({
       _id: banner._id,
       name: banner.name,
@@ -107,7 +105,6 @@ const BannerTable = ({
       } else {
         imageUrl = currentBanner.image;
       }
-      console.log("currentBanner", currentBanner);
 
       const payload = {
         name: currentBanner.name,
@@ -181,13 +178,13 @@ const BannerTable = ({
                     >
                       <Eye className="h-4 w-4" />
                     </Button> */}
-                    <Button
+                    {/* <Button
                       variant="ghost"
                       size="sm"
                       onClick={() => handleEditClick(banner)}
                     >
                       <Edit className="h-4 w-4" />
-                    </Button>
+                    </Button> */}
                     <Button
                       variant="ghost"
                       size="sm"

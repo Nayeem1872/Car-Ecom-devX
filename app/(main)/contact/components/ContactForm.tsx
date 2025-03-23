@@ -104,7 +104,7 @@ const ContactForm = ({ setSubmitted, setIsSubmitting, products }: any) => {
     setIsSubmitting(true);
 
     try {
-      console.log("Submitting data:", data);
+    
 
       const response = await axios.post("/api/ecom/contact-us/craete", data);
 

@@ -14,7 +14,6 @@ const RelatedCarsSection: React.FC<RelatedCarsSectionProps> = ({
   relatedCars,
 }) => {
   if (relatedCars.length === 0) return null;
-  console.log("relatedCars", relatedCars);
 
   return (
     <section className="container mx-auto px-4 mt-16">

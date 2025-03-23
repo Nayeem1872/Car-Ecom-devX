@@ -130,7 +130,6 @@ export default function CarsPage() {
       matchesPrice
     );
   });
-  console.log("filteredCars", filteredCars);
 
   return (
     <>
