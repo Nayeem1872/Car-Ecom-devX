@@ -73,9 +73,9 @@ const ProductViewModal: React.FC<ProductViewModalProps> = ({
   if (!product) return null;
 
   const categoryName =
-    typeof product.category === "object"
+    product.category && typeof product.category === "object"
       ? product.category.name
-      : product.category;
+      : "";
 
   const status =
     product.stock === 0

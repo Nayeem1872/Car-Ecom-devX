@@ -408,8 +408,9 @@ export default function CarsPage() {
                             <div className="flex flex-wrap gap-2 mt-2">
                               {/* Render each feature */}
                               {product.features &&
-                                product.features.map(
-                                  (feature: any, index: number) => (
+                                product.features
+                                  .slice(0, 2)
+                                  .map((feature: any, index: number) => (
                                     <Badge
                                       key={index}
                                       variant="secondary"
@@ -417,8 +418,7 @@ export default function CarsPage() {
                                     >
                                       {feature.fieldLabel}: {feature.fieldValue}
                                     </Badge>
-                                  )
-                                )}
+                                  ))}
                             </div>
                           </CardContent>
                           <CardFooter className="p-4 pt-0 flex gap-2">

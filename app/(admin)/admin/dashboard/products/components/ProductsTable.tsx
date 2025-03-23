@@ -186,8 +186,8 @@ const ProductsTable = ({
         stock: productToEdit.stock,
         discount: {
           price: productToEdit.discount.price,
-          startAt: productToEdit.discount.startAt,
-          endAt: productToEdit.discount.endAt,
+          startAt: productToEdit.discount.startAt || "",
+          endAt: productToEdit.discount.endAt || "",
         },
         category:
           typeof productToEdit.category === "object"

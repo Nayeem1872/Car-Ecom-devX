@@ -162,7 +162,7 @@ export default function FeaturedCars() {
                       transition={{ duration: 0.5, delay: index * 0.1 }}
                       className="cursor-pointer"
                     >
-                      <div className="bg-white shadow-lg rounded-lg overflow-hidden">
+                      <div className="bg-white shadow-lg rounded-lg overflow-hidden ">
                         <div className="relative h-56">
                           <img
                             src={car.images?.[0] || "/placeholder.svg"}
@@ -197,16 +197,17 @@ export default function FeaturedCars() {
                             ${car.price.toLocaleString()}
                           </p>
                           <div className="flex flex-wrap gap-2 mt-2">
-                            {car.features?.map((feature: any, index: any) => (
-                              <Badge
-                                key={index}
-                                variant="secondary"
-                                className="font-normal"
-                              >
-                                {feature.fieldLabel}: {feature.fieldValue}{" "}
-                                {/* Render the label and value */}
-                              </Badge>
-                            ))}
+                            {car.features
+                              ?.slice(0, 2)
+                              .map((feature: any, index: any) => (
+                                <Badge
+                                  key={index}
+                                  variant="secondary"
+                                  className="font-normal"
+                                >
+                                  {feature.fieldLabel}: {feature.fieldValue}
+                                </Badge>
+                              ))}
                           </div>
                         </div>
                         <div className="p-5 pt-0 flex gap-2">

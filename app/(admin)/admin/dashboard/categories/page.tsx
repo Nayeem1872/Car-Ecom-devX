@@ -157,6 +157,7 @@ const Categories = () => {
           cat.id === updatedCategory.id ? updatedCategory : cat
         )
       );
+      fetchCategories();
       setOpenEditModal(false);
       setSelectedCategoryId(null);
 
