@@ -35,15 +35,13 @@ import { Calendar } from "@/components/ui/calendar";
 // Define the schema for form validation
 const contactFormSchema = z.object({
   type: z.string(),
-  product: z.string().min(1, "Product is required"),
-  preferredDate: z.date({
-    required_error: "Please select a date",
-  }),
-  preferredTime: z.string().min(1, "Please select a time"),
+  product: z.string().optional(), // No min length validation here
+  preferredDate: z.date().optional(),
+  preferredTime: z.string().optional(), // Remove the min length validation as well
   firstName: z.string().min(1, "First name is required"),
   lastName: z.string().min(1, "Last name is required"),
   email: z.string().email("Invalid email address"),
-  phoneNumber: z.string().min(10, "Phone number must be at least 10 digits"),
+  phoneNumber: z.string().min(1, "Phone number is required"),
   address: z.object({
     street: z.string().min(1, "Street address is required"),
     city: z.string().min(1, "City is required"),
@@ -102,10 +100,11 @@ const ContactForm = ({ setSubmitted, setIsSubmitting, products }: any) => {
 
   const onSubmit = async (data: ContactFormValues) => {
     setIsSubmitting(true);
+    if (data.product === "") {
+      delete data.product;
+    }
 
     try {
-    
-
       const response = await axios.post("/api/ecom/contact-us/craete", data);
 
       if (response.status === 200) {

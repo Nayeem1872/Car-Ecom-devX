@@ -1,4 +1,3 @@
-// components/FinanceForm.tsx
 import { motion } from "framer-motion";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -58,8 +57,8 @@ interface FormData {
     timeEmployed: string;
     additionalIncome: AdditionalIncome[];
   };
+  category?: string;
   product: {
-    productId: string;
     type: string;
     specificRequirements: string;
     tradeInVehicle: {
@@ -70,6 +69,7 @@ interface FormData {
       amountOwed: number;
     };
   };
+  // category?: string;
 }
 
 export default function FinanceForm({
@@ -107,8 +107,8 @@ export default function FinanceForm({
       timeEmployed: "",
       additionalIncome: [{ source: "", amount: 0 }],
     },
+    category: "",
     product: {
-      productId: "",
       type: "",
       specificRequirements: "",
       tradeInVehicle: {
@@ -255,11 +255,9 @@ export default function FinanceForm({
   ) => {
     const value = e.target.value;
 
-    // Simple parsing of additional income (this could be enhanced)
     const additionalIncome: AdditionalIncome[] = [];
 
     if (value.trim()) {
-      // Add as a single source
       additionalIncome.push({
         source: value,
         amount: 10101010, // Default to 0 since parsing exact amounts from text is complex
@@ -291,14 +289,19 @@ export default function FinanceForm({
           streetAddress:
             formData.address.streetAddress || formData.address.streetAddress,
         },
-        category: formData.product.productId || "unknown",
+
+        // category: formData.product.category || "unknown",
 
         product: {
           ...formData.product,
-          // productId: formData.product.productId || "unknown",
         },
       };
 
+      if (formData.category) {
+        submissionData.category = formData.category;
+      } else {
+        delete submissionData.category;
+      }
       const response = await axios.post(
         "/api/ecom/finance/craete",
         submissionData
@@ -750,17 +753,17 @@ export default function FinanceForm({
             <div className="grid grid-cols-1 gap-6 mb-6">
               <div>
                 <Label htmlFor="product.type">
-                  What kind of vehicle category are you looking for?
+                  What kind of vehicle are you looking for?
                 </Label>
                 <Select
                   required
-                  value={formData.product.productId}
+                  value={formData.category}
                   onValueChange={(value) =>
-                    handleSelectChange("product.productId", value)
+                    handleSelectChange("category", value)
                   }
                 >
                   <SelectTrigger>
-                    <SelectValue placeholder="Select vehicle" />
+                    <SelectValue placeholder="Select Category" />
                   </SelectTrigger>
                   <SelectContent>
                     {products.map((product) => (
@@ -786,53 +789,49 @@ export default function FinanceForm({
               <div>
                 <Label htmlFor="tradeIn">
                   Do you have a trade in vehicle? If yes, what is the
-                  year/make/model and the trim*
+                  year/make/model and the trim
                 </Label>
                 {/* <Input
-                  id="tradeIn"
-                  placeholder="2018 Honda Accord EX-L"
-                  onChange={handleTradeInVehicleChange}
-                /> */}
-                <div className="grid grid-cols-4 gap-6 mb-6">
+id="tradeIn"
+placeholder="2018 Honda Accord EX-L"
+onChange={handleTradeInVehicleChange}
+/> */}
+                <div className="grid grid-cols-4 gap-6 mb-6 mt-2">
                   <div>
-                    <Label htmlFor="product.tradeInVehicle.year">Year*</Label>
+                    <Label htmlFor="product.tradeInVehicle.year">Year</Label>
                     <Input
                       id="year"
                       value={formData.product.tradeInVehicle.year}
                       onChange={handleTradeInVehicleChange}
                       placeholder="2018"
                       type="number"
-                      required
                     />
                   </div>
                   <div>
-                    <Label htmlFor="product.tradeInVehicle.make">Make*</Label>
+                    <Label htmlFor="product.tradeInVehicle.make">Make</Label>
                     <Input
                       id="make"
                       value={formData.product.tradeInVehicle.make}
                       onChange={handleTradeInVehicleChange}
                       placeholder="Honda"
-                      required
                     />
                   </div>
                   <div>
-                    <Label htmlFor="product.tradeInVehicle.model">Model*</Label>
+                    <Label htmlFor="product.tradeInVehicle.model">Model</Label>
                     <Input
                       id="model"
                       value={formData.product.tradeInVehicle.model}
                       onChange={handleTradeInVehicleChange}
                       placeholder="Accord"
-                      required
                     />
                   </div>
                   <div>
-                    <Label htmlFor="product.tradeInVehicle.trim">Trim*</Label>
+                    <Label htmlFor="product.tradeInVehicle.trim">Trim</Label>
                     <Input
                       id="trim"
                       value={formData.product.tradeInVehicle.trim}
                       onChange={handleTradeInVehicleChange}
                       placeholder="EX-L"
-                      required
                     />
                   </div>
                 </div>
