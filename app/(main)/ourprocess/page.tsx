@@ -27,8 +27,9 @@ export default function RoadMapPage() {
       description:
         "Our application takes less than 2 minutes to complete and we only ask for the information we need to get an approval in place, which includes contact information, employment or other income details, as well as address information. The form is SSL secure which ensures your information is safe.",
       icon: <ClipboardCheck className="h-8 w-8" />,
-      customerAction: "Complete and submit the online application form",
-      ourAction: "Receive your application and prepare for review",
+      customerAction:
+        "Fill out our secure online form with your personal details",
+      ourAction: "Review your application and initiate the approval process",
       timeframe: "1-5 minutes",
       link: "/financing",
       linkText: "Start Application",
@@ -39,8 +40,10 @@ export default function RoadMapPage() {
       description:
         "Within hours of sending in your application one of our highly trained Finance Directors will contact you to go over your application, gather any other information they may need to speed up the process and make it easier, and book a time for you to come in and check out our inventory. We then secure your approval through one of the lenders we deal with. Don’t worry about your credit either. We have dozens lenders for all credit situations.",
       icon: <FileCheck className="h-8 w-8" />,
-      customerAction: "Complete and submit the online application form",
-      ourAction: "Receive your application and prepare for review",
+      customerAction:
+        "Be available for a follow-up call and provide any additional information needed",
+      ourAction:
+        "Contact you and coordinate with our lenders to secure approval",
       timeframe: "2-4 Hours",
     },
     {
@@ -49,8 +52,10 @@ export default function RoadMapPage() {
       description:
         "When you come in we will work with you to find the perfect vehicle that fits your budget and is perfect for you and your family. Paperwork is signed and you get to drive away in the ride you wanted at a payment you can afford. It’s really that easy.",
       icon: <UserCheck className="h-8 w-8" />,
-      customerAction: "Complete and submit the online application form",
-      ourAction: "Receive your application and prepare for review",
+      customerAction:
+        "Visit our showroom, choose your vehicle, and complete the paperwork",
+      ourAction:
+        "Assist you in vehicle selection and finalize your financing details",
       timeframe: "1-2 days",
     },
   ];
