@@ -23,7 +23,7 @@ import EditBannerDialog from "./EditBannerDialog";
 import { useToast } from "@/hooks/use-toast";
 
 export interface Banner {
-  id: number;
+  _id: number;
   name: string;
   image: string;
 }
@@ -62,7 +62,7 @@ const BannerTable = ({
     if (selectedBannerForDelete) {
       try {
         await axios.delete(
-          `/api/ecom/banner/delete?id=${selectedBannerForDelete.id}`
+          `/api/ecom/banner/delete?id=${selectedBannerForDelete._id}`
         );
         if (onDelete) onDelete(selectedBannerForDelete);
         if (refreshBanners) refreshBanners();
@@ -72,15 +72,6 @@ const BannerTable = ({
         console.error("Error deleting banner:", error);
       }
     }
-  };
-
-  const handleEditClick = (banner: any) => {
-    setCurrentBanner({
-      _id: banner._id,
-      name: banner.name,
-      image: banner.image,
-    });
-    setEditDialogOpen(true);
   };
 
   const handleEditBanner = async () => {
@@ -153,7 +144,7 @@ const BannerTable = ({
         <TableBody>
           {banners.length > 0 ? (
             banners.map((banner) => (
-              <TableRow key={banner.id}>
+              <TableRow key={banner._id}>
                 <TableCell>
                   <div className="h-12 w-24 rounded-md overflow-hidden">
                     <img
