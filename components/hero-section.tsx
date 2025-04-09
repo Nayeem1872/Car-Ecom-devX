@@ -102,13 +102,13 @@ export default function HeroSection() {
                 <ChevronRight className="ml-2 h-4 w-4 transition-transform group-hover:translate-x-1" />
               </Button>
             </Link>
-            <Link href="/financing">
+            <Link href="/ourprocess">
               <Button
                 size="lg"
                 variant="outline"
                 className="w-full sm:w-auto bg-white/10 text-white border-white/20 hover:bg-white/20"
               >
-                Get Finance
+                Car Loans
               </Button>
             </Link>
           </motion.div>

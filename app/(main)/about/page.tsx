@@ -164,24 +164,30 @@ export default function AboutPage() {
               transition={{ duration: 0.8 }}
             >
               <h2 className="text-3xl md:text-4xl font-bold mb-6">
-                Our <span className="text-primary">Mission</span>
+                Get Approved and Get Behind the Wheel
               </h2>
               <p className="text-muted-foreground mb-6">
-                Founded with a clear purpose, LuxuryCars is dedicated to
-                breaking down barriers to car ownership. We understand that for
-                newcomers to the country or those just starting their financial
-                journey, purchasing a vehicle can seem overwhelming.
+                If you have ever been turned down for an auto loan in the past,
+                you know how frustrating it can be. Our expert team at 401 Auto
+                Financing know that bad things can happen to good people. By
+                working with the best lenders across Canada, we can get you
+                approved and on the path to rebuilding your credit. Our
+                knowledgeable and friendly staff will walk you through the
+                entire process, judgment-free to get you driving.
               </p>
               <p className="text-muted-foreground mb-6">
-                That's why we've created a welcoming environment where everyone
-                is treated with respect and given the opportunity to find a
-                quality vehicle at an affordable price, regardless of their
-                credit history or financial background.
+                We Finance All Types Bad Credit Car Loans
+                <br />
+                <br />
+                Whether you have good credit, bad credit, no credit, bankruptcy,
+                ODSP, are in a consumer proposal or if you’re seeking private
+                sale financing, simply fill out the quick and easy secure credit
+                application and one of our Financial Experts will take care of
+                the rest. But don’t take our word for it, see what some of our
+                loyal customers have to say. When you apply online, you can rest
+                assured that you are dealing directly with the 401 Auto
+                Financing – no third party involvement.
               </p>
-              <div className="flex items-center space-x-2 text-primary font-medium">
-                <ThumbsUp className="h-5 w-5" />
-                <span>Trusted by thousands of satisfied customers</span>
-              </div>
             </motion.div>
 
             <motion.div
@@ -247,43 +253,46 @@ export default function AboutPage() {
               <div className="w-16 h-16 bg-primary/10 rounded-full flex items-center justify-center mb-6">
                 <Car className="h-8 w-8 text-primary" />
               </div>
-              <h3 className="text-2xl font-bold mb-4">Affordable Vehicles</h3>
+              <h3 className="text-2xl font-bold mb-4">
+                Types of Bad Credit Car Loans
+              </h3>
               <p className="text-muted-foreground mb-6">
-                We carefully select quality pre-owned vehicles and price them
-                affordably to ensure they're accessible to newcomers and
-                first-time buyers. Our inventory includes a wide range of makes
-                and models to suit different needs and budgets.
+                Having bad credit or a low credit score can be influenced by
+                different factors. You may have bad credit and not even know it
+                until you apply for a car loan. Most lenders approve or deny
+                your car loan application solely based on your credit score.
+                What separates 401 Auto Financing from other car loan providers,
+                and the reason why we have a nearly 100% approval rate, is that
+                we differentiate bad credit car loans based on your specific
+                situation.
               </p>
               <ul className="space-y-3">
-                <li className="flex items-start">
-                  <div className="mr-2 mt-1">
-                    <ChevronRight className="h-4 w-4 text-primary" />
-                  </div>
-                  <span>Extensive selection of quality pre-owned vehicles</span>
+                <li className="text-muted-foreground">
+                  <span className="font-bold">Self Employed Car Loans:</span>{" "}
+                  Most lenders look at the self-employed as bad credit risks
+                  because of the instability of their income. The amount of
+                  paperwork that is involved for the self-employed to obtain a
+                  car loan through traditional lenders is absurd. 401 Auto
+                  Financing is able to cut through a lot of the red tape and get
+                  you approved immediately so you can continue to run your
+                  business. 401 Auto Financing gets nearly 100% of the
+                  self-employed approved.
                 </li>
-                <li className="flex items-start">
-                  <div className="mr-2 mt-1">
-                    <ChevronRight className="h-4 w-4 text-primary" />
-                  </div>
-                  <span>Transparent pricing with no hidden fees</span>
-                </li>
-                <li className="flex items-start">
-                  <div className="mr-2 mt-1">
-                    <ChevronRight className="h-4 w-4 text-primary" />
-                  </div>
-                  <span>All vehicles undergo thorough inspection</span>
-                </li>
-                <li className="flex items-start">
-                  <div className="mr-2 mt-1">
-                    <ChevronRight className="h-4 w-4 text-primary" />
-                  </div>
-                  <span>Extended warranty options available</span>
+                <li className="text-muted-foreground">
+                  <span className="font-bold">Bankruptcy Car Loans:</span>{" "}
+                  Having a bankruptcy on your credit report will have you
+                  automatically labelled as a bad credit car loan risk by most
+                  lenders. However, 401 Auto Financing understands that
+                  bankruptcy is often a new beginning and a car loan can be the
+                  first step in rebuilding bad credit. 401 Auto Financing has a
+                  nearly 100% approval rate for bankrupt individuals, even if
+                  they have yet to be discharged.
                 </li>
               </ul>
               <div className="mt-8">
-                <Link href="/cars">
+                <Link href="/ourprocess">
                   <Button className="bg-primary hover:bg-primary/90">
-                    View Our Inventory
+                    View Our Process
                   </Button>
                 </Link>
               </div>
@@ -299,37 +308,50 @@ export default function AboutPage() {
               <div className="w-16 h-16 bg-primary/10 rounded-full flex items-center justify-center mb-6">
                 <DollarSign className="h-8 w-8 text-primary" />
               </div>
-              <h3 className="text-2xl font-bold mb-4">Flexible Financing</h3>
-              <p className="text-muted-foreground mb-6">
-                We understand that traditional financing can be challenging for
-                newcomers. That's why we've developed flexible financing
-                solutions that consider your unique situation, not just your
-                credit score or history.
-              </p>
+              <h3 className="text-2xl font-bold mb-4">
+                Additional Car Loan Options
+              </h3>
               <ul className="space-y-3">
-                <li className="flex items-start">
-                  <div className="mr-2 mt-1">
-                    <ChevronRight className="h-4 w-4 text-primary" />
-                  </div>
-                  <span>Financing options for all credit situations</span>
+                <li className="text-muted-foreground">
+                  <span className="font-bold">
+                    First Time or Student Car Loans:
+                  </span>{" "}
+                  One of the best ways to establish credit is by making years of
+                  consistent payments towards a car loan. The problem which
+                  faces most first time buyers or students is that they usually
+                  have no credit history and are automatically deemed to have
+                  bad credit by most lenders. 401 Auto Financing specializes in
+                  first-time and student car loans and has a nearly 100%
+                  approval rate because we look at the big picture, not just
+                  your credit score. As long as you make your payments as
+                  agreed, 401 Auto Financing reviews first-time car loans in the
+                  tenth month and can rewrite the loan at a lower rate.
                 </li>
-                <li className="flex items-start">
-                  <div className="mr-2 mt-1">
-                    <ChevronRight className="h-4 w-4 text-primary" />
-                  </div>
-                  <span>Special programs for newcomers to the country</span>
+                <li className="text-muted-foreground">
+                  <span className="font-bold">
+                    Subprime or Bad Credit Car Loans:
+                  </span>{" "}
+                  Subprime means that interest rates are higher than the prime
+                  rate, as the risk factor is higher. Someone carrying too much
+                  debt is often why car loans are declined by traditional
+                  lenders. They view lingering debt, delinquent payments and a
+                  low credit score as bad credit. 401 Auto Financing believes
+                  that everyone deserves a second chance and views subprime car
+                  loans as a great way to repair and rebuild bad credit. Most of
+                  the loans 401 Auto Financing makes are subprime loans, which
+                  have a nearly 100% approval rate.
                 </li>
-                <li className="flex items-start">
-                  <div className="mr-2 mt-1">
-                    <ChevronRight className="h-4 w-4 text-primary" />
-                  </div>
-                  <span>Low down payment options available</span>
-                </li>
-                <li className="flex items-start">
-                  <div className="mr-2 mt-1">
-                    <ChevronRight className="h-4 w-4 text-primary" />
-                  </div>
-                  <span>Personalized payment plans to fit your budget</span>
+                <li className="text-muted-foreground">
+                  <span className="font-bold">No Credit Car Loans:</span> Always
+                  paying in cash, never using a credit card and not carrying any
+                  debts may seem like a good idea but in reality, no credit
+                  history is considered by most lenders as being equivalent to
+                  bad credit. This is not the case with 401 Auto Financing. At
+                  401 Auto Financing, we look at no credit car loans as an
+                  opportunity for a customer to build their credit. Not only
+                  does 401 Auto Financing have a nearly 100% approval rate for
+                  individuals with no credit history, credit rebuilding is just
+                  one of the benefits of teaming up with us.
                 </li>
               </ul>
               <div className="mt-8">
@@ -341,6 +363,240 @@ export default function AboutPage() {
               </div>
             </motion.div>
           </div>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-8 mt-8">
+            <motion.div
+              className="bg-white rounded-xl p-8 shadow-lg border border-gray-100 h-full"
+              initial={{ opacity: 0, y: 30 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.6 }}
+            >
+              <div className="w-16 h-16 bg-primary/10 rounded-full flex items-center justify-center mb-6">
+                <Car className="h-8 w-8 text-primary" />
+              </div>
+              <h3 className="text-2xl font-bold mb-4">
+                Private Car Sales Overview
+              </h3>
+              <p className="text-muted-foreground mb-6">
+                Whether you are a buyer or a seller, 401 Auto Financing offers
+                private sale financing across Ontario.
+              </p>
+              <p className="text-muted-foreground mb-6">
+                <strong>Seller:</strong> As a Seller, being able to offer
+                financing on your vehicle will dramatically increase the
+                interest in your listing. Potential buyers who would otherwise
+                be forced to purchase from Registered Dealerships for financing
+                can now buy your private sale and get financed through 401 Auto
+                Financing. For more information on how you can offer financing
+                on your used vehicle listing at no cost to you, please see a 401
+                Auto Financing Professional near you.
+              </p>
+              <p className="text-muted-foreground mb-6">
+                <strong>Buyer:</strong> As a buyer, a private sale is a great
+                way to purchase a used vehicle. But unless you have a pocket
+                full of cash or an exceptional credit score, most people who are
+                in the market for a used car are forced to finance through a
+                dealer. With 401 Auto Financing, financing a private car sale is
+                now possible and can save you hundreds, if not thousands of
+                dollars!
+              </p>
+              <ul className="list-disc list-inside mb-6 text-muted-foreground">
+                <li>Financing</li>
+                <li>Licensing</li>
+                <li>Safety and E-Testing</li>
+              </ul>
+              <div className="mt-8">
+                <Link href="/about">
+                  <Button className="bg-primary hover:bg-primary/90">
+                    Learn More
+                  </Button>
+                </Link>
+              </div>
+            </motion.div>
+
+            <motion.div
+              className="bg-white rounded-xl p-8 shadow-lg border border-gray-100 h-full"
+              initial={{ opacity: 0, y: 30 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.6, delay: 0.2 }}
+            >
+              <div className="w-16 h-16 bg-primary/10 rounded-full flex items-center justify-center mb-6">
+                <DollarSign className="h-8 w-8 text-primary" />
+              </div>
+              <h3 className="text-2xl font-bold mb-4">
+                Time-Sensitive Private Sales
+              </h3>
+              <p className="text-muted-foreground mb-6">
+                The decision to buy a car is not one that is made lightly and
+                people often find out the hard way that by the time they can
+                arrange financing, the deal is gone. So before you start your
+                search, get pre-approved through 401 Auto Financing. By getting
+                pre-approved before you start shopping, you’ll know exactly what
+                your price range is and when you find the car you want that fits
+                into your budget, you can make an offer and close the deal the
+                same day.
+              </p>
+              <p className="text-muted-foreground mb-6">
+                Once you are pre-approved, a 401 Auto Financing Professional
+                will walk you through the simple process and even provide advice
+                on which makes and models will best fit your needs and your
+                budget.
+              </p>
+              <p className="text-muted-foreground">
+                <strong>
+                  How to Get Pre-approved with 401 Auto Financing:
+                </strong>{" "}
+                Our same day approval process for private car sales is simple,
+                fast and secure. We approve nearly 100% of credit applicants and
+                specialize in approving customers with bad or slow credit
+                histories.
+              </p>
+              <div className="mt-8">
+                <Link href="/contact">
+                  <Button className="bg-primary hover:bg-primary/90">
+                    Contact Us
+                  </Button>
+                </Link>
+              </div>
+            </motion.div>
+          </div>
+        </div>
+      </section>
+
+      {/* Bankruptcy Section */}
+      <section className="py-20 bg-white">
+        <div className="container mx-auto px-4">
+          <motion.div
+            className="max-w-4xl mx-auto"
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.8 }}
+          >
+            <h2 className="text-3xl md:text-4xl font-bold mb-6">Bankruptcy</h2>
+            <p className="text-muted-foreground mb-6">
+              “Financial Freedom” is a concept that very few Canadians have been
+              able to declare with confidence, but “Bankruptcy” is a term many
+              of them know all too well. Bills keep on filling up the mailbox,
+              collection agency calls increase and the items that you require
+              for everyday living are no longer affordable. Over the past
+              decade, thousands of Canadians have chosen to file for bankruptcy
+              in hopes to decrease their required debt payments. In 2013, 22,731
+              Ontario residents filed for bankruptcy according to the Office of
+              the Superintendent of Bankruptcy Canada. Unfortunately, along with
+              completing the bankruptcy process and making monthly payments,
+              many people believe that due to their unstable financial history,
+              they are no longer qualified to own a car. Thankfully this is not
+              the case. 401 Auto Financing is giving Canadians the ability to
+              own a car without worry.
+            </p>
+            <p className="text-muted-foreground mb-6">
+              Bankruptcy is a process that can affect your future purchases and
+              a company’s trust in you, whether it is purchasing a home, renting
+              an apartment or applying for a car loan. Bankruptcy is a process
+              that no one wants to go through, but it can allow you to eliminate
+              some of the debts that you are just unable to pay. Filing for
+              bankruptcy involves meeting with a trustee who will assess your
+              financial situation, assigning all assets to your trustee, and
+              speaking with the Office of the Superintendent of Bankruptcy
+              Canada. What many do not realize is that the process does not have
+              to end there! By working with a 401 Auto Financing Professional,
+              you will be working together to find a car that fits all of your
+              needs in an easy and timely manner. Meeting with a 401 Auto
+              Financing Professional is the perfect starting point to begin the
+              exciting process of buying a vehicle and rebuilding your credit!
+              Don’t let your financial situation hold you back from the freedom
+              and ease of mind that a car can give you.
+            </p>
+            <ul className="list-disc list-inside mb-6 text-muted-foreground">
+              <li>Ensure that your credit report is in order</li>
+              <li>
+                Determine a monthly payment plan that you know you can afford
+              </li>
+              <li>
+                Speak with lenders on your behalf that specialize in bankruptcy
+                car loans to get you the best rate possible
+              </li>
+            </ul>
+            <p className="text-muted-foreground">
+              Bankruptcy is a part of life that many people have learned to
+              embrace, but it does not mean that you have to settle for public
+              transit. 401 Auto Financing is an excellent resource that can show
+              you how to proceed if you have filed for bankruptcy and are hoping
+              to own a car. Furthermore, 401 Auto Financing has several programs
+              that are in place to help you rebuild your credit and regain
+              confidence in your financial situation. Bankruptcy does not last
+              for your entire life, so don’t let it affect your future.
+            </p>
+          </motion.div>
+        </div>
+      </section>
+
+      {/* Bad Credit Section */}
+      <section className="py-20 bg-gray-50">
+        <div className="container mx-auto px-4">
+          <motion.div
+            className="max-w-4xl mx-auto"
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.8 }}
+          >
+            <h2 className="text-3xl md:text-4xl font-bold mb-6">Bad Credit</h2>
+            <p className="text-muted-foreground mb-6">
+              Over the past several years, Canada’s economy has fluctuated up
+              and down, creating a strain on the wallets of Canadians across the
+              country. Rising gas prices, insurance rates, food prices and
+              electricity and water bills have left people living from paycheque
+              to paycheque, providing very little wiggle room when unexpected
+              expenses occur. Credit cards have become relied upon as the
+              default form of payment for everyday items. Now many Canadians are
+              left wondering how they are going to afford to drive a car, let
+              alone pay for it.
+            </p>
+            <p className="text-muted-foreground mb-6">
+              “Bad credit” has become a term all too familiar to Canadians, and
+              with the transforming financial landscape of the country, people’s
+              ability to receive a car loan with a history of bad credit has
+              changed completely. The great news is that even if you have a bad
+              credit rating, buying a car with the help of 401 Auto Financing is
+              still an option that you can take advantage of. The process does
+              not have to be scary or overwhelming, it can be painless and easy.
+              401 Auto Financing aims for you to be able to receive a car that
+              best fits your lifestyle and have the freedom that four wheels on
+              an open road can give you.
+            </p>
+            <p className="text-muted-foreground mb-6">
+              If you are considering applying for a bad credit car loan with 401
+              Auto Financing, be prepared to answer the following questions:
+            </p>
+            <ul className="list-disc list-inside mb-6 text-muted-foreground">
+              <li>What is your total income each month?</li>
+              <li>How long have you been employed at your current job?</li>
+              <li>How long have you resided at your current address?</li>
+              <li>If required, is there someone who can act as a cosigner?</li>
+            </ul>
+            <p className="text-muted-foreground mb-6">
+              Due to the stigma around bad credit ratings and car loans, many
+              people believe that the process of obtaining a car loan with bad
+              credit is long and intimidating. It is actually simple, fast and
+              secure as 401 Auto Financing allows you to fill out a car loan
+              application online from the comfort of your own home.
+            </p>
+            <p className="text-muted-foreground mb-6">
+              Once your application is received, a 401 Auto Financing
+              Professional will work with you every step of the way until you
+              are behind the wheel of your new car. Utilizing their large
+              network of lenders who specialize in bad credit car loans coupled
+              with their years of expertise is why 401 Auto Financing has a
+              nearly 100% approval rate for bad credit car loans.
+            </p>
+            <p className="text-muted-foreground">
+              At 401 Auto Financing, we believe that everyone deserves to drive
+              and bad credit shouldn’t hold you back.
+            </p>
+          </motion.div>
         </div>
       </section>
 

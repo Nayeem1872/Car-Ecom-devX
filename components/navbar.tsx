@@ -79,6 +79,16 @@ export default function Navbar({ vendor }: NavbarProps) {
               Financing
             </Link>
             <Link
+              href="/ourprocess"
+              className={`text-sm font-medium transition-colors hover:text-primary ${
+                pathname === "/ourprocess"
+                  ? "text-primary"
+                  : "text-foreground/80"
+              }`}
+            >
+              Our Process
+            </Link>
+            <Link
               href="/about"
               className={`text-sm font-medium transition-colors hover:text-primary ${
                 pathname === "/about" ? "text-primary" : "text-foreground/80"
