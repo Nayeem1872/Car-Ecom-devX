@@ -108,7 +108,7 @@ export default function HeroSection() {
                 variant="outline"
                 className="w-full sm:w-auto bg-white/10 text-white border-white/20 hover:bg-white/20"
               >
-                Car Loans
+                Apply for Car Loans
               </Button>
             </Link>
           </motion.div>

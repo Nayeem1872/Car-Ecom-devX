@@ -9,8 +9,6 @@ import axios from "axios";
 import RelatedCarsSection from "./RelatedCarsSection";
 import CarDetailsContent from "./CarDetailsSection";
 import HeroSection from "./CarHeroSection";
-import Footer from "@/components/footer";
-import Navbar from "@/components/navbar";
 
 export default function CarDetailsPage() {
   const { id } = useParams();
@@ -31,79 +29,87 @@ export default function CarDetailsPage() {
   const opacity = useTransform(scrollYProgress, [0, 0.5], [1, 0.3]);
   const scale = useTransform(scrollYProgress, [0, 0.5], [1, 0.9]);
 
-  useEffect(() => {
-    if (!id) return;
+  const loadData = async () => {
+    setLoading(true);
+    try {
+      const { data } = await axios.get("/api/ecom/product/get?all=true");
+      const productsData: any[] = Array.isArray(data.data)
+        ? data.data
+        : Array.isArray(data)
+        ? data
+        : [];
 
-    const loadData = async () => {
-      try {
-        const response = await axios.get("/api/ecom/product/get?all=true");
-        const productsData = response.data.data;
-        setProducts(productsData);
+      console.log("Products Data:", productsData);
+      console.log("ID from Params:", id);
 
-        const carId = id;
-        const foundCar = productsData.find((c: any) => c._id === carId);
-
-        if (foundCar) {
-          const { category, brand, ...rest } = foundCar;
-
-          const defaults = {
-            specs:
-              foundCar.features && foundCar.features.length > 0
-                ? foundCar.features.map((feature: any) => ({
-                    fieldLabel: feature.fieldLabel,
-                    fieldValue: feature.fieldValue,
-                  }))
-                : [],
-            features: [
-              "Leather Interior",
-              "Panoramic Roof",
-              "Advanced Safety",
-              "Heated Seats",
-              "Ambient Lighting",
-            ],
-            year: 2023,
-            mileage: 0,
-            condition: "New",
-            exteriorColor: "Obsidian Black",
-            interiorColor: "Black Nappa Leather",
-            vin: "WDDUG8DB1LA456789",
-            stockNumber: "MB12345",
-            relatedCars: getRandomRelatedCars(productsData),
-          };
-          const mergedCar = {
-            id: foundCar._id,
-            ...defaults,
-            ...rest,
-            specs: {
-              ...defaults.specs,
-              ...(rest.specs || {}),
-            },
-            features:
-              rest.features && rest.features.length > 0
-                ? rest.features
-                : defaults.features,
-          };
-
-          setCar(mergedCar);
-
-          if (mergedCar.relatedCars && mergedCar.relatedCars.length > 0) {
-            const related = productsData.filter((c: any) =>
-              mergedCar.relatedCars.includes(c._id)
-            );
-            setRelatedCars(related);
-          }
-        } else {
-          // Optionally, redirect if no car was found
-          // router.push("/cars");
-        }
-      } catch (error) {
-        console.error("Error fetching products:", error);
+      const found = productsData.find((c) => String(c._id) === String(id));
+      console.log("Found Car:", found);
+      if (!found) {
+        setCar(null);
+        return;
       }
-      setLoading(false);
-    };
 
-    loadData();
-  }, [id, router]);
+      // merge your defaults & rest
+      const { category, brand, ...rest } = found;
+      const defaults = {
+        specs: found.features?.length
+          ? found.features.map((f: any) => ({
+              fieldLabel: f.fieldLabel,
+              fieldValue: f.fieldValue,
+            }))
+          : [],
+        features: [
+          "Leather Interior",
+          "Panoramic Roof",
+          "Advanced Safety",
+          "Heated Seats",
+          "Ambient Lighting",
+        ],
+        year: 2023,
+        mileage: 0,
+        condition: "New",
+        exteriorColor: "Obsidian Black",
+        interiorColor: "Black Nappa Leather",
+        vin: "WDDUG8DB1LA456789",
+        stockNumber: "MB12345",
+        // relatedCars: getRandomRelatedCars(productsData),
+      };
+      const mergedCar = {
+        id: found._id,
+        ...defaults,
+        ...rest,
+        specs: {
+          ...defaults.specs,
+          ...(rest.specs || {}),
+        },
+        features: rest.features?.length ? rest.features : defaults.features,
+      };
+      console.log("Merged Car:", mergedCar);
+
+      setCar(mergedCar);
+      // if (mergedCar.relatedCars?.length) {
+      //   setRelatedCars(
+      //     productsData.filter((c) =>
+      //       mergedCar.relatedCars.includes(String(c._id))
+      //     )
+      //   );
+      // }
+    } catch (error) {
+      console.error("Error fetching products:", error);
+      toast({
+        title: "Error",
+        description: "Failed to load products data.",
+        variant: "destructive",
+      });
+      setCar(null);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    if (id) loadData();
+  }, [id]);
 
   const getRandomRelatedCars = (productsData: any[]): string[] => {
     const randomCars: string[] = []; // Explicitly type as string array
@@ -161,10 +167,8 @@ export default function CarDetailsPage() {
   return (
     <>
       <main className="min-h-screen pb-20" ref={containerRef}>
-        {/* Hero Section with Main Image */}
         <HeroSection car={car} currentImageIndex={currentImageIndex} />
 
-        {/* Main Content */}
         <CarDetailsContent
           car={car}
           currentImageIndex={currentImageIndex}
@@ -174,9 +178,9 @@ export default function CarDetailsPage() {
         />
 
         {/* Related Cars Section */}
-        {relatedCars.length > 0 && (
+        {/* {relatedCars.length > 0 && (
           <RelatedCarsSection relatedCars={relatedCars} />
-        )}
+        )} */}
       </main>
     </>
   );

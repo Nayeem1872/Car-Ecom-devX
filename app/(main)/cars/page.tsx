@@ -232,8 +232,9 @@ export default function CarsPage() {
                         className="mb-2"
                       />
                       <div className="flex justify-between text-sm">
-                        <span>${priceRange[0].toLocaleString()}</span>
                         <span>${priceRange[1].toLocaleString()}</span>
+                        {/* min on the right */}
+                        <span>${priceRange[0].toLocaleString()}</span>
                       </div>
                     </div>
                   </div>
@@ -322,8 +323,9 @@ export default function CarsPage() {
                       className="mb-2"
                     />
                     <div className="flex justify-between text-sm">
-                      <span>${priceRange[0].toLocaleString()}</span>
                       <span>${priceRange[1].toLocaleString()}</span>
+                      {/* min on the right */}
+                      <span>${priceRange[0].toLocaleString()}</span>
                     </div>
                   </div>
                 </div>
