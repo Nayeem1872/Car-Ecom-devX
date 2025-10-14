@@ -366,13 +366,12 @@ export default function BookingPage() {
                     ></textarea>
                   </div>
 
-                  <div className="flex items-center space-x-2 mb-6">
+                  {/* <div className="flex items-center space-x-2 mb-6">
                     <Checkbox id="consent" required />
                     <Label htmlFor="consent" className="text-sm">
-                      I consent to LuxuryCars contacting me regarding this
-                      inquiry.*
+                      I consent to ESAUTO contacting me regarding this inquiry.*
                     </Label>
-                  </div>
+                  </div> */}
 
                   <Button
                     type="submit"

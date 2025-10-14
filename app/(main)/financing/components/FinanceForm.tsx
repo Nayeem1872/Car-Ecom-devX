@@ -856,13 +856,13 @@ onChange={handleTradeInVehicleChange}
                   />
                 </div>
               </div>
-              <div className="flex items-center space-x-2 mt-2">
+              {/* <div className="flex items-center space-x-2 mt-2">
                 <Checkbox id="consent" required />
                 <Label htmlFor="consent" className="text-sm">
-                  I consent to LuxuryCars collecting and processing my personal
+                  I consent to ESAUTO collecting and processing my personal
                   information for the purpose of this inquiry.*
                 </Label>
-              </div>
+              </div> */}
             </div>
             <div className="flex justify-between">
               <Button type="button" variant="outline" onClick={prevFormStep}>

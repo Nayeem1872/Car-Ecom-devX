@@ -401,7 +401,7 @@ const CarDetailsContent: React.FC<CarDetailsContentProps> = ({
             <div className="mt-6 bg-gray-50 p-4 rounded-lg">
               <div className="flex items-center mb-2">
                 <Shield className="h-5 w-5 text-primary mr-2" />
-                <h4 className="font-medium">LuxuryCars Guarantee</h4>
+                <h4 className="font-medium">ESAUTO Guarantee</h4>
               </div>
               <p className="text-sm text-muted-foreground">
                 All our vehicles undergo a rigorous 150-point inspection and

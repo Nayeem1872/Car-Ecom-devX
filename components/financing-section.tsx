@@ -299,7 +299,7 @@ export default function FinancingSection() {
             </p>
             <p className="text-white/80 max-w-2xl mx-auto mb-8">
               Love your car? Tell your friends and family about us! When they
-              purchase a vehicle from LuxuryCars and mention your name, you'll
+              purchase a vehicle from ESAUTO and mention your name, you'll
               receive $500 as our way of saying thank you.
             </p>
             <Link href="/financing">

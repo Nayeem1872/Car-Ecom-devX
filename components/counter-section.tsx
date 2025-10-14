@@ -1,47 +1,67 @@
-"use client"
+"use client";
 
-import { useRef, useState, useEffect } from "react"
-import { motion, useInView } from "framer-motion"
-import { Users, Car, Award, ThumbsUp } from "lucide-react"
+import { useRef, useState, useEffect } from "react";
+import { motion, useInView } from "framer-motion";
+import { Users, Car, Award, ThumbsUp } from "lucide-react";
 
 const counters = [
-  { icon: <Users className="h-10 w-10 text-primary" />, value: 10000, label: "Happy Customers", suffix: "+" },
-  { icon: <Car className="h-10 w-10 text-primary" />, value: 500, label: "Premium Cars", suffix: "+" },
-  { icon: <Award className="h-10 w-10 text-primary" />, value: 15, label: "Years Experience", suffix: "" },
-  { icon: <ThumbsUp className="h-10 w-10 text-primary" />, value: 100, label: "Quality Assurance", suffix: "%" },
-]
+  {
+    icon: <Users className="h-10 w-10 text-primary" />,
+    value: 1000,
+    label: "Happy Customers",
+    suffix: "+",
+  },
+  {
+    icon: <Car className="h-10 w-10 text-primary" />,
+    value: 500,
+    label: "Premium Cars",
+    suffix: "+",
+  },
+  {
+    icon: <Award className="h-10 w-10 text-primary" />,
+    value: 15,
+    label: "Years Experience",
+    suffix: "",
+  },
+  {
+    icon: <ThumbsUp className="h-10 w-10 text-primary" />,
+    value: 100,
+    label: "Quality Assurance",
+    suffix: "%",
+  },
+];
 
 export default function CounterSection() {
-  const ref = useRef(null)
-  const isInView = useInView(ref, { once: true, amount: 0.2 })
-  const [counts, setCounts] = useState(counters.map(() => 0))
+  const ref = useRef(null);
+  const isInView = useInView(ref, { once: true, amount: 0.2 });
+  const [counts, setCounts] = useState(counters.map(() => 0));
 
   useEffect(() => {
     if (isInView) {
       const intervals = counters.map((counter, index) => {
-        const duration = 2000 // 2 seconds
-        const steps = 50
-        const increment = counter.value / steps
-        let count = 0
+        const duration = 2000; // 2 seconds
+        const steps = 50;
+        const increment = counter.value / steps;
+        let count = 0;
 
         return setInterval(() => {
-          count += increment
+          count += increment;
           if (count >= counter.value) {
-            count = counter.value
-            clearInterval(intervals[index])
+            count = counter.value;
+            clearInterval(intervals[index]);
           }
 
           setCounts((prev) => {
-            const newCounts = [...prev]
-            newCounts[index] = Math.floor(count)
-            return newCounts
-          })
-        }, duration / steps)
-      })
+            const newCounts = [...prev];
+            newCounts[index] = Math.floor(count);
+            return newCounts;
+          });
+        }, duration / steps);
+      });
 
-      return () => intervals.forEach((interval) => clearInterval(interval))
+      return () => intervals.forEach((interval) => clearInterval(interval));
     }
-  }, [isInView])
+  }, [isInView]);
 
   return (
     <section className="counter-section py-20 relative" ref={ref}>
@@ -66,6 +86,5 @@ export default function CounterSection() {
         </div>
       </div>
     </section>
-  )
+  );
 }
-

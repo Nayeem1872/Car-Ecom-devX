@@ -113,9 +113,9 @@ export default function AboutPage() {
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.8, delay: 0.4 }}
             >
-              At LuxuryCars, we believe everyone deserves the opportunity to
-              drive a quality vehicle. Our mission is to provide affordable cars
-              to newcomers and make car ownership accessible through flexible
+              At ESAUTO, we believe everyone deserves the opportunity to drive a
+              quality vehicle. Our mission is to provide affordable cars to
+              newcomers and make car ownership accessible through flexible
               financing options.
             </motion.p>
             <motion.div
@@ -552,16 +552,16 @@ export default function AboutPage() {
               with the transforming financial landscape of the country, people’s
               ability to receive a car loan with a history of bad credit has
               changed completely. The great news is that even if you have a bad
-              credit rating, buying a car with the help of ESAUTO is still an
+              credit rating, buying a car with the help of ES Auto is still an
               option that you can take advantage of. The process does not have
-              to be scary or overwhelming, it can be painless and easy. ESAUTO
+              to be scary or overwhelming, it can be painless and easy. ES Auto
               aims for you to be able to receive a car that best fits your
               lifestyle and have the freedom that four wheels on an open road
               can give you.
             </p>
             <p className="text-muted-foreground mb-6">
-              If you are considering applying for a bad credit car loan with
-              ESAUTO Financing, be prepared to answer the following questions:
+              If you are considering applying for a bad credit car loan with ES
+              Auto Financing, be prepared to answer the following questions:
             </p>
             <ul className="list-disc list-inside mb-6 text-muted-foreground">
               <li>What is your total income each month?</li>
@@ -573,19 +573,19 @@ export default function AboutPage() {
               Due to the stigma around bad credit ratings and car loans, many
               people believe that the process of obtaining a car loan with bad
               credit is long and intimidating. It is actually simple, fast and
-              secure as ESAUTO allows you to fill out a car loan application
+              secure as ES Auto allows you to fill out a car loan application
               online from the comfort of your own home.
             </p>
             <p className="text-muted-foreground mb-6">
-              Once your application is received, a ESAUTO Professional will work
-              with you every step of the way until you are behind the wheel of
-              your new car. Utilizing their large network of lenders who
+              Once your application is received, an ES Auto Professional will
+              work with you every step of the way until you are behind the wheel
+              of your new car. Utilizing their large network of lenders who
               specialize in bad credit car loans coupled with their years of
-              expertise is why ESAUTO has a nearly 100% approval rate for bad
+              expertise is why ES Auto has a nearly 100% approval rate for bad
               credit car loans.
             </p>
             <p className="text-muted-foreground">
-              At ESAUTO, we believe that everyone deserves to drive and bad
+              At ES Auto, we believe that everyone deserves to drive and bad
               credit shouldn’t hold you back.
             </p>
           </motion.div>
@@ -603,7 +603,7 @@ export default function AboutPage() {
             transition={{ duration: 0.8 }}
           >
             <h2 className="text-3xl md:text-4xl font-bold mb-4">
-              Why Choose <span className="text-primary">LuxuryCars</span>
+              Why Choose <span className="text-primary">ESAUTO</span>
             </h2>
             <p className="text-muted-foreground max-w-2xl mx-auto">
               We're more than just a car dealership. We're your partners in
@@ -706,8 +706,8 @@ export default function AboutPage() {
               </div>
               <p className="italic text-muted-foreground mb-4">
                 "As a newcomer to Canada, I was worried about getting approved
-                for a car loan. LuxuryCars made the process so easy and found me
-                a beautiful car that fit my budget. Their team was incredibly
+                for a car loan. ESAUTO made the process so easy and found me a
+                beautiful car that fit my budget. Their team was incredibly
                 supportive throughout the entire process."
               </p>
               <div className="flex text-yellow-400">
@@ -737,7 +737,7 @@ export default function AboutPage() {
               </div>
               <p className="italic text-muted-foreground mb-4">
                 "I was nervous about buying my first car, especially with
-                limited credit history. The team at LuxuryCars was patient,
+                limited credit history. The team at ESAUTO was patient,
                 explained everything clearly, and helped me find a reliable car
                 with payments I could afford. I couldn't be happier!"
               </p>
@@ -768,7 +768,7 @@ export default function AboutPage() {
               </div>
               <p className="italic text-muted-foreground mb-4">
                 "After being turned down by traditional lenders, I thought I'd
-                never be able to get a decent car. LuxuryCars worked with my
+                never be able to get a decent car. ESAUTO worked with my
                 situation and found me both a great car and financing that
                 worked with my budget. Their customer service is exceptional!"
               </p>

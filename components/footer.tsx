@@ -47,8 +47,8 @@ export default function Footer({ vendor }: FooterProps) {
               <span className="text-primary">ES</span>AUTO
             </Link>
             <p className="text-muted-foreground mb-4 mt-2">
-              Your trusted partner for finding the perfect luxury vehicle. We
-              offer a premium selection of cars with exceptional service.
+              Your trusted partner for finding the perfect vehicle. We offer a
+              premium selection of cars with exceptional service.
             </p>
             <div className="flex space-x-4">
               <Link
