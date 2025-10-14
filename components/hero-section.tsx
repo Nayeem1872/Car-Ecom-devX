@@ -1,6 +1,6 @@
 "use client";
 import { useEffect, useState } from "react";
-import { motion, AnimatePresence } from "framer-motion";
+import { motion } from "framer-motion";
 import { ChevronRight, ArrowRight } from "lucide-react";
 
 import Link from "next/link";
@@ -10,17 +10,6 @@ import { Button } from "./ui/button";
 export default function HeroSection() {
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
   const [banners, setBanners] = useState<any[]>([]);
-  const [currentWordIndex, setCurrentWordIndex] = useState(0);
-
-  // Car-related words to cycle through
-  const carWords = [
-    "Dream",
-    "Perfect",
-    "Luxury",
-    "Premium",
-    "Ideal",
-    "Ultimate",
-  ];
 
   useEffect(() => {
     const loadBanners = async () => {
@@ -44,14 +33,6 @@ export default function HeroSection() {
     }, 5000);
     return () => clearInterval(interval);
   }, [banners]);
-
-  // Update current word index every 3 seconds
-  useEffect(() => {
-    const interval = setInterval(() => {
-      setCurrentWordIndex((prevIndex) => (prevIndex + 1) % carWords.length);
-    }, 3000);
-    return () => clearInterval(interval);
-  }, [carWords.length]);
 
   return (
     <section className="relative h-[90vh] min-h-[600px] w-full overflow-hidden">
@@ -93,44 +74,7 @@ export default function HeroSection() {
             animate={{ opacity: 1 }}
             transition={{ duration: 0.8, delay: 0.6 }}
           >
-            Drive Your{" "}
-            <span className="relative inline-block">
-              <AnimatePresence mode="wait">
-                <motion.span
-                  key={currentWordIndex}
-                  className="text-primary absolute left-0 top-0"
-                  initial={{
-                    opacity: 0,
-                    y: 20,
-                    rotateX: -90,
-                    scale: 0.8,
-                  }}
-                  animate={{
-                    opacity: 1,
-                    y: 0,
-                    rotateX: 0,
-                    scale: 1,
-                  }}
-                  exit={{
-                    opacity: 0,
-                    y: -20,
-                    rotateX: 90,
-                    scale: 0.8,
-                  }}
-                  transition={{
-                    duration: 0.6,
-                    ease: "easeInOut",
-                  }}
-                >
-                  {carWords[currentWordIndex]}
-                </motion.span>
-              </AnimatePresence>
-              {/* Invisible placeholder to maintain layout */}
-              <span className="opacity-0 select-none">
-                {carWords[currentWordIndex]}
-              </span>
-            </span>{" "}
-            Today
+            Drive Your <span className="text-primary">Dream</span> Today
           </motion.h1>
 
           <motion.p
