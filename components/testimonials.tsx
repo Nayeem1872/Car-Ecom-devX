@@ -15,7 +15,7 @@ const testimonials = [
     name: "Sarah Johnson",
     role: "Business Executive",
     content:
-      "DevXCars provided an exceptional buying experience. Their team was knowledgeable and helped me find the perfect Mercedes that suits my lifestyle.",
+      "ESAUTO provided an exceptional buying experience. Their team was knowledgeable and helped me find the perfect Mercedes that suits my lifestyle.",
     avatar: "https://randomuser.me/api/portraits/women/44.jpg",
     rating: 5,
   },
@@ -24,7 +24,7 @@ const testimonials = [
     name: "Michael Chen",
     role: "Tech Entrepreneur",
     content:
-      "I was looking for a high-performance vehicle and the team at DevXCars delivered beyond my expectations. The BMW M5 they recommended is a dream to drive.",
+      "I was looking for a high-performance vehicle and the team at ESAUTO delivered beyond my expectations. The BMW M5 they recommended is a dream to drive.",
     avatar: "https://randomuser.me/api/portraits/men/32.jpg",
     rating: 5,
   },
@@ -33,7 +33,7 @@ const testimonials = [
     name: "Emily Rodriguez",
     role: "Architect",
     content:
-      "The attention to detail and personalized service at DevXCars is unmatched. They made the entire process smooth and enjoyable.",
+      "The attention to detail and personalized service at ESAUTO is unmatched. They made the entire process smooth and enjoyable.",
     avatar: "https://randomuser.me/api/portraits/women/68.jpg",
     rating: 4,
   },
@@ -42,7 +42,7 @@ const testimonials = [
     name: "James Wilson",
     role: "Finance Director",
     content:
-      "I've purchased multiple vehicles from DevXCars over the years. Their after-sales service is as impressive as their selection of premium cars.",
+      "I've purchased multiple vehicles from ESAUTO over the years. Their after-sales service is as impressive as their selection of premium cars.",
     avatar: "https://randomuser.me/api/portraits/men/86.jpg",
     rating: 5,
   },

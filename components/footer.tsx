@@ -40,8 +40,13 @@ export default function Footer({ vendor }: FooterProps) {
       <div className="container mx-auto px-4 py-12">
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
           <div>
-            <h3 className="text-lg font-bold mb-4">DevXCars</h3>
-            <p className="text-muted-foreground mb-4">
+            <Link
+              href="/"
+              className="text-2xl font-black font-hexco tracking-tight"
+            >
+              <span className="text-primary">ES</span>AUTO
+            </Link>
+            <p className="text-muted-foreground mb-4 mt-2">
               Your trusted partner for finding the perfect luxury vehicle. We
               offer a premium selection of cars with exceptional service.
             </p>
@@ -182,7 +187,7 @@ export default function Footer({ vendor }: FooterProps) {
         <div className="border-t mt-12 pt-8">
           <div className="flex flex-col md:flex-row justify-between items-center">
             <p className="text-sm text-muted-foreground mb-4 md:mb-0">
-              &copy; {new Date().getFullYear()} DevXCars. All rights reserved.
+              &copy; {new Date().getFullYear()} ESAUTO. All rights reserved.
             </p>
             <div className="flex space-x-6">
               <Link

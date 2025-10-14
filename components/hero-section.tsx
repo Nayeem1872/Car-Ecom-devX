@@ -138,7 +138,7 @@ export default function HeroSection() {
             </div>
             <div className="ml-4">
               <p className="text-white font-medium">
-                Trusted by 10,000+ customers
+                Trusted by 1000+ customers
               </p>
               <div className="flex items-center text-yellow-400">
                 <span>★★★★★</span>

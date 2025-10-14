@@ -3,7 +3,7 @@
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { Menu, X, Phone } from "lucide-react";
-import { useCart } from "@/context/cart-context";
+
 import { useState, useEffect } from "react";
 import { usePathname } from "next/navigation";
 import { motion, AnimatePresence } from "framer-motion";
@@ -45,8 +45,11 @@ export default function Navbar({ vendor }: NavbarProps) {
       <div className="container mx-auto px-4">
         <div className="flex h-20 items-center justify-between">
           <div className="flex items-center">
-            <Link href="/" className="text-2xl font-bold">
-              <span className="text-primary">DevX</span>Cars
+            <Link
+              href="/"
+              className="text-2xl font-black font-hexco tracking-tight"
+            >
+              <span className="text-primary">ES</span>AUTO
             </Link>
           </div>
 

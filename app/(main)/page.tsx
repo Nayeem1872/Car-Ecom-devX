@@ -24,7 +24,7 @@ export default function Home() {
       <section className="container mx-auto py-16 px-4">
         <div className="flex flex-col items-center text-center mb-12">
           <h2 className="text-3xl md:text-5xl font-bold mb-4">
-            Why Choose <span className="text-primary">DevXCars</span>
+            Why Choose <span className="text-primary">ESAUTO</span>
           </h2>
           <p className="text-muted-foreground max-w-2xl">
             We offer an unparalleled car buying experience with premium service
