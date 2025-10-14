@@ -15,11 +15,7 @@ import AddBrandModal from "../../components/AddBrandModal";
 import BrandsTable from "../../components/BrandsTable";
 import axios from "axios";
 import EditBrandModal from "./components/EditBrandModal";
-import {
-  fetchBrands,
-  fetchBrandsData,
-  fetchCategories,
-} from "@/hooks/ApiHooks";
+import { fetchBrands, fetchBrandsData } from "@/hooks/ApiHooks";
 import { handleAddBrandAction, handleEditBrandAction } from "./brandActions";
 import { Button } from "@/components/ui/button";
 
@@ -32,11 +28,10 @@ const Brands = () => {
   const [newBrand, setNewBrand] = useState<any>({
     name: "",
     logo: null,
-    category: "",
   });
   const [searchTerm, setSearchTerm] = useState("");
   const [open, setOpen] = useState(false);
-  const [availableCategories, setAvailableCategories] = useState<any[]>([]);
+
   const [editBrand, setEditBrand] = useState<any | null>(null);
   const [openEditModal, setOpenEditModal] = useState(false);
   const { toast } = useToast();
@@ -61,18 +56,6 @@ const Brands = () => {
             | null
             | undefined,
         });
-      }
-
-      try {
-        const categoriesData = await fetchCategories();
-        setAvailableCategories(categoriesData);
-      } catch (error) {
-        console.error("Error fetching categories:", error);
-        toast({
-          title: "Error",
-          description: "Failed to fetch categories",
-          variant: "destructive",
-        });
       } finally {
         setIsLoading(false);
       }
@@ -95,6 +78,15 @@ const Brands = () => {
   };
 
   const handleEditBrand = async () => {
+    if (!editBrand) {
+      toast({
+        title: "Error",
+        description: "No brand selected for editing",
+        variant: "destructive",
+      });
+      return;
+    }
+
     await handleEditBrandAction({
       editBrand,
       toast,
@@ -120,14 +112,7 @@ const Brands = () => {
   };
   const filteredBrands = brands.filter((brand) => {
     if (!brand.name) return false;
-    const categoryName =
-      typeof brand.category === "object" && brand.category !== null
-        ? brand.category.name
-        : brand.category || "";
-    return (
-      brand.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      categoryName.toLowerCase().includes(searchTerm.toLowerCase())
-    );
+    return brand.name.toLowerCase().includes(searchTerm.toLowerCase());
   });
 
   const handlePrevPage = () => {
@@ -180,7 +165,6 @@ const Brands = () => {
                   newBrand={newBrand}
                   setNewBrand={setNewBrand}
                   handleAddBrand={handleAddBrand}
-                  categories={availableCategories}
                 />
               </div>
             </div>
@@ -235,7 +219,7 @@ const Brands = () => {
           brand={editBrand}
           setBrand={setEditBrand}
           handleEditBrand={handleEditBrand}
-          categories={availableCategories}
+          categories={[]}
         />
       )}
     </>

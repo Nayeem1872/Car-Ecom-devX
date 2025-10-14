@@ -10,6 +10,24 @@
   font-display: swap;
 }
 
+.font-hexco {
+  text-transform: none !important;
+  font-variant: normal !important;
+}
+
+.logo-text {
+  text-transform: none !important;
+}
+
+.logo-auto {
+  text-transform: lowercase !important;
+  font-variant-caps: normal !important;
+}
+
+.logo-auto::first-letter {
+  text-transform: uppercase !important;
+}
+
 @layer base {
   :root {
     --background: 0 0% 100%;
@@ -212,4 +230,46 @@
 
 .swiper-pagination-bullet-active {
   background-color: hsl(var(--primary)) !important;
+}
+
+.testimonial-swiper {
+  overflow: visible !important;
+}
+
+.testimonial-swiper .swiper-slide {
+  height: auto !important;
+  display: flex !important;
+  flex-direction: column !important;
+}
+
+.testimonial-swiper .swiper-wrapper {
+  align-items: stretch !important;
+}
+
+.infinite-scroll-container {
+  width: 100%;
+  overflow: hidden;
+  position: relative;
+  height: auto;
+  min-height: 450px;
+}
+
+.infinite-scroll-track {
+  display: flex;
+  animation: infiniteScroll 30s linear infinite;
+  width: fit-content;
+  align-items: stretch;
+}
+
+.infinite-scroll-track:hover {
+  animation-play-state: paused;
+}
+
+@keyframes infiniteScroll {
+  0% {
+    transform: translateX(0);
+  }
+  100% {
+    transform: translateX(-33.333%);
+  }
 }

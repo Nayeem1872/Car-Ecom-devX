@@ -47,9 +47,15 @@ export default function Navbar({ vendor }: NavbarProps) {
           <div className="flex items-center">
             <Link
               href="/"
-              className="text-2xl font-black font-hexco tracking-tight"
+              className="text-2xl font-black tracking-tight logo-text flex items-center"
             >
-              <span className="text-primary">ES</span>AUTO
+              <span className="text-primary font-hexco">ES</span>
+              <span
+                className="font-bold"
+                style={{ fontFamily: "Inter, sans-serif" }}
+              >
+                Auto
+              </span>
             </Link>
           </div>
 
