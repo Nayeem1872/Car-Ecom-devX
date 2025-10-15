@@ -20,10 +20,10 @@ export const handleAddBrandAction = async ({
   setNewBrand: (brand: any) => void;
   setOpen: (open: boolean) => void;
 }) => {
-  if (!newBrand.name || !newBrand.category || !newBrand.logo) {
+  if (!newBrand.name) {
     toast({
       title: "Error",
-      description: "Please provide name, category, and logo",
+      description: "Please provide brand name",
       variant: "destructive",
     });
     return;
@@ -44,7 +44,7 @@ export const handleAddBrandAction = async ({
 
     const payload = {
       name: newBrand.name,
-      category: newBrand.category,
+      category: "67e02d4c1745e9ee066ffcf6", // Fixed category ID
       logo: logoUrl,
     };
 
@@ -56,7 +56,6 @@ export const handleAddBrandAction = async ({
     setNewBrand({
       name: "",
       logo: null,
-      category: "",
     });
     setOpen(false);
     toast({
@@ -101,7 +100,6 @@ export const handleEditBrandAction = async ({
 
       logoUrl = uploadResponse.data.data[0].serverPath;
     }
-  
 
     const payload = {
       name: editBrand.name,

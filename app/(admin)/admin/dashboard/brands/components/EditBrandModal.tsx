@@ -30,7 +30,6 @@ export interface EditBrandModalProps {
   brand: Brand;
   setBrand: (brand: Brand) => void;
   handleEditBrand: () => void;
-  categories: { id: string; name: string }[];
 }
 
 const EditBrandModal = ({
@@ -39,7 +38,6 @@ const EditBrandModal = ({
   brand,
   setBrand,
   handleEditBrand,
-  categories,
 }: EditBrandModalProps) => {
   const { toast } = useToast();
   const [newLogoFile, setNewLogoFile] = useState<File | null>(null);
@@ -48,11 +46,10 @@ const EditBrandModal = ({
     if (e.target.files && e.target.files.length > 0) {
       const file = e.target.files[0];
       setNewLogoFile(file);
-    
+
       setBrand({ ...brand, newLogoFile: file });
     }
   };
-  
 
   return (
     <Dialog open={open} onOpenChange={setOpen}>
@@ -105,29 +102,6 @@ const EditBrandModal = ({
               </div>
               <Input id="edit-logo" type="file" onChange={handleFileChange} />
             </div>
-          </div>
-          {/* Brand Category as a Select */}
-          <div className="grid grid-cols-4 items-center gap-4">
-            <Label htmlFor="edit-category" className="text-right">
-              Category*
-            </Label>
-            <select
-              id="edit-category"
-              className="col-span-3 border p-2 rounded"
-              value={
-                typeof brand.category === "object" && brand.category !== null
-                  ? (brand.category as { _id: string })._id
-                  : brand.category
-              }
-              onChange={(e) => setBrand({ ...brand, category: e.target.value })}
-            >
-              <option value="">Select a category</option>
-              {categories.map((cat) => (
-                <option key={cat.id} value={cat.id}>
-                  {cat.name}
-                </option>
-              ))}
-            </select>
           </div>
         </div>
         <DialogFooter>

@@ -10,7 +10,7 @@ import {
 } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Input } from "@/components/ui/input";
-import { Slider } from "@/components/ui/slider";
+import CustomSlider from "@/components/ui/custom-slider";
 import { Checkbox } from "@/components/ui/checkbox";
 import { useCart } from "@/context/cart-context";
 import { useToast } from "@/components/ui/use-toast";
@@ -223,7 +223,7 @@ export default function CarsPage() {
 
                     <div>
                       <h3 className="text-sm font-medium mb-4">Price Range</h3>
-                      <Slider
+                      <CustomSlider
                         defaultValue={priceRange}
                         min={0}
                         max={250000}
@@ -313,7 +313,7 @@ export default function CarsPage() {
 
                   <div>
                     <h4 className="text-sm font-medium mb-4">Price Range</h4>
-                    <Slider
+                    <CustomSlider
                       defaultValue={priceRange}
                       min={0}
                       max={250000}

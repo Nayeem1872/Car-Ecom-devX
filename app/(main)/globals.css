@@ -273,3 +273,29 @@
     transform: translateX(-33.333%);
   }
 }
+/* Custom Slider Styles - Inverted Colors */
+.custom-slider [data-radix-slider-track] {
+  background-color: #ef4444 !important; /* red-500 - unselected area is red */
+  height: 4px;
+}
+
+.custom-slider [data-radix-slider-range] {
+  background-color: #e5e7eb !important; /* gray-200 - selected area is gray */
+  height: 4px;
+}
+
+.custom-slider [data-radix-slider-thumb] {
+  background-color: #6b7280 !important; /* gray-500 */
+  border: 2px solid #6b7280 !important; /* gray-500 */
+  width: 20px;
+  height: 20px;
+}
+
+.custom-slider [data-radix-slider-thumb]:hover {
+  background-color: #4b5563 !important; /* gray-600 */
+  border-color: #4b5563 !important; /* gray-600 */
+}
+
+.custom-slider [data-radix-slider-thumb]:focus {
+  box-shadow: 0 0 0 2px #d1d5db !important; /* gray-300 */
+}

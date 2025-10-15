@@ -219,7 +219,6 @@ const Brands = () => {
           brand={editBrand}
           setBrand={setEditBrand}
           handleEditBrand={handleEditBrand}
-          categories={[]}
         />
       )}
     </>

@@ -175,9 +175,6 @@ export default function AboutPage() {
                 judgment-free to get you driving.
               </p>
               <p className="text-muted-foreground mb-6">
-                We Finance All Types Bad Credit Car Loans
-                <br />
-                <br />
                 We Finance All Types Bad Credit Car Loans. Whether you have good
                 credit, bad credit, no credit, bankruptcy, ODSP, are in a
                 consumer proposal or if you’re seeking private sale financing,
